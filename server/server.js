@@ -8,12 +8,17 @@ const userController = require('./controllers/userController');
 const postController = require('./controllers/postController');
 const cors = require('cors');
 require('dotenv').config()
+const cookieparser = require("cookie-parser");
+// const helmet = require("helmet");
+
 
 const mongoose = require('mongoose');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// app.use(helmet());
+app.use(cookieparser());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended : true}))
@@ -54,7 +59,7 @@ app.get('/login/auth/google/callback', passport.authenticate('google', { failure
 const URI = process.env.ATLAS_URI;
 
 //connect to mongoDB
-mongoose.connect(URI , {
+mongoose.connect('mongodb+srv://johnlesoloproject:NhanMa9318006@cluster0.mlmgp.mongodb.net/?retryWrites=true&w=majority' , {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         dbName: 'findARoommate'

@@ -16,6 +16,7 @@ const metaController = {};
 */
 
 metaController.createPost = async (req,res,next) => {
+  console.log('metaController.createPost');
     try {
       
 
