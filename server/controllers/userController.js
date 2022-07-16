@@ -20,8 +20,8 @@ userController.createUser = async (req, res, next) => {
 
     // passing into our res so we can access
     res.locals.user = queryResult;
-    console.log('res.locals.user, ' , res.locals.user)
-    return next(res.locals.user);
+    // console.log('res.locals.user, ' , res.locals.user)
+    return next();
   } catch (err) {
     return next({
       log: `error caught in userController.createUser: ${err}`,
@@ -62,5 +62,20 @@ userController.verifyUser = async (req, res, next) => {
     })
   }
 };
+
+userController.findUser = async (req, res, next) => {
+  try {
+    const data = await User.find({});
+    console.log('data', data)
+    // const formattedData = data.json();
+    // console.log('format', formattedData);
+    return next();
+  } catch (err) {
+    return next({
+      log: `error caught in userController.findUser : ${err}`,
+      message: {err: 'an error occurred while attempting to find a user'}
+    })
+  }
+}
 
 module.exports = userController;

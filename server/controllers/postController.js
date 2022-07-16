@@ -6,8 +6,6 @@ const Post = require('../db/createPost');
 const postController = {};
 
 postController.createPost = async (req, res, next) => {
-  console.log('res to check where user is stored: ', req)
-  console.log("res.locals.user inside postController" , res.locals)
   try {
     // deconstruct from our post request
     const { picture, address, roommate, description,

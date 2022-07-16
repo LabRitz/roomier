@@ -8,7 +8,7 @@ const metaController = {};
 // metadata is for post creation data
 
 /* 
-  ownerId: {type: String, required: true}, - email
+  email: {type: String, required: true}, - email
   firstName: {type: String, required: true},
   lastName: {type: String, required: true},
   createdAt: {type: Date, required: true, default: Date.now},
