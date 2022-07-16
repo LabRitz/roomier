@@ -1,15 +1,10 @@
 @import 'globalVariables.scss';
 
-<<<<<<< HEAD
-.nav {
-
-=======
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;600&display=swap');
 
 
 .nav {
   position: fixed;
->>>>>>> f27c3c2baaf77d65ad9993615ef6f9728ab8da8a
   background: linear-gradient(180deg, #658495 0%, #81a9c1 30%, #98C1D9 80%);
   width: 100%;
   height: 66px;
@@ -28,11 +23,8 @@
     flex-direction: row;
     width: 50%;
     h1 {
-<<<<<<< HEAD
-=======
       font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
       font-size: 36px;
->>>>>>> f27c3c2baaf77d65ad9993615ef6f9728ab8da8a
       margin-left: 4%;
       color: #293241;
       width:300px
