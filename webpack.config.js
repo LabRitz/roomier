@@ -14,8 +14,9 @@ module.exports = {
         publicPath: '/'
     },
     proxy: {
-      '/profile': 'http://localhost:3000'
-    },
+
+      '/login': 'http://localhost:3000',
+
     compress: true,
     port: 8080,
   },
