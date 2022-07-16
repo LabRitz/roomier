@@ -143,4 +143,3 @@ const CreatePost = (props) => {
     );
 };
 
-export default CreatePost;

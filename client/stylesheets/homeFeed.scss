@@ -1,0 +1,17 @@
+@import './globalVariables.scss';
+
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .homeFeed {
+    padding-top: 120px;
+    padding-bottom: 66px;
+    width:80%;
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+}
