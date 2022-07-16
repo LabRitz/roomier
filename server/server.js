@@ -51,11 +51,10 @@ app.get('/login/auth/google/callback', passport.authenticate('google', { failure
 })
 
 
-// const URI = process.env.ATLAS_URI;
-const URI = 'mongodb+srv://johnlesoloproject:NhanMa9318006@cluster0.mlmgp.mongodb.net/?retryWrites=true&w=majority'
+const URI = process.env.ATLAS_URI;
 
 //connect to mongoDB
-mongoose.connect('mongodb+srv://johnlesoloproject:NhanMa9318006@cluster0.mlmgp.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect(URI , {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         dbName: 'findARoommate'

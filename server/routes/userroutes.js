@@ -3,17 +3,18 @@ const router = express.Router();
 
 // controllers
 const userController = require('../controllers/userController');
-const postController = require('../controllers/postController')
+const postController = require('../controllers/postController');
+const cookieController = require('../controllers/cookieController')
 
 
 //localhost:3000/signup
-router.post('/signup', userController.createUser, (req, res) => {
+router.post('/signup', userController.createUser, cookieController.setSSIDCookie, (req, res) => {
     return res.status(200).json(res.locals.user)
 })
 
 // locahost:3000
 //login
-router.post('/', userController.verifyUser, (req, res) => {
+router.post('/', userController.verifyUser, cookieController.setSSIDCookie, (req, res) => {
   return res.status(200).json(res.locals.user);
 })
 
@@ -28,6 +29,10 @@ router.post('/createPost', postController.createPost, (req,res) => {
     return res.status(200).json(res.locals.createPost)
 })
 
+
+
+
+//cookies route
 
 module.exports = router;
 
