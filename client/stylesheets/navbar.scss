@@ -1,0 +1,63 @@
+@import 'globalVariables.scss';
+
+.nav {
+
+  background: linear-gradient(180deg, #658495 0%, #81a9c1 30%, #98C1D9 80%);
+  width: 100%;
+  height: 66px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0px 0px 24px $mid-blue;
+
+  .leftBtn {
+
+    padding-left: 2.5%;
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    h1 {
+      margin-left: 4%;
+      color: #293241;
+      width:300px
+    }
+  }
+
+
+  .rightBtn {
+    padding-right: 3%;
+    width: 30%;
+    display: flex;
+    justify-content: end;
+    gap: 2.5%;
+
+    .post {
+      margin-right: 4%;
+    }
+  }
+
+}
+
+h1, button {
+  border: none;
+  background: none;
+  
+  &:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    transition-duration: 300ms;
+  }
+
+  svg {
+    filter: invert(13%) sepia(3%) saturate(6478%) hue-rotate(180deg) brightness(96%) contrast(82%);
+  }
+
+}
+
+a {
+  text-decoration: none;
+  display: flex;
+}
