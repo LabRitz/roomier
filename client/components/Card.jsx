@@ -61,7 +61,7 @@ const Card = ({props}) => {
           </div>
         </div>
         <div className="info">
-          <p><span className='bold'>{description.BR}BR | {description.BA}BA | {description.sqft} sqft</span></p>
+          <p><span className='bold'>{description.BR}BR | {description.BA}BA | {description.sqFt} sqft</span></p>
           <p>Roommate seeking: {roommate.gender}</p>
           <><label>Pet friendly: </label><input type={'checkbox'} checked={description.pets}></input></>
           <br/>

@@ -24,7 +24,7 @@ const HomeFeed = ({props}) => {
     description: {
       BR: 1,
       BA: 1,
-      sqft: 450,
+      sqFt: 450,
       pets: true,
       smoking: false,
       parking:false,
