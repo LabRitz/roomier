@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 const SALT_FACTOR = 10;
 
-const User = Schema({
+const Userprofile = Schema({
   firstName: {type: String, required: true},
   lastName: {type: String, required: true},
   username: {type: String, required: true},
@@ -14,7 +14,7 @@ const User = Schema({
 
 // Prefunction that uses bcrypt to hash our password and resave
 // into our database
-User.pre('save', function(next){
+Userprofile.pre('save', function(next){
   const user = this;  
 
   // bcrypt hash function here
@@ -25,6 +25,6 @@ User.pre('save', function(next){
   })
 });
 
-const user = mongoose.model('User', User);
+const User = mongoose.model('User', Userprofile);
 
-module.export = user;
+module.exports = User;

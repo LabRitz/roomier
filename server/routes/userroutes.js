@@ -3,7 +3,7 @@ const router = express.Router();
 
 // controllers
 const userController = require('../controllers/userController');
-const postController = require('..controllers/postController')
+const postController = require('../controllers/postController')
 
 
 //localhost:3000/signup
@@ -12,9 +12,13 @@ router.post('/signup', userController.createUser, (req, res) => {
 })
 
 // locahost:3000
+//login
 router.post('/', userController.verifyUser, (req, res) => {
   return res.status(200).json(res.locals.user);
 })
+
+
+
 
 //localhost:3000/home
 router.get('/home', postController.createPost, (req,res) => {
@@ -22,6 +26,7 @@ router.get('/home', postController.createPost, (req,res) => {
 })
 
 
+module.exports = router;
 
 //localhost8080 => display the login => verify => CHECK
 //localhost8000/signup => createUsers signup => CHECK 

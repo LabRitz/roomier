@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const post = Schema({
   picture: {type: Buffer},
   address: {
-    street1: {type: String}, required: true,
+    street1: {type: String, required: true},
     street2: {type: String},
     city: {type: String, required: true},
     state: {type: String, required: true},
@@ -14,12 +14,12 @@ const post = Schema({
     gender: {type: String, required: true, default: 'No Preference'},
   },
   description: [{
-    BR: {type: Number, required: true},
-    BA: {type: Number, required: true},
+    BR: {type: Number},
+    BA: {type: Number},
     sqFt: {type: Number},
-    pets: {type: Boolean, default: false},
-    smoking: {type: Boolean, default: false},
-    parking: {type: Boolean, default: false},
+    pets: {type: Boolean},
+    smoking: {type: Boolean},
+    parking: {type: Boolean},
     condition: {type: String},
   }],
   moveInDate: {type: Date, default: Date.now },

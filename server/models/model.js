@@ -13,7 +13,6 @@ require('dotenv').config()
 //connect to the URI in .env
 const URI = process.env.ATLAS_URI;
 
-
 //connect to mongoDB
 mongoose.connect(URI, {
         useNewUrlParser: true,

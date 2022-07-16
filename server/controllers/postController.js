@@ -5,20 +5,11 @@ const Post = require('../db/createPost');
 
 const postController = {};
 
-postController.createPost= async (res, res, next) => {
+postController.createPost = async (req, res, next) => {
   try {
     // deconstruct from our post request
-    const { 
-    picture,
-    address,
-    roommate,
-    description,
-    moveInDate,
-    utilities,
-    rent,
-    bio
-    } = req.body;
-    
+    const { picture, address, roommate, description,
+      moveInDate, utilities, rent, bio } = req.body;
     
     //deconstruct sub object inside createPost
     const addressObj = {street1: address.street1, street2: address.street2, city: address.city, state: address.state, zipCode: address.zipCode};
@@ -77,3 +68,5 @@ postController.createPost= async (res, res, next) => {
   rent: {type: Number, required: true},
   bio: {type: String}
 */
+
+module.exports = postController;

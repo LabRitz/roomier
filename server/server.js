@@ -5,8 +5,11 @@ const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const passport = require('passport');
 const userController = require('./controllers/userController');
-const postController = require('./controllers/postController')
+const postController = require('./controllers/postController');
+const cors = require('cors');
 require('dotenv').config()
+
+const mongoose = require('mongoose');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -48,7 +51,20 @@ app.get('/login/auth/google/callback', passport.authenticate('google', { failure
 })
 
 
+const URI = process.env.ATLAS_URI;
 
+//connect to mongoDB
+mongoose.connect(URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        dbName: 'findARoommate'
+    })      
+    .then(() => {
+        console.log("Successfully connected to MongoDB!");
+        })
+    .catch((error) => {
+        console.log("Unable to connect to MongoDB!");
+        console.error(error);});
 
 // catch-all route handler for any requests to an unknown route
 app.use((req, res) => res.sendStatus(404));

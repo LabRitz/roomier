@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
 const User = require('../db/user');
@@ -7,18 +8,19 @@ const userController = {};
 
 // sign up
 userController.createUser = async (req, res, next) => {
+  console.log('req.body:', req.body)
   try {
-    const {username, password} = req.body;
+    const {firstName, lastName, username, password} = req.body;
 
     // checking if username or password is empty
     if (!username || !password) return next('username or password is missing')
 
     // if username/password is not empty, we will create our user
-    const queryResult = await User.create({ username, password });
+    const queryResult = await User.create({ firstName, lastName, username, password });
 
     // passing into our res so we can access
     res.locals.user = queryResult;
-
+    console.log('res.locals.user, ' , res.locals.user)
     return next();
   } catch (err) {
     return next({
@@ -31,13 +33,13 @@ userController.createUser = async (req, res, next) => {
 // login
 userController.verifyUser = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { firstName, lastName, username, password } = req.body;
 
     // checking if username or password is empty
     if (!username || !password) return next('username or password is missing')
 
     // parsing our User db to see if we have a matching username
-    const queryResult = await User.findOne({ username });
+    const queryResult = await User.findOne({ username: username });
 
     // checking to see if the password matches after to our bcrypt hash
     const comparePass = await bcrypt.compare(pass, queryResult.password);
