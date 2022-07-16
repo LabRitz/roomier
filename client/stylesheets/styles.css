@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500&display=swap');
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
+    Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: linear-gradient(180deg,rgb(214, 214, 214) 70%,rgb(169, 169, 169)85%,  rgb(140, 140, 140) 90%, rgba(0, 25, 46, 0.723));
+  font-family: 'Red Hat Display', sans-serif;
+  margin: 0px;
+}

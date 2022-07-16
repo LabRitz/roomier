@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 const handleSignUp = (e) => {
-    e.preventDefault();
-    console.log({firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, username: document.getElementById('username').value, password: document.getElementById('password').value});
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('firstName').value = '';
-    document.getElementById('lastName').value = '';
-    // fetch('/login', {
-    //     method: 'POST',
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: {username: document.getElementById('username').value, password: document.getElementById('password').value}}
-    // );
+  e.preventDefault();
+  console.log({ firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, username: document.getElementById('username').value, password: document.getElementById('password').value });
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
+  document.getElementById('firstName').value = '';
+  document.getElementById('lastName').value = '';
+  // fetch('/login', {
+  //     method: 'POST',
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: {username: document.getElementById('username').value, password: document.getElementById('password').value}}
+  // );
 }
 
 const Signup = (props) => {
