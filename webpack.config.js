@@ -14,7 +14,6 @@ module.exports = {
         publicPath: '/'
     },
     proxy: {
-      '/imdb': 'http://localhost:3000',
       '/profile': 'http://localhost:3000'
     },
     compress: true,
@@ -40,8 +39,8 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
-        use: [{loader: 'style-loader'}, {loader: 'css-loader'}]
+        test: /\.s?css$/,
+        use: [{loader: 'style-loader'}, {loader: 'css-loader'}, {loader: 'sass-loader'}]
       }
     ]
   }
