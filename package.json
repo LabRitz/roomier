@@ -33,7 +33,9 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-router": "^5.1.0",
-    "react-router-dom": "^5.1.0"
+    "react-router-dom": "^5.1.0",
+    "sass": "^1.53.0",
+    "sass-loader": "^13.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

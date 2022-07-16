@@ -14,8 +14,9 @@ module.exports = {
         publicPath: '/'
     },
     proxy: {
+
       '/login': 'http://localhost:3000',
-    },
+
     compress: true,
     port: 8080,
   },
@@ -39,8 +40,8 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
-        use: [{loader: 'style-loader'}, {loader: 'css-loader'}]
+        test: /\.s?css$/,
+        use: [{loader: 'style-loader'}, {loader: 'css-loader'}, {loader: 'sass-loader'}]
       }
     ]
   }
