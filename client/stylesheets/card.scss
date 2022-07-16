@@ -26,7 +26,8 @@ div {
     
     display: flex;
     flex-direction: row;
-    
+    height: 50%;
+
     .img {
       padding: 1%;
       width: 50%;
@@ -55,16 +56,15 @@ div {
       p {
         margin-block-start: 0px;
         margin-block-end: 0px;
-        font-size: 24px;
+        font-size: 125%;
         
         span {
           font-weight: bold;
-
         }
 
         &.address {
           font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
-          font-size: 36px;
+          font-size: 150%;
           font-weight: 300;
         }
 
@@ -76,13 +76,21 @@ div {
   }
   .info {
     label, p {
+      font-size: 75%;
       font-family: 'Red Hat Display', sans-serif;
       font-weight: 500;
       color: rgb(85, 85, 85);
+      margin-block-start: 0px;
+      margin-block-end: 0px;
+      margin-top:1%;
       .bold {
         font-weight: 700;
+        font-size: 150%;
       }
-
+    }
+    .bio {
+      height: 80px;
+      overflow-y: scroll;
     }
   }
 }

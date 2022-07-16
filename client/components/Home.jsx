@@ -6,14 +6,14 @@ import HomeFeed from './HomeFeed.jsx';
 import Card from './Card.jsx';
 import ContainerFeed from './ContainerFeed.jsx';
 
+
 const Home = (props) => {
 
   return (
     <>
       <div className='home'>
         <NavBar />
-        <ContainerFeed />
-        {/* <HomeFeed props={props}/> */}
+        <HomeFeed />
       </div>
     </>
   )
