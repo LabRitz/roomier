@@ -8,4 +8,6 @@ const metadata = Schema({
   createdAt: {type: Date, required: true, default: Date.now},
 })
 
-module.exports = mongoose.model('Metadata', metadata);
+const MetaData= mongoose.model('Metadata', metadata);
+
+module.exports = MetaData;
