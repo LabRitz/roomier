@@ -21,6 +21,7 @@ const Login = (props) => {
       <input type={'password'} id="password" placeholder='Enter your password'></input>
       <button type='submit' id='submit' onClick={handleLogin}>Login</button>
       <Link to='/signup'>Sign up</Link>
+      <a href='/login/auth/google'>Log in with google</a>
     </div>
   )
 
