@@ -52,7 +52,7 @@ userController.verifyUser = async (req, res, next) => {
     } else {
       // store for access
       res.locals.user = queryResult;
-      return next(res.locals.user);
+      return next();
     } 
 
   } catch (err) {
