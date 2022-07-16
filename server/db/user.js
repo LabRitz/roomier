@@ -15,15 +15,16 @@ const User = Schema({
 // Prefunction that uses bcrypt to hash our password and resave
 // into our database
 User.pre('save', function(next){
-  const user = this;
+  const user = this;  
 
   // bcrypt hash function here
   bcrypt.hash(user.password, SALT_FACTOR, (err, hash) => {
     if (err) return next(err);
-
     user.password = hash;
     return next();
   })
 });
 
-module.exports = mongoose.model('User', User);
+const user = mongoose.model('User', User);
+
+module.export = user;
