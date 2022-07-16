@@ -1,0 +1,36 @@
+@import './globalVariables.scss';
+
+.card {
+  display: flex;
+  flex-direction: column;
+  .header {
+    display: flex;
+    flex-direction: row;
+    .img {
+      &:hover {
+        transform: scale(1.5);
+        filter: brightness(1.25) contrast(1.1);
+        transition-duration: 400ms;
+      }
+      &:not(:hover) {
+        transition-duration: 800ms;
+      }
+    }
+    .data {
+      display: flex;
+      flex-direction: column;
+      p {
+        // font-size: 12px;
+      }
+    }
+  }
+  .info {
+    label, p {
+      color: rgb(85, 85, 85);
+    }
+  }
+}
+
+label, span.bold {
+  font-weight: 700;
+}

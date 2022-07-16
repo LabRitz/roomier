@@ -51,6 +51,10 @@ h1, button {
     transition-duration: 300ms;
   }
 
+  &:not(:hover) {
+    transition-duration: 750ms;
+  }
+
   svg {
     filter: invert(13%) sepia(3%) saturate(6478%) hue-rotate(180deg) brightness(96%) contrast(82%);
   }
