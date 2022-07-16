@@ -21,7 +21,7 @@ router.post('/', userController.verifyUser, (req, res) => {
 
 
 //localhost:3000/home
-router.get('/home', postController.createPost, (req,res) => {
+router.post('/createPost', postController.createPost, (req,res) => {
     return res.status(200).json(res.locals.createPost)
 })
 

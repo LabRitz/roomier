@@ -8,7 +8,7 @@ const userController = {};
 
 // sign up
 userController.createUser = async (req, res, next) => {
-  console.log('req.body:', req.body)
+  // console.log('req.body:', req.body)
   try {
     const {firstName, lastName, username, password} = req.body;
 
@@ -21,7 +21,7 @@ userController.createUser = async (req, res, next) => {
     // passing into our res so we can access
     res.locals.user = queryResult;
     console.log('res.locals.user, ' , res.locals.user)
-    return next();
+    return next(res.locals.user);
   } catch (err) {
     return next({
       log: `error caught in userController.createUser: ${err}`,
@@ -42,7 +42,7 @@ userController.verifyUser = async (req, res, next) => {
     const queryResult = await User.findOne({ username: username });
 
     // checking to see if the password matches after to our bcrypt hash
-    const comparePass = await bcrypt.compare(pass, queryResult.password);
+    const comparePass = await bcrypt.compare(password, queryResult.password);
 
     // redirect to signup endpoint if does not match
     // Look to alert user if they want to signup or not - change redirect
@@ -52,7 +52,7 @@ userController.verifyUser = async (req, res, next) => {
     } else {
       // store for access
       res.locals.user = queryResult;
-      return next();
+      return next(res.locals.user);
     } 
 
   } catch (err) {
