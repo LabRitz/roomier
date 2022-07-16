@@ -33,7 +33,7 @@ userController.createUser = async (req, res, next) => {
 // login
 userController.verifyUser = async (req, res, next) => {
   try {
-    const { firstName, lastName, username, password } = req.body;
+    const { username, password } = req.body;
 
     // checking if username or password is empty
     if (!username || !password) return next('username or password is missing')
