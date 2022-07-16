@@ -4,6 +4,33 @@ import styles from '../stylesheets/card.scss';
 
 const Card = ({props}) => {
 
+  const state = {
+          picture: 'https://cdn-bnokp.nitrocdn.com/QNoeDwCprhACHQcnEmHgXDhDpbEOlRHH/assets/static/optimized/rev-f9654ed/online-decorating/wp-content/uploads/2020/07/Modern-apartment-decor-for-a-rustic-studio-unit.jpg',
+          address: {
+            street1: '100 West 31st Street',
+            street2: '#18D',
+            city: 'New York City',
+            state: 'NY',
+            zipCode: '10036',
+          },
+          roommate: {
+            gender: 'no-preference',
+          },
+          description: {
+            BR: 1,
+            BA: 1,
+            sqft: 450,
+            pets: true,
+            smoking: false,
+            parking:false,
+            condition: 'Slightly used'
+          },
+          moveInDate: new Date().toString,
+          utilities: 159,
+          rent: 4700,
+          bio:'Located at 100 West 31st Street, EOS offers distinctive residences, curated amenities, and the personalized service needed to engage New York City life to the fullest inside and out. Premier recreation and relaxation facilities for residents to enjoy include a pool, fitness center on the lower level, as well as a game room and entertaining areas on the towers 47th floor with sweeping views of Manhattan. EOS offers 375 smoke-free rental residences consisting of studios, one, two, and two bedroom + den layouts. Each apartment contains a washer/dryer, dishwasher, hardwood floors, and kitchens and bathrooms with premium finishes and fixtures.' 
+        }
+
   const {
           picture,
           address,
@@ -13,7 +40,8 @@ const Card = ({props}) => {
           utilities,
           rent,
           bio
-        } = props
+        } = props;
+        // } = state;
 
   return (
     <>
@@ -23,19 +51,21 @@ const Card = ({props}) => {
             <img src={picture} alt='insert sweet looking apartment'></img>
           </div>
           <div className="data">
+            <p className='address'>{address.street1} {address.street2}</p>
+            <p className='address cityState'>{address.city}, {address.state} {address.zipCode}</p>
+
             <p className='rent'><span className='bold'>Rent: </span> ${rent}/mo</p>
             <p><span className='bold'>Utilities: </span> ${utilities}/mo</p>
-            <p><span className='bold'>{description.BR}BR {description.BA}BA</span> {description.sqft} sqft</p>
             <p><span className='bold'>Condition: </span> {description.condition}</p>
-            <p><span className='bold'>Move-in Date: </span> ${moveInDate}</p>
+            <p><span className='bold'>Move-in Date: </span>{moveInDate}</p>
           </div>
         </div>
         <div className="info">
-          <p>{address.street1}, {address.street2}, {address.city}, {address.state} {address.zipCode}</p>
+          <p><span className='bold'>{description.BR}BR | {description.BA}BA | {description.sqft} sqft</span></p>
           <p>Roommate seeking: {roommate.gender}</p>
-          <><label>Pet friendly: </label><input type={'checkbox'} defaultValue={description.pets}></input></>
-          <><label>Smoker friendly: </label><input type={'checkbox'} defaultValue={description.smoking}></input></>
-          <><label>Parking availability: </label><input type={'checkbox'} defaultValue={description.parking}></input></>
+          <><label>Pet friendly: </label><input type={'checkbox'} value={description.pets}></input></>
+          <><label>Smoker friendly: </label><input type={'checkbox'} value={description.smoking}></input></>
+          <><label>Parking availability: </label><input type={'checkbox'} value={description.parking}></input></>
           <p>{bio}</p>
         </div>
       </div>

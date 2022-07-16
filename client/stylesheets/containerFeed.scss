@@ -1,0 +1,27 @@
+@import './globalVariables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;600&display=swap');
+
+
+div:hover {
+  border: 1px solid black;
+} 
+
+.feed {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 2%;
+
+  
+
+  .apply {
+
+    p {
+      font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 100;
+    }
+  }
+
+}
+
