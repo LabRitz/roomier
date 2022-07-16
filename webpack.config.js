@@ -17,15 +17,16 @@ module.exports = {
 
       '/login': 'http://localhost:3000',
 
-    compress: true,
-    port: 8080,
+      compress: true,
+      port: 8080,
+    },
   },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'build'),
     clean: true
   },  
-
+  
   module: {
     rules: [
       { 
@@ -45,4 +46,5 @@ module.exports = {
       }
     ]
   }
+  
 }

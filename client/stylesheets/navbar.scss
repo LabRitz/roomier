@@ -1,7 +1,10 @@
 @import 'globalVariables.scss';
 
-.nav {
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;600&display=swap');
 
+
+.nav {
+  position: fixed;
   background: linear-gradient(180deg, #658495 0%, #81a9c1 30%, #98C1D9 80%);
   width: 100%;
   height: 66px;
@@ -20,6 +23,8 @@
     flex-direction: row;
     width: 50%;
     h1 {
+      font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+      font-size: 36px;
       margin-left: 4%;
       color: #293241;
       width:300px
@@ -49,6 +54,10 @@ h1, button {
     transform: scale(1.1);
     cursor: pointer;
     transition-duration: 300ms;
+  }
+
+  &:not(:hover) {
+    transition-duration: 750ms;
   }
 
   svg {
