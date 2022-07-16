@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar.jsx';
 
+import styles from '../stylesheets/createPost.scss';
 
 const createPostSubmissions = (e) => {
     e.preventDefault();
