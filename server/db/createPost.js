@@ -3,16 +3,16 @@ const Schema = mongoose.Schema;
 
 const post = Schema({
   picture: {type: Buffer},
-  address: [{
-    street1: {type: String},
+  address: {
+    street1: {type: String}, required: true,
     street2: {type: String},
     city: {type: String, required: true},
     state: {type: String, required: true},
     zipCode: {type: String, required: true},
-  }],
-  roommate: [{
-    gender: {type: String, default: 'No Preference'},
-  }],
+  },
+  roommate: {
+    gender: {type: String, required: true, default: 'No Preference'},
+  },
   description: [{
     BR: {type: Number, required: true},
     BA: {type: Number, required: true},

@@ -2,7 +2,6 @@ const { application } = require('express');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const mongoose = require('mongoose');
 const expressSession = require('express-session');
 const passport = require('passport');
 const userController = require('./controllers/userController');
@@ -29,10 +28,6 @@ app.use('/', mainRouter);
 // respond with main app --> WATCH TO CHANGE INDEX.HTML
 app.get('/', (req, res) => res.status(200).sendFile(path.resolve(__dirname, '../index.html')));
 
-
-//connect to the URI in .env
-const URI = process.env.ATLAS_URI;
-
 //oAuth connection
 app.use(expressSession({
     secret: "google auth",
@@ -52,24 +47,7 @@ app.get('/login/auth/google/callback', passport.authenticate('google', { failure
     res.redirect('/');
 })
 
-/* --------------------------------------------
-//account to login mongodb:
-//username: huujohnle@gmail.com
-//password: findaroommate123
-------------------------------------------- */
 
-//connect to mongoDB
-mongoose.connect(URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        dbName: 'findARoommate'
-    })      
-    .then(() => {
-        console.log("Successfully connected to MongoDB!");
-        })
-    .catch((error) => {
-        console.log("Unable to connect to MongoDB!");
-        console.error(error);});
 
 
 // catch-all route handler for any requests to an unknown route
