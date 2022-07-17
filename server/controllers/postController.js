@@ -8,28 +8,73 @@ const postController = {};
 postController.createPost = async (req, res, next) => {
   try {
     // deconstruct from our post request
-    const { picture, address, roommate, description,
-      moveInDate, utilities, rent, bio } = req.body;
+    const { 
+      // picture, 
+      address, 
+      roommate, 
+      description,
+      moveInDate, 
+      utilities, 
+      rent, 
+      bio } = req.body;
     
     //deconstruct sub object inside createPost
-    const addressObj = {street1: address.street1, street2: address.street2, city: address.city, state: address.state, zipCode: address.zipCode};
-    const roommateObj = {gender: roommate.gender}
-    const descriptionObj = {BR: description.BR, BA: description.BA, sqFt: description.sqFt, 
-      pets: description.pets, smoking: description.smoking, parking: description.parking, 
-      condition: description.condition};
+    const addressObj = {
+      street1: address.street1, 
+      street2: address.street2, 
+      city: address.city, 
+      state: address.state, 
+      zipCode: address.zipCode
+    };
+    const roommateObj = {
+      gender: roommate.gender
+    }
+    const descriptionObj = {
+      BR: description.BR, 
+      BA: description.BA, 
+      sqFt: description.sqFt, 
+      pets: description.pets, 
+      smoking: description.smoking, 
+      parking: description.parking, 
+      condition: description.condition
+    };
     
-    const newPost = await new Post ({
-      picture,
-      addressObj,
-      roommateObj,
-      descriptionObj,
-      moveInDate,
-      utilities,
-      rent,
-      bio
-    })
-    res.locals.createPost =  newPost
+    // const newPost = await new Post ({
+    const newPost = await Post.create({
+      // picture,
+      // address: addressObj,
+      // roommate: roommateObj,
+      // description: descriptionObj,
+      // moveInDate: moveInDate,
+      // utilities: utilities,
+      // rent: rent,
+      // bio: bio
 
+      address: {
+        street1: address.street1,
+        street2: address.street2,
+        city: address.city,
+        state: address.state,
+        zipCode: address.zipCode,
+      },
+      roommate: {
+        gender: roommate.gender,
+      },
+      description: {
+        BR: description.BR, 
+        BA: description.BA, 
+        sqFt: description.sqFt, 
+        pets: description.pets, 
+        smoking: description.smoking, 
+        parking: description.parking, 
+        condition: description.condition
+      },
+      moveInDate: moveInDate,
+      utilities: utilities,
+      rent: rent,
+      bio: bio
+    });
+    res.locals.createPost =  newPost
     return next();
   } catch (err) {
     return next({

@@ -4,15 +4,10 @@ import { useLocation } from 'react-router-dom';
 import NavBar from './NavBar.jsx';
 import HomeFeed from './HomeFeed.jsx';
 
-import Card from './Card.jsx';
-import ContainerFeed from './ContainerFeed.jsx';
-
-
 const Home = (props) => {
   const location = useLocation();
   const userData = location.state;
-
-  console.log(userData)
+  console.log('metaData from Home: ', userData)
 
   return (
     <>
@@ -22,7 +17,6 @@ const Home = (props) => {
       </div>
     </>
   )
-
 }
 
 export default Home;

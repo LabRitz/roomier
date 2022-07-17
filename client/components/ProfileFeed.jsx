@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { useState } from 'react';
 
-import ContainerFeed from './ContainerFeed.jsx';
+import ContainerApplication from './ContainerApplication.jsx';
 
-import styles from '../stylesheets/homeFeed.scss'
+import styles from '../stylesheets/profileFeed.scss'
 
-const HomeFeed = ({props}) => {
+const ProfileFeed = ({props}) => {
 
   //Initialize apt to push to arr
   const apt = {
@@ -46,12 +46,12 @@ const HomeFeed = ({props}) => {
 
   const feed = []
   for (let i = 0; i < state.length; i++) {
-    feed.push(<ContainerFeed props={state[i]}/>)
+    feed.push(<ContainerApplication props={state[i]}/>)
   }
 
   return (
     <>
-      <div className='homeFeed'>
+      <div className='profileFeed'>
         {feed}
       </div>
     </>
@@ -59,4 +59,4 @@ const HomeFeed = ({props}) => {
 
 }
 
-export default HomeFeed;
+export default ProfileFeed;

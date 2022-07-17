@@ -5,8 +5,11 @@
 .createPost {
 
   margin-block-end: 0px;
-  
+  h3, h5 {
+    margin-block-end: 4px;
+  }
   input, select {
+    font-family: "Red Hat Display", sans-serif;
     border: none;
     height: 24px;
     width: 80%;
@@ -44,7 +47,12 @@
     align-items: center;
     .price {
       input {
+        font-family: "Red Hat Display", sans-serif;
         width: 50%;
+      }
+      .cost {
+        margin-bottom: 15%;
+        padding-left: 4%;
       }
     }
   
@@ -67,12 +75,14 @@
         flex-direction:row;
         input[type=number] {
           width: 60%;
+          font-family: "Red Hat Display", sans-serif;
         }
       }
     }
     .bio {
 
       input {
+        font-family: "Red Hat Display", sans-serif;
         width: 90%;
         height: 50%;
         align-items: flex-start;
