@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Post = require('../db/createPost');
+const Post = require('../db/postModel');
 
 const postController = {};
 
@@ -16,7 +16,9 @@ postController.createPost = async (req, res, next) => {
       moveInDate, 
       utilities, 
       rent, 
-      bio } = req.body;
+      bio,
+      userData
+    } = req.body;
     
     //deconstruct sub object inside createPost
     const addressObj = {
@@ -72,7 +74,12 @@ postController.createPost = async (req, res, next) => {
       moveInDate: moveInDate,
       utilities: utilities,
       rent: rent,
-      bio: bio
+      bio: bio,
+      userData: {
+        username: userData.username,
+        firstName: userData.firstName,
+        lastName: userData.lastName
+      }
     });
     res.locals.createPost =  newPost
     return next();

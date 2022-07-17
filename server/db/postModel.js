@@ -25,7 +25,12 @@ const post = Schema({
   moveInDate: {type: Date, default: Date.now },
   utilities: {type: Number, required: true},
   rent: {type: Number, required: true},
-  bio: {type: String}
+  bio: {type: String},
+  userData: {
+    firstName: {type: String},
+    lastName: {type: String},
+    username: {type: String}
+  }
 })
 
 const Post = mongoose.model('post', post);

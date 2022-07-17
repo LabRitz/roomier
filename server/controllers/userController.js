@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
-const User = require('../db/user');
+const User = require('../db/userModel');
 
 const userController = {};
 
