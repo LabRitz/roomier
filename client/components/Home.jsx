@@ -12,7 +12,7 @@ const Home = (props) => {
   const location = useLocation();
   const ID = location.state;
 
-  console.log(ID)
+  console.log(location)
 
   return (
     <>

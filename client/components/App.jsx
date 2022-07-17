@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect, Routes } from 'react-router-dom';
 
 import Login from './Login.jsx';
 import Signup from './Signup.jsx';
@@ -12,19 +12,21 @@ const App = (props) => {
 
   return (
     <Router>
-      <Switch>
+      <Routes>
+      
+        <Route path='/' element={<Login/>} />
+        <Route path='/signup' element={<Signup/>}/>
+        <Route path='/home' element={<Home/>}/>
+        <Route path='/createPost' element={<CreatePost/>}/>
+        <Route path='/profile' element={<Profile/>}/>
 
-        <Route exact path='/' component={Login} />
-        <Route path='/signup' component={Signup}/>
-        <Route path='/home' component={Home}/>
-        <Route path='/createPost' component={CreatePost}/>
-        <Route path='/profile' component={Profile}/>
-
-        <Redirect to='/' />  
-      </Switch>
+      </Routes>
     </Router>
   )
 
 }
 
 export default App;
+
+//<Route exact path='/' component={Login} /> 
+//<Route path ='/' element = {<Home />}>
