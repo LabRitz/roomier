@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { render } from 'react-dom';
 import App from './components/App.jsx';
 
-// import styles from './stylesheets/styles.css';
+import styles from './stylesheets/styles.css';
 
 render(
   <App />, 
