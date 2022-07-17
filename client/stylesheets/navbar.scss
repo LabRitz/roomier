@@ -46,14 +46,24 @@ a {
     padding-left: 2.5%;
     display: flex;
     flex-direction: row;
+    align-items: center;
     width: 50%;
+    a {
+      margin-left: 2%;
+      height: 100%;
+      img {
+        height: 120px;
+      }
+    }
+
     h1 {
       font-family: 'DM Sans', sans-serif;
       font-size: 36px;
       margin-left: 4%;
       color: #293241;
-      width:300px;
-
+      width:350px;
+      margin-block-end: 0px;
+      margin-block-start: 0px;
       &:hover {
         transform: scale(1.05) translateX(4px)
       }
