@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
 import styles from '../stylesheets/navbar.scss';
 
 const NavBar = (props) => {
@@ -25,7 +26,9 @@ const NavBar = (props) => {
           pathname: '/home',
           state: userData
           }}>
-          <h1>Find a Roommate</h1>
+            <h1>roomier</h1>
+          {/* <img src='https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg'/> */}
+          
         </Link>
       </div>
       <div class="rightBtn">
