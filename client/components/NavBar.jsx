@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import styles from '../stylesheets/navbar.scss';
@@ -8,6 +8,17 @@ const NavBar = (props) => {
   const userData = location.state;
   console.log('metaData from navBar: ', userData)
 
+  const [phrase, setPhrase] = useState('roommate');
+
+  const phrases = ['roommate', 'future', 'life', 'friend' ]
+  useEffect(()=> {
+    const index = phrases.indexOf(phrase);
+    const newPhrase = (index === phrases.length - 1) ? phrases[0] : phrases[index+1];
+    setTimeout(() => {
+      setPhrase(newPhrase)
+    }, 5000)
+  }, [phrase])
+
   return (
     <div className='nav'>
       <div class="leftBtn">
@@ -15,18 +26,19 @@ const NavBar = (props) => {
           pathname: '/home',
           state: userData
           }}>
-          <button class='logoBtn'>
+          <img src='https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg'/>
+          {/* <button class='logoBtn'>
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
               <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
             </svg>
-          </button>
+          </button> */}
         </Link>
         < Link to={{
           pathname: '/home',
           state: userData
           }}>
-            <h1>roomier</h1>
+            <h1>find a {phrase}...</h1>
           {/* <img src='https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg'/> */}
           
         </Link>
