@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { useLocation } from 'react-router-dom';
 import NavBar from './NavBar.jsx';
 
 import styles from '../stylesheets/createPost.scss';
@@ -8,8 +9,8 @@ const createPostSubmissions = (e) => {
     const reqBody = {
         // picture: ,
         address: {
-            street1: address1,
-            street2: address2,
+            street1: document.getElementById('street1').value,
+            street2: document.getElementById('street2').value,
             city: city,
             state: state,
             zipCode: zipCode
@@ -26,16 +27,18 @@ const createPostSubmissions = (e) => {
             parking: parking,
             condition: condition,
         },
-        moveInDate: date,
+        moveInDate: moveInDate,
         utilities: utilities,
         rent: rent,
         bio: bio,
     };
 
+    console.log(reqBody)
+
     fetch('/createPost', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: reqBody
+        body: JSON.stringify(reqBody)
     })
         .then(data => data.json())
         .then((formattedData) => {
@@ -68,10 +71,12 @@ const bio = document.getElementById('bio').value;
 const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
 const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
 const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
-const date = JSON.parse(document.getElementById('moveInDate').value);
-// const picture = JSON.parse(document.getElementById('').value);
+const moveInDate = document.getElementById('date').value;
 
 const CreatePost = (props) => {
+    const location = useLocation();
+    const userData = location.state;
+    console.log('metaData from createPost: ', userData)
 
     return (
         <div className='createPost'>
@@ -80,11 +85,15 @@ const CreatePost = (props) => {
             <div className='createPostRoute'>
 
                 <div className="price">
+                    <h2>Move In Date</h2>
+                    <input type={'date'} id='date'></input>
                     <h2>List Price</h2>
-                    <h3 id="rentTag">Rent</h3>
-                    <input type={'number'} id="rent"></input>
-                    <h3 id="utilitiesTag">Utilities</h3>
-                    <input type={'number'} id="utilities"></input>
+                    <div className='cost'>
+                        <h3 id="rentTag">Rent</h3>
+                        <input type={'number'} id="rent"></input>
+                        <h3 id="utilitiesTag">Utilities</h3>
+                        <input type={'number'} id="utilities"></input>
+                    </div>
                     <div className="preference">
                         <h3 id="genderTag">Gender Preference </h3>
 
