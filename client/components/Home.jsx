@@ -10,9 +10,9 @@ import ContainerFeed from './ContainerFeed.jsx';
 
 const Home = (props) => {
   const location = useLocation();
-  const ID = location.state;
+  const userData = location.state;
 
-  console.log(ID)
+  console.log(userData)
 
   return (
     <>

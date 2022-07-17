@@ -11,22 +11,38 @@ const Login = (props) => {
   const handleLogin = (e) => {
       // e.preventDefault();
 
-      console.log({username: document.getElementById('username').value, password: document.getElementById('password').value});
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
-
-      setID('brennan')
+      // console.log({username: document.getElementById('username').value, password: document.getElementById('password').value});
       
-      // fetch('/login', {
-      //   method: 'POST',
-      //   headers: {'Content-Type': 'application/json'},
-      //   body: {username: document.getElementById('username').value, password: document.getElementById('password').value}}
-      // ).then(data => {
-      //   if (data.length === 0) 
-      //   const userData = data[0];
-      //   setID(userData);
-      // })
-  }
+      // setID('brennan')
+      
+    const reqBody = {
+      username: document.getElementById('username').value, 
+      password: document.getElementById('password').value
+    }
+
+    // fetch('http://localhost:3000', {
+    fetch('/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(reqBody)})
+      .then(data => data.json())
+      .then(formattedData => {
+        console.log('data: ', formattedData)
+        if (formattedData.err) {
+          // document.getElementById('accNotFound').innerHTML = "Account doesn't exist, please try again or create account";
+          alert("Account doesn't exist, please try again or create account");
+        }
+        else if (formattedData.error) {
+          // document.getElementById('accNotFound').innerHTML = "Password incorrect";
+          alert("Password incorrect");
+        }
+        else {
+          setID(formattedData);
+        }
+      })
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+}
 
   useEffect(() => {
     const homeLink = document.querySelector('.homeLink')
@@ -36,6 +52,7 @@ const Login = (props) => {
   return (
     <div className='router'>
       <h2>Find a Roommate</h2>
+      <div className='accNotFound'></div>
       <input type={'email'} id="username" placeholder='Enter your email address'></input>
       <input type={'password'} id="password" placeholder='Enter your password'></input>
       <button type='submit' id='submit' onClick={handleLogin}>Login</button>
@@ -43,8 +60,7 @@ const Login = (props) => {
         <Link to={{
           pathname: '/home',
           state: ID
-          }}
-        >Home</Link>
+          }}>Home</Link>
       </div>
       <Link to='/signup'>Sign up</Link>
       <a href='/login/auth/google'>Log in with google</a>
@@ -54,3 +70,7 @@ const Login = (props) => {
 }
 
 export default Login;
+
+// import {useNavgiate}
+// let navigate = useNavigate()
+// navigateToHome = navigate('/home')
