@@ -60,8 +60,7 @@ const Login = (props) => {
         <Link to={{
           pathname: '/home',
           state: ID
-          }}
-        >Home</Link>
+          }}>Home</Link>
       </div>
       <Link to='/signup'>Sign up</Link>
       <a href='/login/auth/google'>Log in with google</a>
