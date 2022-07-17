@@ -53,6 +53,13 @@ a {
       height: 100%;
       img {
         height: 120px;
+        &:hover {
+          transform: scale(1.1);
+          transition-duration: 300ms;
+        }
+        &:not(:hover) {
+          transition-duration: 600ms;
+        }
       }
     }
 
