@@ -7,8 +7,7 @@ import HomeFeed from './HomeFeed.jsx';
 const Home = (props) => {
   const location = useLocation();
   const userData = location.state;
-
-  console.log(userData)
+  console.log('metaData from Home: ', userData)
 
   return (
     <>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { useLocation } from 'react-router-dom';
 import NavBar from './NavBar.jsx';
 
 import styles from '../stylesheets/createPost.scss';
@@ -67,6 +68,10 @@ const createPostSubmissions = (e) => {
 };
 
 const CreatePost = (props) => {
+  const location = useLocation();
+  const userData = location.state;
+  console.log('metaData from createPost: ', userData)
+
     return (
         <div className='createPost'>
             <NavBar />
