@@ -12,6 +12,7 @@ const CreatePost = (props) => {
   
   const createPostSubmissions = (e) => {
       e.preventDefault();
+
       const address1 = document.getElementById('street1').value;
       const address2 = document.getElementById('street2').value;
       const city = document.getElementById('city').value;
@@ -29,65 +30,71 @@ const CreatePost = (props) => {
       const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
       const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
       const moveInDate = document.getElementById('date').value;
+     
+      if (address1 === '' || city === '' || state === '' || zipCode === '' || genderPreference === '' || sqft === '' || utilities === '' || rent === '') {
+        alert("Must Require Input Fields");
+      }
+      else {
+        const reqBody = {
+            // picture: ,
+            address: {
+                street1: address1,
+                street2: address2,
+                city: city,
+                state: state,
+                zipCode: zipCode
+            },
+            roommate: {
+                gender: genderPreference,
+            },
+            description: {
+                BR: bedroom,
+                BA: bathroom,
+                sqFt: sqft,
+                pets: pets,
+                smoking: smoking,
+                parking: parking,
+                condition: condition,
+            },
+            moveInDate: moveInDate,
+            utilities: utilities,
+            rent: rent,
+            bio: bio,
+            userData: userData
+        };
+    
+        fetch('/createPost', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reqBody)
+            })
+            .then(data => data.json()) 
+            .then((formattedData) => {
+                console.log(formattedData)
+            })
+            .catch(err => {
+                console.log('Error thrown in POST request in createPost: ', err)
+            })
+    
+        document.getElementById('street1').value = '';
+        document.getElementById('street2').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('state').value = '';
+        document.getElementById('zipCode').value = '';
+        document.getElementById('dropDownMenu').value = '';
+        document.getElementById('bedroom').value = '';
+        document.getElementById('bathroom').value = '';
+        document.getElementById('sqft').value = '';
+        document.getElementById('condition').value = '';
+        document.getElementById('utilities').value = '';
+        document.getElementById('rent').value = '';
+        document.getElementById('bio').value = '';
+        // document.getElementById('dropDownMenuPets').value;
+        // document.getElementById('dropDownMenuSmoking').value;
+        // document.getElementById('dropDownMenuParking').value;
+        // document.getElementById('date').value;
+      }
   
-      const reqBody = {
-          // picture: ,
-          address: {
-              street1: address1,
-              street2: address2,
-              city: city,
-              state: state,
-              zipCode: zipCode
-          },
-          roommate: {
-              gender: genderPreference,
-          },
-          description: {
-              BR: bedroom,
-              BA: bathroom,
-              sqFt: sqft,
-              pets: pets,
-              smoking: smoking,
-              parking: parking,
-              condition: condition,
-          },
-          moveInDate: moveInDate,
-          utilities: utilities,
-          rent: rent,
-          bio: bio,
-          userData: userData
-      };
-  
-      fetch('/createPost', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(reqBody)
-          })
-          .then(data => data.json()) 
-          .then((formattedData) => {
-              console.log(formattedData)
-          })
-          .catch(err => {
-              console.log('Error thrown in POST request in createPost: ', err)
-          })
-  
-      document.getElementById('street1').value = '';
-      document.getElementById('street2').value = '';
-      document.getElementById('city').value = '';
-      document.getElementById('state').value = '';
-      document.getElementById('zipCode').value = '';
-      document.getElementById('dropDownMenu').value = '';
-      document.getElementById('bedroom').value = '';
-      document.getElementById('bathroom').value = '';
-      document.getElementById('sqft').value = '';
-      document.getElementById('condition').value = '';
-      document.getElementById('utilities').value = '';
-      document.getElementById('rent').value = '';
-      document.getElementById('bio').value = '';
-      // document.getElementById('dropDownMenuPets').value;
-      // document.getElementById('dropDownMenuSmoking').value;
-      // document.getElementById('dropDownMenuParking').value;
-      // document.getElementById('date').value;
   };
 
     return (
