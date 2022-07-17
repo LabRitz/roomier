@@ -6,7 +6,6 @@ const userController = require('../controllers/userController');
 const postController = require('../controllers/postController');
 const cookieController = require('../controllers/cookieController')
 const sessionController = require('../controllers/sessionController')
-const metaController = require('../controllers/metaController')
 
 
 //localhost:3000/signup
@@ -21,10 +20,15 @@ router.post('/',
   cookieController.setSSIDCookie, 
   sessionController.startSession, 
   (req, res) => {
-    console.log('res.cookie: ', res.cookies);
+    // console.log('res.cookie: ', res.cookies);
     return res.status(200).json(res.locals.user);
 })
 
+// home
+router.get('/home', postController.getAllPosts, (req,res ) => {
+  console.log('getAllPosts route running.')
+  return res.status(200).json(res.locals.allPosts);
+})
 
 router.get('/findUser', userController.findUser, (req, res) => {
   // postController.createPost
