@@ -7,7 +7,7 @@ import styles from '../stylesheets/login.scss';
 const Login = (props) => {
 
   const [ID, setID] = useState('')
-  // const [phrase, setPhrase] = useState('Roommate');
+  const [phrase, setPhrase] = useState('Roommate');
 
   const handleLogin = (e) => {
       // e.preventDefault();
@@ -50,6 +50,16 @@ const Login = (props) => {
     if (ID !== '') homeLink.style.visibility = 'visible'
   }, [ID])
 
+
+  const phrases = ['Roommate', 'Future', 'Life', 'Friend' ]
+  useEffect(()=> {
+    const index = phrases.indexOf(phrase);
+    const newPhrase = (index === phrases.length - 1) ? phrases[0] : phrases[index+1];
+    setTimeout(() => {
+      setPhrase(newPhrase)
+    }, 5000)
+  }, [phrase])
+
   return (
     <div className='router'>
       <div className="logo">
@@ -58,7 +68,7 @@ const Login = (props) => {
         <h6>looking for a Zillow corporate sponsorship</h6>
       </div>
       <div className="login">
-        <h2>Find a Roommate</h2>
+        <h2>Find a {phrase}</h2>
         <div className='accNotFound'></div>
         <input type={'email'} id="username" placeholder='Enter your email address'></input>
         <input type={'password'} id="password" placeholder='Enter your password'></input>
