@@ -1,6 +1,102 @@
+@import './globalVariables.scss';
 
-.createPostRoute {
-  padding-top: 66px;
-  padding-left: 4%;
 
+
+.createPost {
+
+  margin-block-end: 0px;
+  
+  input, select {
+    border: none;
+    height: 24px;
+    width: 80%;
+    overflow-y: scroll;
+    border-radius: 4px;
+    opacity: 80%;
+    background: rgb(243, 243, 243);
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid rgba(128, 128, 128, 0.715);
+      box-shadow: 0px 2px 4px gray;
+      opacity: 100%;
+      transition-duration: 300ms;
+    }
+  }
+  
+  select {
+    width: 50%;
+  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: url('https://galeriemagazine.com/wp-content/uploads/2017/11/Calatrava_Oculus_03-copy-1920x1200.jpg');
+  background-position: center;
+  height: 100%;
+  .createPostRoute {
+    height: 90%;
+    padding-top: 15%;
+    padding-left: 20%;
+    padding-bottom:15%;
+    width: 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: linear-gradient(-90deg, rgba(221, 221, 221, 0.975) 75%,rgba(238, 238, 238, 0.815) 85%, rgba(241, 241, 241, 0.753) 87%, rgba(255, 255, 255, 0) 90%);
+    align-items: center;
+    .price {
+      input {
+        width: 50%;
+      }
+    }
+  
+    .house {
+      .address {
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 8px;
+      }
+      #city {
+        width: 50%
+      }
+      #state, #zipCode {
+        width: 20%;
+      }
+    }
+    .description {
+      .basic {
+        display: flex;
+        flex-direction:row;
+        input[type=number] {
+          width: 60%;
+        }
+      }
+    }
+    .bio {
+
+      input {
+        width: 90%;
+        height: 50%;
+        align-items: flex-start;
+      }
+    }
+    button {
+      margin-left: 60%;
+      margin-top: 10%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      h2 {
+        margin-block-end:0px ;
+        margin-block-start: 0px;
+        margin-bottom: 0px;
+      }
+      svg {
+        margin-left: 10%;
+      }
+
+    }
+  
+  }
 }
+
+
+
