@@ -13,7 +13,7 @@ const post = Schema({
   roommate: {
     gender: {type: String, required: true, default: 'No Preference'},
   },
-  description: [{
+  description: {
     BR: {type: Number},
     BA: {type: Number},
     sqFt: {type: Number},
@@ -21,13 +21,13 @@ const post = Schema({
     smoking: {type: Boolean},
     parking: {type: Boolean},
     condition: {type: String},
-  }],
+  },
   moveInDate: {type: Date, default: Date.now },
   utilities: {type: Number, required: true},
   rent: {type: Number, required: true},
   bio: {type: String}
 })
 
-const Post = mongoose.model('Post', post);
+const Post = mongoose.model('post', post);
 
 module.exports = Post;

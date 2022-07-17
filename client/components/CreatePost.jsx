@@ -21,6 +21,7 @@ const createPostSubmissions = (e) => {
     const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
     const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
     const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
+    const moveInDate = document.getElementById('date').value;
 
     const reqBody = {
         // picture: ,
@@ -43,18 +44,18 @@ const createPostSubmissions = (e) => {
             parking: parking,
             condition: condition,
         },
-        // moveInDate: ,
+        moveInDate: moveInDate,
         utilities: utilities,
         rent: rent,
         bio: bio,
     };
 
-    // console.log(reqBody)
+    console.log(reqBody)
 
     fetch('/createPost', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: reqBody
+        body: JSON.stringify(reqBody)
         })
         .then(data => data.json()) 
         .then((formattedData) => {
@@ -72,11 +73,15 @@ const CreatePost = (props) => {
             <div className='createPostRoute'>
                   
                   <div className="price">
+                    <h2>Move In Date</h2>
+                    <input type={'date'} id='date'></input>
                     <h2>List Price</h2>
-                    <h3 id="rentTag">Rent</h3>
-                    <input type={'number'} id="rent"></input>
-                    <h3 id="utilitiesTag">Utilities</h3>
-                    <input type={'text'} id="utilities"></input>
+                    <div className='cost'>
+                      <h3 id="rentTag">Rent</h3>
+                      <input type={'number'} id="rent"></input>
+                      <h3 id="utilitiesTag">Utilities</h3>
+                      <input type={'number'} id="utilities"></input>
+                    </div>
                     <div className="preference">
                       <h3 id="genderTag">Gender Preference </h3>
 

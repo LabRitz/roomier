@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import NavBar from './NavBar.jsx';
+import ProfileFeed from './ProfileFeed.jsx';
 
 const Profile = (props) => {
 
@@ -8,7 +9,7 @@ const Profile = (props) => {
     <>
       <div className='profile'>
         <NavBar />
-        
+        <ProfileFeed />
       </div>
     </>
   )

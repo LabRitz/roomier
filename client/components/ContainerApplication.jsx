@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 
 import Card from './Card.jsx';
 
-import styles from '../stylesheets/containerFeed.scss'
+import styles from '../stylesheets/containerApplication.scss'
 
-const ContainerFeed = ({props}) => {
+const ContainerApplications = ({props}) => {
   // Need props to pass down user info and application info
 
   const applications = [];
@@ -16,14 +16,13 @@ const ContainerFeed = ({props}) => {
   }
 
   return (
-    <div className='feed'>
+    <div className='applications'>
       <Card props={props}/>
       <div className="apply">
-        <input type='checkbox' className='apply' onChange={(e) => handleChange(e)}></input>
         <p>{applications.length} pending application(s)</p>
       </div>
     </div>
   )
 }
 
-export default ContainerFeed;
+export default ContainerApplications;
