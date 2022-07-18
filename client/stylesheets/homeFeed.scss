@@ -1,0 +1,50 @@
+@import './globalVariables.scss';
+
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+
+  .background {
+    position: fixed;
+    z-index:-2;
+
+    img {
+      position: relative;
+      width: 80%;
+      right: 20%;
+    }
+  }
+
+  .fade {
+    position: fixed;
+    z-index:-1;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(232, 232, 232, 0) 15%, rgb(232, 232, 232) 40% );
+  }
+
+  .homeFeed {
+    padding-top: 120px;
+    padding-bottom: 66px;
+    width:60%;
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+
+    margin-left: 40%;
+
+    .feed {
+      &:hover {
+        transform: scale(1.05);
+        transition-duration: 500ms;
+      }
+      &:not(:hover) {
+        transition-duration: 500ms;
+      }
+    }
+
+  }
+}
