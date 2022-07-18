@@ -19,8 +19,8 @@ router.post('/signup',
 //login
 router.post('/', 
   userController.verifyUser, 
-  // cookieController.setSSIDCookie, 
-  // sessionController.startSession, 
+  cookieController.setSSIDCookie, 
+  sessionController.startSession, 
   (req, res) => {
     // console.log('res.cookie: ', res.cookies);
     return res.status(200).json(res.locals.user);
@@ -59,10 +59,10 @@ router.delete('/profile/:_id', postController.deletePost, (req, res) => {
   return res.status(202).json(res.locals.deleteProfile);
 });
 
-
-
-
 //cookies route
+router.get('/signout', cookieController.deleteCookie , (req,res) => {
+  return res.status(200).json({})
+});
 
 module.exports = router;
 
