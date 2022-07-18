@@ -30,7 +30,8 @@ const post = Schema({
     firstName: {type: String},
     lastName: {type: String},
     username: {type: String}
-  }
+  },
+  applicantData: {type: Array}
 })
 
 const Post = mongoose.model('post', post);

@@ -12,7 +12,7 @@ const Profile = (props) => {
   const [posts, setPosts] = useState(null);
 
   useEffect(() => {
-    fetch('/home')
+    fetch(`/profile/${userData.username}`)
       .then(data => data.json())
       .then(postsArr => {
         setPosts(postsArr)
