@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const post = Schema({
-  picture: {type: Buffer},
+  picture: {type: String},
   address: {
     street1: {type: String, required: true},
     street2: {type: String},
@@ -13,7 +13,7 @@ const post = Schema({
   roommate: {
     gender: {type: String, required: true, default: 'No Preference'},
   },
-  description: [{
+  description: {
     BR: {type: Number},
     BA: {type: Number},
     sqFt: {type: Number},
@@ -21,13 +21,19 @@ const post = Schema({
     smoking: {type: Boolean},
     parking: {type: Boolean},
     condition: {type: String},
-  }],
+  },
   moveInDate: {type: Date, default: Date.now },
   utilities: {type: Number, required: true},
   rent: {type: Number, required: true},
-  bio: {type: String}
+  bio: {type: String},
+  userData: {
+    firstName: {type: String},
+    lastName: {type: String},
+    username: {type: String}
+  },
+  applicantData: {type: Array}
 })
 
-const Post = mongoose.model('Post', post);
+const Post = mongoose.model('post', post);
 
 module.exports = Post;

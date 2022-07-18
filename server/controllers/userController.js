@@ -2,18 +2,25 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 
-const User = require('../db/user');
+const User = require('../db/userModel');
 
 const userController = {};
 
 // sign up
 userController.createUser = async (req, res, next) => {
-  // console.log('req.body:', req.body)
   try {
-    const {firstName, lastName, username, password} = req.body;
+    const { firstName, lastName, username, password } = req.body;
 
     // checking if username or password is empty
     if (!username || !password) return next('username or password is missing')
+
+    const results = await User.findOne({username: username})
+    
+    if (results) {
+      console.log('from userfindone result line 20 :', results)
+      res.locals.user = null;
+      return next();
+    }
 
     // if username/password is not empty, we will create our user
     const queryResult = await User.create({ firstName, lastName, username, password });
@@ -21,6 +28,10 @@ userController.createUser = async (req, res, next) => {
     // passing into our res so we can access
     res.locals.user = queryResult;
     // console.log('res.locals.user, ' , res.locals.user)
+
+    // redirect to login
+    res.redirect('/')
+
     return next();
   } catch (err) {
     return next({
@@ -33,6 +44,8 @@ userController.createUser = async (req, res, next) => {
 // login
 userController.verifyUser = async (req, res, next) => {
   try {
+    console.log('verifyUser reqBody: ', req.body)
+
     const { username, password } = req.body;
 
     // checking if username or password is empty
@@ -48,7 +61,13 @@ userController.verifyUser = async (req, res, next) => {
     // Look to alert user if they want to signup or not - change redirect
     if (!queryResult || !comparePass) {
       console.log('invalid username or password');
-      res.redirect('/signup')
+      // res.redirect('/signup')
+      res.locals.user = null
+      // res.send(res.locals.user)
+      return next({
+        log: `error caught in userController.verifyUser`,
+        message: {error: 'an error occurred while attempting to verify a user'}
+      })
     } else {
       // store for access
       res.locals.user = queryResult;

@@ -1,5 +1,5 @@
 const cookieParser = require('cookie-parser');
-const Session = require('../db/session');
+const Session = require('../db/sessionModel');
 
 const sessionController = {};
 

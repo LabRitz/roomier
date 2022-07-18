@@ -1,0 +1,29 @@
+@import './globalVariables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;600&display=swap');
+
+
+// div:hover {
+//   border: 1px solid black;
+// } 
+
+.feed {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 2%;
+  border-radius: 12px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.512);
+  width: 90%;
+  background: linear-gradient(180deg, rgb(232, 232, 232) 80%, rgba(209, 209, 209, 0.82) 90%, rgba(210, 210, 210, 0.82) 95%);
+
+  .apply {
+
+    p {
+      font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 100;
+    }
+  }
+
+}
+

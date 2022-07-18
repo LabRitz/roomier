@@ -16,7 +16,7 @@ cookieController.setSSIDCookie = async (req, res, next) => {
 
 cookieController.getCookie = async (req, res, next) => {
   const cookie = req.headers.cookie;
-  console.log(req.headers.cookie)
+  console.log('cookieController.getCookie: ', req.headers.cookie)
   return next();
 }
 
