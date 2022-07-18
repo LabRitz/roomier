@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server/server.js",
     "build": "NODE_ENV=production webpack",
-    "dev": "NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve --open",
+    "dev": "NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve --open ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/blee3395/find-a-roommate#readme",
   "dependencies": {
+    "@react-google-maps/api": "^2.12.1",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
@@ -36,6 +37,7 @@
     "passport-local": "^1.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-geocode": "^0.2.3",
     "react-router": "^5.1.0",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.2"
