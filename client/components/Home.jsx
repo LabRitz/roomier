@@ -12,10 +12,11 @@ const Home = (props) => {
   const [posts, setPosts] = useState(null);
 
   useEffect(() => {
-    fetch('/home')
+    fetch(`/home/${userData.username}`)
       .then(data => data.json())
       .then(postsArr => {
-        setPosts(postsArr)
+        const newPost = Object.assign(postsArr, {userData: userData})
+        setPosts(newPost)
         return (
           <>
             <div className='home'>
@@ -28,11 +29,18 @@ const Home = (props) => {
   }, [])
 
   if (posts) {
+
     return (
       <>
         <div className='home'>
           <NavBar />
-          <HomeFeed props = {posts} />
+          <div className='background'>
+            <img src='https://i.redd.it/za30ryykl7n81.jpg'></img>
+          </div>
+          <div className="fade">
+            <img/>
+          </div>
+          <HomeFeed props = {posts}/>
         </div>
       </>
     )

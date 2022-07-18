@@ -14,7 +14,7 @@ const App = (props) => {
     <Router>
       <Switch>
       
-        <Route exact path='/' component={Profile} />
+        <Route exact path='/' component={Login} />
         <Route path='/signup' component={Signup}/>
         <Route path='/home' component={Home}/>
         <Route path='/createPost' component={CreatePost}/>
@@ -23,20 +23,6 @@ const App = (props) => {
       </Switch>
     </Router>
   )
-
-  // return (
-  //   <Router>
-  //     <Routes>
-      
-  //       <Route path='/' element={<Login/>} />
-  //       <Route path='/signup' element={<Signup/>}/>
-  //       <Route path='/home' element={<Home/>}/>
-  //       <Route path='/createPost' element={<CreatePost/>}/>
-  //       <Route path='/profile' element={<Profile/>}/>
-
-  //     </Routes>
-  //   </Router>
-  // )
 
 }
 
