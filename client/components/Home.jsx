@@ -44,8 +44,8 @@ const Home = (props) => {
       render(
         <GoogleMap
           center={{ lat: 40.748441, lng: -73.985664 }}
-          zoom={15}
-          mapContainerStyle={{ width: '50%', height: '50%', top: '50%', left: '50%', position: 'absolute'}}
+          zoom={13}
+          mapContainerStyle={{ width: '35%', height: '90%', bottom: '2%', top: '8%', left: '2%', position: 'absolute', borderRadius: '12px'}}
         >
           {markers}
         </GoogleMap>,
