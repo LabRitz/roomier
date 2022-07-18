@@ -15,7 +15,7 @@ userController.createUser = async (req, res, next) => {
     if (!username || !password) return next('username or password is missing')
 
     const results = await User.findOne({username: username})
-
+    
     if (results) {
       console.log('from userfindone result line 20 :', results)
       res.locals.user = null;

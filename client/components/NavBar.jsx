@@ -10,7 +10,14 @@ const NavBar = (props) => {
 
   const [phrase, setPhrase] = useState('roommate');
 
-  const phrases = ['roommate', 'future', 'life', 'friend' ]
+  const phrases = [
+    'roommate', 
+    'future', 
+    'friend', 
+    'bed',
+    'dorito',
+    'milk steak'
+  ]
   useEffect(()=> {
     const index = phrases.indexOf(phrase);
     const newPhrase = (index === phrases.length - 1) ? phrases[0] : phrases[index+1];
