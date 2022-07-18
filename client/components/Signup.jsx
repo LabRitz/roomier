@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
 
-import styles from '../stylesheets/login.scss';
+import styles from '../stylesheets/login.scss'; 
 
 const handleSignUp = (e) => {
   e.preventDefault();
@@ -15,8 +15,6 @@ const handleSignUp = (e) => {
   //     body: {username: document.getElementById('username').value, password: document.getElementById('password').value}}
   // );
 }
-
-
 
 const Signup = (props) => {
   const [phrase, setPhrase] = useState('Roommate');

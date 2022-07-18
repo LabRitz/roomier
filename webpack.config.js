@@ -10,8 +10,8 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     static: {
-        directory: path.resolve(__dirname, 'build'),
-        publicPath: '/'
+      directory: path.resolve(__dirname, 'build'),
+      publicPath: '/'
     },
     proxy: {
       '/': 'http://localhost:3000',
@@ -25,12 +25,12 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'build'),
     clean: true
-  },  
-  
+  },
+
   module: {
     rules: [
-      { 
-        test: /\.jsx?/, 
+      {
+        test: /\.jsx?/,
         // exclude: /(node_modules)/,
         exclude: path.resolve(__dirname, './node_modules'),
         use: {
@@ -42,9 +42,9 @@ module.exports = {
       },
       {
         test: /\.s?css$/,
-        use: [{loader: 'style-loader'}, {loader: 'css-loader'}, {loader: 'sass-loader'}]
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }]
       }
     ]
   }
-  
+
 }

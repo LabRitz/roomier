@@ -4,34 +4,36 @@ import NavBar from './NavBar.jsx';
 
 import styles from '../stylesheets/createPost.scss';
 
-const createPostSubmissions = (e) => {
-    e.preventDefault();
-    const reqBody = {
-        // picture: ,
-        address: {
-            street1: document.getElementById('street1').value,
-            street2: document.getElementById('street2').value,
-            city: city,
-            state: state,
-            zipCode: zipCode
-        },
-        roommate: {
-            gender: genderPreference,
-        },
-        description: {
-            BR: bedroom,
-            BA: bathroom,
-            sqFt: sqft,
-            pets: pets,
-            smoking: smoking,
-            parking: parking,
-            condition: condition,
-        },
-        moveInDate: moveInDate,
-        utilities: utilities,
-        rent: rent,
-        bio: bio,
-    };
+const CreatePost = () => {
+    const createPostSubmissions = (userData) => {
+        // e.preventDefault();
+        const reqBody = {
+            // picture: ,
+            address: {
+                street1: document.getElementById('street1').value,
+                street2: document.getElementById('street2').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                zipCode: document.getElementById('zipCode').value
+            },
+            roommate: {
+                gender: document.getElementById('dropDownMenu').value
+            },
+            description: {
+                BR: document.getElementById('bedroom').value,
+                BA: document.getElementById('bathroom').value,
+                sqFt: document.getElementById('sqft').value,
+                pets: JSON.parse(document.getElementById('dropDownMenuPets').value),
+                smoking: JSON.parse(document.getElementById('dropDownMenuSmoking').value),
+                parking: JSON.parse(document.getElementById('dropDownMenuParking').value),
+                condition: document.getElementById('condition').value,
+            },
+            moveInDate: document.getElementById('date').value,
+            utilities: document.getElementById('utilities').value,
+            rent: document.getElementById('rent').value,
+            bio: document.getElementById('bio').value,
+            userData: userData
+        };
 
     console.log(reqBody)
 
@@ -42,49 +44,37 @@ const createPostSubmissions = (e) => {
     })
         .then(data => data.json())
         .then((formattedData) => {
-            console.log(formattedData)
-            if (formattedData.err) {
-                alert("Must Require Proper Fields");
-            }
-
 
         })
         .catch(err => {
             console.log('Error thrown in POST request in createPost: ', err)
         })
-};
 
-
-const address1 = document.getElementById('street1').value;
-const address2 = document.getElementById('street2').value;
-const city = document.getElementById('city').value;
-const state = document.getElementById('state').value;
-const zipCode = document.getElementById('zipCode').value;
-const genderPreference = document.getElementById('dropDownMenu').value;
-const bedroom = document.getElementById('bedroom').value;
-const bathroom = document.getElementById('bathroom').value;
-const sqft = document.getElementById('sqft').value;
-const condition = document.getElementById('condition').value;
-const utilities = document.getElementById('utilities').value;
-const rent = document.getElementById('rent').value;
-const bio = document.getElementById('bio').value;
-const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
-const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
-const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
-const moveInDate = document.getElementById('date').value;
-
-const CreatePost = (props) => {
-    const location = useLocation();
-    const userData = location.state;
-    console.log('metaData from createPost: ', userData)
-
+    const address1 = document.getElementById('street1').value = '';
+    const address2 = document.getElementById('street2').value = '';
+    const city = document.getElementById('city').value = '';
+    const state = document.getElementById('state').value = '';
+    const zipCode = document.getElementById('zipCode').value = '';
+    const genderPreference = document.getElementById('dropDownMenu').value = '';
+    const bedroom = document.getElementById('bedroom').value = '';
+    const bathroom = document.getElementById('bathroom').value = '';
+    const sqft = document.getElementById('sqft').value = '';
+    const condition = document.getElementById('condition').value = '';
+    const utilities = document.getElementById('utilities').value = '';
+    const rent = document.getElementById('rent').value = '';
+    const bio = document.getElementById('bio').value = '';
+    const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
+    const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
+    const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
+    const moveInDate = document.getElementById('date').value;
+    };
     return (
         <div className='createPost'>
             <NavBar />
-            <div className='fieldIncomplete'></div>
             <div className='createPostRoute'>
 
                 <div className="price">
+                   
                     <h2>Move In Date</h2>
                     <input type={'date'} id='date'></input>
                     <h2>List Price</h2>
@@ -169,7 +159,7 @@ const CreatePost = (props) => {
                 <div className="bio">
                     <h3 id="bioTag">Bio</h3>
                     <input type={'text'} id="bio"></input>
-                    <button type='submit' id='submitPost' onClick={createPostSubmissions}>
+                    <button type='submit' id='submitPost' onClick={(userData) => createPostSubmissions(userData)}>
                         <h2>Post</h2>
                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
                             <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
@@ -179,6 +169,6 @@ const CreatePost = (props) => {
             </div>
         </div>
     );
-};
+}
 
 export default CreatePost;
