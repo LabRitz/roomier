@@ -115,10 +115,10 @@ postController.getProfilePosts = async (req, res, next) => {
     const username = req.params.username;
 
     // parse through mongoDB and get all posts with username using find
-    const queryResult = await Post.find({userData: {username: username}})
+    const queryResult = await Post.find({'userData.username': username})
 
     // store for output
-    res.locals.getProfilePosts = queryResult
+    res.locals.profilePosts = queryResult;
   
     return next();
   } catch (err) {
@@ -134,7 +134,7 @@ postController.getProfilePosts = async (req, res, next) => {
 postController.updateApplicationPost = async (req,res,next) => {
   try {
     const { firstName, lastName, username } = req.body;
-    const id = req.body._id;
+    const id = req.params._id;
 
     console.log(id)
 
@@ -144,8 +144,12 @@ postController.updateApplicationPost = async (req,res,next) => {
       username: username
     };
 
+    console.log('step 1:', newApplicant)
+
     // linear search to see if user is alrdy an applicant
     const results = await Post.findOne({applicantData: {username: username}})
+
+    console.log('finding here 2')
     
     if (results) {
       console.log('from updateApplicantPost result :', results)
@@ -158,6 +162,9 @@ postController.updateApplicationPost = async (req,res,next) => {
       { _id : id },
       { $push: { applicantData: newApplicant } }
     )
+
+    console.log('succesfully updated: ', id)
+
     res.locals.updatedPost = queryResult.acknowledged;
     
     return next();

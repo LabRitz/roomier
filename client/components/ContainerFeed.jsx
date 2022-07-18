@@ -21,7 +21,8 @@ const ContainerFeed = ({props}) => {
       console.log('application reqBody, ', reqBody ,'to _id', props._id)
 
       const response = await fetch(`/home/${props._id}`, {
-          method:'POST',
+          method:'PATCH',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(reqBody)
         })
       const data = await response.json();

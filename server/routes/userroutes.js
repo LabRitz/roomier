@@ -19,8 +19,8 @@ router.post('/signup',
 //login
 router.post('/', 
   userController.verifyUser, 
-  cookieController.setSSIDCookie, 
-  sessionController.startSession, 
+  // cookieController.setSSIDCookie, 
+  // sessionController.startSession, 
   (req, res) => {
     // console.log('res.cookie: ', res.cookies);
     return res.status(200).json(res.locals.user);
@@ -33,7 +33,7 @@ router.get('/home/:username', postController.getAllPosts, (req,res ) => {
 });
 
 //update applications in posts 
-router.patch('/home', postController.updateApplicationPost, (req, res) => {
+router.patch('/home/:_id', postController.updateApplicationPost, (req, res) => {
   return res.status(200).send(res.locals.updatedPost);
 })
 
