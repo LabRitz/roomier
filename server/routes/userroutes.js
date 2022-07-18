@@ -30,21 +30,29 @@ router.post('/',
 router.get('/home', postController.getAllPosts, (req,res ) => {
   // console.log('getAllPosts route running.')
   return res.status(200).json(res.locals.allPosts);
-})
+});
 
 router.get('/findUser', userController.findUser, (req, res) => {
   // postController.createPost
   return res.status(200).json({});
-})
+});
 
 //localhost:3000/home
 router.post('/createPost', postController.createPost, (req,res) => {
     return res.status(200).json(res.locals.createPost)
-})
+});
 
 router.get('/getcookie', cookieController.getCookie, (req, res) => {
   return res.status(200).json({})
-})
+});
+
+router.get('/profile',postController.getProfilePosts, (req,res) => {
+  return res.status(200).json(res.locals.profilePosts)
+});
+
+router.delete('/profile/:_id', postController.deletePost, (req, res) => {
+  return res.status(202).json(res.locals.deleteProfile);
+});
 
 
 //cookies route

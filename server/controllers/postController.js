@@ -98,4 +98,44 @@ postController.getAllPosts = async (req, res, next) => {
     message: {err: 'an error occurred while attempting to get a post'}
   })}
 };
+
+postController.getProfilePosts = async (req, res, next) => {
+  console.log('get Profile Posts')
+  try {
+    // user email that we are grabbing
+    const { username } = req.body;
+
+    // parse through mongoDB and get all posts with username using find
+    const queryResult = await Post.find({userData: {username: username}})
+
+    // store for output
+    res.locals.getProfilePosts = queryResult
+  
+    return next();
+  } catch (err) {
+    return next ({
+      log: `error caught in postController.getProfilePosts : ${err}`,
+      message: {err: 'an error occurred while attempting to get a post in profile'}
+    })
+  }
+}
+
+postController.deletePost = async (req, res, next) => {
+  console.log('read 1')
+  const id = req.params._id;
+  console.log('inside postController.deletePost: ' , req.params._id)
+  try {
+    const queryResult = await Post.deleteOne({_id: id })
+    res.locals.deleteProfile = queryResult;    
+    console.log('res.locals.deleteProfile:' , res.locals.deleteProfile)
+    return next();
+  } catch (err) {
+    return next ({
+      log: `error caught in postController.deletePost : ${err}`,
+      message: {err: 'an error occurred while attempting to delete a post in profile'}
+    })
+  }
+  
+}
+
 module.exports = postController;
