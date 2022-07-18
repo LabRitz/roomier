@@ -8,12 +8,19 @@ const userController = {};
 
 // sign up
 userController.createUser = async (req, res, next) => {
-  // console.log('req.body:', req.body)
   try {
-    const {firstName, lastName, username, password} = req.body;
+    const { firstName, lastName, username, password } = req.body;
 
     // checking if username or password is empty
     if (!username || !password) return next('username or password is missing')
+
+    const results = await User.findOne({username: username})
+    
+    if (results) {
+      console.log('from userfindone result line 20 :', results)
+      res.locals.user = null;
+      return next();
+    }
 
     // if username/password is not empty, we will create our user
     const queryResult = await User.create({ firstName, lastName, username, password });
@@ -21,6 +28,10 @@ userController.createUser = async (req, res, next) => {
     // passing into our res so we can access
     res.locals.user = queryResult;
     // console.log('res.locals.user, ' , res.locals.user)
+
+    // redirect to login
+    res.redirect('/')
+
     return next();
   } catch (err) {
     return next({

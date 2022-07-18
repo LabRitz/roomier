@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const post = Schema({
-  picture: {type: Buffer},
+  picture: {type: String},
   address: {
     street1: {type: String, required: true},
     street2: {type: String},

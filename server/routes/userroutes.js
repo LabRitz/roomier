@@ -9,7 +9,9 @@ const sessionController = require('../controllers/sessionController')
 
 
 //localhost:3000/signup
-router.post('/signup', userController.createUser, cookieController.setSSIDCookie, sessionController.startSession, (req, res) => {
+router.post('/signup',
+  userController.createUser, 
+  (req, res) => {
     return res.status(200).json(res.locals.user)
 })
 
@@ -26,7 +28,7 @@ router.post('/',
 
 // home
 router.get('/home', postController.getAllPosts, (req,res ) => {
-  console.log('getAllPosts route running.')
+  // console.log('getAllPosts route running.')
   return res.status(200).json(res.locals.allPosts);
 })
 
