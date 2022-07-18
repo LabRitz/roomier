@@ -17,19 +17,10 @@ const Home = (props) => {
       .then(postsArr => {
         const newPost = Object.assign(postsArr, {userData: userData})
         setPosts(newPost)
-        return (
-          <>
-            <div className='home'>
-              <NavBar />
-              <HomeFeed props = {posts} />
-            </div>
-          </>
-        )
       })
   }, [])
 
   if (posts) {
-
     return (
       <>
         <div className='home'>
