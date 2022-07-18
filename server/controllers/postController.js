@@ -21,25 +21,25 @@ postController.createPost = async (req, res, next) => {
     } = req.body;
     
     //deconstruct sub object inside createPost
-    const addressObj = {
-      street1: address.street1, 
-      street2: address.street2, 
-      city: address.city, 
-      state: address.state, 
-      zipCode: address.zipCode
-    };
-    const roommateObj = {
-      gender: roommate.gender
-    }
-    const descriptionObj = {
-      BR: description.BR, 
-      BA: description.BA, 
-      sqFt: description.sqFt, 
-      pets: description.pets, 
-      smoking: description.smoking, 
-      parking: description.parking, 
-      condition: description.condition
-    };
+    // const addressObj = {
+    //   street1: address.street1, 
+    //   street2: address.street2, 
+    //   city: address.city, 
+    //   state: address.state, 
+    //   zipCode: address.zipCode
+    // };
+    // const roommateObj = {
+    //   gender: roommate.gender
+    // }
+    // const descriptionObj = {
+    //   BR: description.BR, 
+    //   BA: description.BA, 
+    //   sqFt: description.sqFt, 
+    //   pets: description.pets, 
+    //   smoking: description.smoking, 
+    //   parking: description.parking, 
+    //   condition: description.condition
+    // };
     
     // const newPost = await new Post ({
     const newPost = await Post.create({
@@ -73,7 +73,7 @@ postController.createPost = async (req, res, next) => {
       },
       applicantData: []
     });
-    res.locals.createPost =  newPost
+    res.locals.createPost = newPost
     return next();
   } catch (err) {
     return next({
