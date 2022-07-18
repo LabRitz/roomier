@@ -13,5 +13,16 @@
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 24px;
+
+    .feed {
+      &:hover {
+        transform: scale(1.05);
+        transition-duration: 500ms;
+      }
+      &:not(:hover) {
+        transition-duration: 500ms;
+      }
+    }
+
   }
 }

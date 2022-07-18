@@ -4,51 +4,99 @@ import NavBar from './NavBar.jsx';
 
 import styles from '../stylesheets/createPost.scss';
 
-const CreatePost = () => {
-    const createPostSubmissions = (userData) => {
-        // e.preventDefault();
+
+const CreatePost = (props) => {
+  const location = useLocation();
+  const userData = location.state;
+  console.log('metaData from createPost: ', userData)
+  
+  const createPostSubmissions = (e) => {
+      e.preventDefault();
+
+      const address1 = document.getElementById('street1').value;
+      const address2 = document.getElementById('street2').value;
+      const city = document.getElementById('city').value;
+      const state = document.getElementById('state').value;
+      const zipCode = document.getElementById('zipCode').value;
+      const genderPreference = document.getElementById('dropDownMenu').value;
+      const bedroom = document.getElementById('bedroom').value;
+      const bathroom = document.getElementById('bathroom').value;
+      const sqft = document.getElementById('sqft').value;
+      const condition = document.getElementById('condition').value;
+      const utilities = document.getElementById('utilities').value;
+      const rent = document.getElementById('rent').value;
+      const bio = document.getElementById('bio').value;
+      const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
+      const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
+      const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
+      const moveInDate = document.getElementById('date').value;
+     
+      if (address1 === '' || city === '' || state === '' || zipCode === '' || genderPreference === '' || sqft === '' || utilities === '' || rent === '') {
+        alert("Must Require Input Fields");
+      }
+      else {
         const reqBody = {
             // picture: ,
             address: {
-                street1: document.getElementById('street1').value,
-                street2: document.getElementById('street2').value,
-                city: document.getElementById('city').value,
-                state: document.getElementById('state').value,
-                zipCode: document.getElementById('zipCode').value
+                street1: address1,
+                street2: address2,
+                city: city,
+                state: state,
+                zipCode: zipCode
             },
             roommate: {
-                gender: document.getElementById('dropDownMenu').value
+                gender: genderPreference,
             },
             description: {
-                BR: document.getElementById('bedroom').value,
-                BA: document.getElementById('bathroom').value,
-                sqFt: document.getElementById('sqft').value,
-                pets: JSON.parse(document.getElementById('dropDownMenuPets').value),
-                smoking: JSON.parse(document.getElementById('dropDownMenuSmoking').value),
-                parking: JSON.parse(document.getElementById('dropDownMenuParking').value),
-                condition: document.getElementById('condition').value,
+                BR: bedroom,
+                BA: bathroom,
+                sqFt: sqft,
+                pets: pets,
+                smoking: smoking,
+                parking: parking,
+                condition: condition,
             },
-            moveInDate: document.getElementById('date').value,
-            utilities: document.getElementById('utilities').value,
-            rent: document.getElementById('rent').value,
-            bio: document.getElementById('bio').value,
-            userData: userData
+            moveInDate: moveInDate,
+            utilities: utilities,
+            rent: rent,
+            bio: bio,
+            userData: userData,
+            applications: []
         };
-
-    console.log(reqBody)
-
-    fetch('/createPost', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reqBody)
-    })
-        .then(data => data.json())
-        .then((formattedData) => {
-
-        })
-        .catch(err => {
-            console.log('Error thrown in POST request in createPost: ', err)
-        })
+    
+        fetch('/createPost', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reqBody)
+            })
+            .then(data => data.json()) 
+            .then((formattedData) => {
+                console.log(formattedData)
+            })
+            .catch(err => {
+                console.log('Error thrown in POST request in createPost: ', err)
+            })
+    
+        document.getElementById('street1').value = '';
+        document.getElementById('street2').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('state').value = '';
+        document.getElementById('zipCode').value = '';
+        document.getElementById('dropDownMenu').value = '';
+        document.getElementById('bedroom').value = '';
+        document.getElementById('bathroom').value = '';
+        document.getElementById('sqft').value = '';
+        document.getElementById('condition').value = '';
+        document.getElementById('utilities').value = '';
+        document.getElementById('rent').value = '';
+        document.getElementById('bio').value = '';
+        // document.getElementById('dropDownMenuPets').value;
+        // document.getElementById('dropDownMenuSmoking').value;
+        // document.getElementById('dropDownMenuParking').value;
+        // document.getElementById('date').value;
+      }
+  
+  };
 
     const address1 = document.getElementById('street1').value = '';
     const address2 = document.getElementById('street2').value = '';
@@ -85,13 +133,12 @@ const CreatePost = () => {
                         <input type={'number'} id="utilities"></input>
                     </div>
                     <div className="preference">
-                        <h3 id="genderTag">Gender Preference </h3>
-
-                        <select name="genders" id="dropDownMenu">
-                            <option value='male'>Male</option>
-                            <option value='female'>Female</option>
-                            <option value='no-preference'>No-preference</option>
-                        </select>
+                      <h3 id="genderTag">Gender Preference </h3>
+                      <select name="genders" id="dropDownMenu">
+                          <option value='male'>Male</option>
+                          <option value='female'>Female</option>
+                          <option value='no-preference'>No-preference</option>
+                      </select>
                     </div>
                 </div>
                 <div className="house">

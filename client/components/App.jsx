@@ -13,7 +13,7 @@ const App = (props) => {
   return (
     <Router>
       <Switch>
-
+      
         <Route exact path='/' component={Login} />
         <Route path='/signup' component={Signup}/>
         <Route path='/home' component={Home}/>

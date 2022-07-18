@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Post = require('../db/createPost');
+const Post = require('../db/postModel');
 
 const postController = {};
 
@@ -17,7 +17,7 @@ postController.createPost = async (req, res, next) => {
       utilities, 
       rent, 
       bio,
-      userData,
+      userData
     } = req.body;
     
     //deconstruct sub object inside createPost
@@ -43,15 +43,6 @@ postController.createPost = async (req, res, next) => {
     
     // const newPost = await new Post ({
     const newPost = await Post.create({
-      // picture,
-      // address: addressObj,
-      // roommate: roommateObj,
-      // description: descriptionObj,
-      // moveInDate: moveInDate,
-      // utilities: utilities,
-      // rent: rent,
-      // bio: bio
-
       address: {
         street1: address.street1,
         street2: address.street2,
@@ -74,7 +65,12 @@ postController.createPost = async (req, res, next) => {
       moveInDate: moveInDate,
       utilities: utilities,
       rent: rent,
-      bio: bio
+      bio: bio,
+      userData: {
+        username: userData.username,
+        firstName: userData.firstName,
+        lastName: userData.lastName
+      }
     });
     res.locals.createPost = newPost
     return next();
@@ -86,34 +82,20 @@ postController.createPost = async (req, res, next) => {
   }
 };
 
+postController.getAllPosts = async (req, res, next) => {
+  console.log('get All Posts')
+  try {
+    // object to house our find request
+    const queryResult = await Post.find({});
+    // console.log(queryResult);
+    
+    res.locals.allPosts = queryResult;
 
-
-
-/*
-  picture: {type: Buffer},
-  address: {
-    street1: {type: String}, required: true,
-    street2: {type: String},
-    city: {type: String, required: true},
-    state: {type: String, required: true},
-    zipCode: {type: String, required: true},
-  },
-  roommate: {
-    gender: {type: String, required: true, default: 'No Preference'},
-  },
-  description: [{
-    BR: {type: Number, required: true},
-    BA: {type: Number, required: true},
-    sqFt: {type: Number},
-    pets: {type: Boolean, default: false},
-    smoking: {type: Boolean, default: false},
-    parking: {type: Boolean, default: false},
-    condition: {type: String},
-  }],
-  moveInDate: {type: Date, default: Date.now },
-  utilities: {type: Number, required: true},
-  rent: {type: Number, required: true},
-  bio: {type: String}
-*/
-
+    return next();
+  } catch (err) {
+    return next({
+    log: `error caught in postController.getAllPost : ${err}`,
+    message: {err: 'an error occurred while attempting to get a post'}
+  })}
+};
 module.exports = postController;
