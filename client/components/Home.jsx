@@ -54,12 +54,11 @@ const Home = (props) => {
   }
 
   useEffect(() => {
-    console.log('first useEffect')
-    fetch('/home')
+    fetch(`/home/${userData.username}`)
       .then(data => data.json())
       .then(postsArr => {
-        setPosts(postsArr)
-        setPassedProps(true)
+        const newPost = Object.assign(postsArr, {userData: userData})
+        setPosts(newPost)
         return (
           <>
             <div className='home'>
@@ -79,6 +78,7 @@ const Home = (props) => {
   }, [passedProps])
 
   if (posts) {
+
     return (
       <>
         <div className='home'>

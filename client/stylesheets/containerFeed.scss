@@ -17,7 +17,24 @@
   background: linear-gradient(180deg, rgb(232, 232, 232) 80%, rgba(209, 209, 209, 0.82) 90%, rgba(210, 210, 210, 0.82) 95%);
 
   .apply {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    button {
+      align-items: center;
+      border-radius: 15px;
+      padding: 4%;
+      box-shadow: 0px 2px 2px $light-blue;
 
+      &:hover {
+        background: $light-blue;
+        transition-duration: 300ms;
+      }
+      &:not(:hover) {
+        transition-duration: 600ms;
+      }
+
+    }
     p {
       font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
       font-size: 12px;
