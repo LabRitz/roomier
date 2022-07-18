@@ -40,9 +40,11 @@ const HomeFeed = ({props}) => {
     arr.push(apt)
   }
 
+  console.log('what is props: ', props)
 
   //Initialize state to apt array
-  const [state, setState] = useState(arr)
+  // const [state, setState] = useState(arr)
+  const [state, setState] = useState(props)
 
   const feed = []
   for (let i = 0; i < state.length; i++) {

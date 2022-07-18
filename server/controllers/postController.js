@@ -87,7 +87,7 @@ postController.getAllPosts = async (req, res, next) => {
   try {
     // object to house our find request
     const queryResult = await Post.find({});
-    console.log(queryResult);
+    // console.log(queryResult);
     
     res.locals.allPosts = queryResult;
 

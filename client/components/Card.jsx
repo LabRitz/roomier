@@ -31,17 +31,23 @@ const Card = ({props}) => {
   //         bio:'Located at 100 West 31st Street, EOS offers distinctive residences, curated amenities, and the personalized service needed to engage New York City life to the fullest inside and out. Premier recreation and relaxation facilities for residents to enjoy include a pool, fitness center on the lower level, as well as a game room and entertaining areas on the towers 47th floor with sweeping views of Manhattan. EOS offers 375 smoke-free rental residences consisting of studios, one, two, and two bedroom + den layouts. Each apartment contains a washer/dryer, dishwasher, hardwood floors, and kitchens and bathrooms with premium finishes and fixtures.' 
   //       }
 
-  const {
-          picture,
-          address,
-          roommate,
-          description,
-          moveInDate,
-          utilities,
-          rent,
-          bio
-        } = props;
-        // } = state;
+  let {
+        picture,
+        address,
+        roommate,
+        description,
+        moveInDate,
+        utilities,
+        rent,
+        bio
+      } = props;
+      // } = state;
+    
+  if (picture === undefined) picture = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg';
+
+  console.log('picture', String(picture))
+
+  if (description.condition === undefined) description.condition = 'Slightly used';
 
   return (
     <>
@@ -57,7 +63,7 @@ const Card = ({props}) => {
             <p className='rent'><span className='bold'>Rent: </span> ${rent}/mo</p>
             <p><span className='bold'>Utilities: </span> ${utilities}/mo</p>
             <p><span className='bold'>Condition: </span> {description.condition}</p>
-            <p><span className='bold'>Move-in Date: </span>{moveInDate}</p>
+            <p><span className='bold'>Move-in Date: </span>{moveInDate.slice(0,10)}</p>
           </div>
         </div>
         <div className="info">

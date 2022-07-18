@@ -18,7 +18,7 @@ module.exports = {
       '/signup': 'http://localhost:3000',
       '/createPost': 'http://localhost:3000',
       compress: true,
-      port: 8081,
+      port: 8080,
     },
   },
   output: {

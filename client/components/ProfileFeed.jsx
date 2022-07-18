@@ -30,7 +30,7 @@ const ProfileFeed = ({props}) => {
       parking:false,
       condition: 'Slightly used'
     },
-    moveInDate: new Date().toString,
+    moveInDate: '2022-07-18T01:23:13Z',
     utilities: 159,
     rent: 4700,
     bio:'Located at 100 West 31st Street, EOS offers distinctive residences, curated amenities, and the personalized service needed to engage New York City life to the fullest inside and out. Premier recreation and relaxation facilities for residents to enjoy include a pool, fitness center on the lower level, as well as a game room and entertaining areas on the towers 47th floor with sweeping views of Manhattan. EOS offers 375 smoke-free rental residences consisting of studios, one, two, and two bedroom + den layouts. Each apartment contains a washer/dryer, dishwasher, hardwood floors, and kitchens and bathrooms with premium finishes and fixtures.' 
@@ -56,7 +56,7 @@ const ProfileFeed = ({props}) => {
       parking: true,
       condition: 'Slightly used'
     },
-    moveInDate: new Date().toString,
+    moveInDate: '2022-07-18T01:23:13Z',
     utilities: 709,
     rent: 8650,
     bio:'This oversized three bedroom, two bathroom residence is on a high floor with incredible city views.. The home features beautiful hardwood floors throughout, a windowed kitchen with top-of-the-line appliances, and streaming natural light. Additional conveniences include excellent closet space and storage through-out. Building amenities at Yorkshire Towers include 24-hour doormen, an indoor swimming pool, fitness center, resident lounge, on-site garage, on-site dry cleaning and valet services, and laundry on every floor.'
@@ -70,7 +70,8 @@ const ProfileFeed = ({props}) => {
   // **********************
 
   //Initialize state to apt array
-  const [state, setState] = useState(arr)
+  // const [state, setState] = useState(arr)
+  const [state, setState] = useState(props)
 
   const feed = []
   for (let i = 0; i < state.length; i++) {

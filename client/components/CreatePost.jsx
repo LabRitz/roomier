@@ -60,7 +60,8 @@ const CreatePost = (props) => {
             utilities: utilities,
             rent: rent,
             bio: bio,
-            userData: userData
+            userData: userData,
+            applications: []
         };
     
         fetch('/createPost', {

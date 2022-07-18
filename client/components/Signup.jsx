@@ -4,16 +4,37 @@ import styles from '../stylesheets/login.scss';
 
 const handleSignUp = (e) => {
     e.preventDefault();
-    console.log({firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, username: document.getElementById('username').value, password: document.getElementById('password').value});
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('firstName').value = '';
-    document.getElementById('lastName').value = '';
-    // fetch('/login', {
-    //     method: 'POST',
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: {username: document.getElementById('username').value, password: document.getElementById('password').value}}
-    // );
+    // console.log({firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, username: document.getElementById('username').value, password: document.getElementById('password').value});
+    
+    const reqBody = {
+      firstName: document.getElementById('firstName').value,
+      lastName: document.getElementById('lastName').value,
+      username: document.getElementById('username').value, 
+      password: document.getElementById('password').value
+    }
+
+    fetch('/signup', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(reqBody)
+      })
+      .then(data => data.json())
+      .then(formattedData => {
+        if (formattedData !== null) {
+          document.getElementById('username').value = '';
+          document.getElementById('password').value = '';
+          document.getElementById('firstName').value = '';
+          document.getElementById('lastName').value = '';
+          window.open('/', '_self')
+        }
+        else {
+          alert('User already exists in the database')
+        }
+      })
+      .catch(err => {
+        console.log('signup error: ', err)
+      })
+    ;
 }
 
 

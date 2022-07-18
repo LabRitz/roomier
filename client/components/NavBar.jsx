@@ -6,7 +6,7 @@ import styles from '../stylesheets/navbar.scss';
 const NavBar = (props) => {
   const location = useLocation();
   const userData = location.state;
-  console.log('metaData from navBar: ', userData)
+  // console.log('metaData from navBar: ', userData)
 
   const [phrase, setPhrase] = useState('roommate');
 
