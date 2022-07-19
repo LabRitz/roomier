@@ -37,11 +37,11 @@ const ContainerFeed = ({props}) => {
   async function handleApply(e) {
     console.log('clicking apply')
     try {
-      const { applicantData } = props
+      const { applicationInfo } = props
       const reqBody = {
-        firstName: applicantData.firstName,
-        lastName: applicantData.lastName,
-        username: applicantData.username
+        firstName: applicationInfo.firstName,
+        lastName: applicationInfo.lastName,
+        username: applicationInfo.username
       }
       const response = await fetch(`/home/${props._id}`, {
           method:'PATCH',

@@ -15,11 +15,13 @@ const Home = (props) => {
   const [posts, setPosts] = useState(null);
   const [passedProps, setPassedProps] = useState(false);
 
+  const GoogleMapsAPIKey = '' //INSERT OWN GOOGLE MAPS API
+
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyC_okJNBkwBu8ceXP1UlIL3jhSzf8YeQiw'
+    googleMapsApiKey: GoogleMapsAPIKey
   })
 
-  Geocode.setApiKey('AIzaSyC_okJNBkwBu8ceXP1UlIL3jhSzf8YeQiw');
+  Geocode.setApiKey(GoogleMapsAPIKey);
   
   const markers = [];
   async function onMapLoad() {
@@ -60,6 +62,7 @@ const Home = (props) => {
       .then(data => data.json())
       .then(postsArr => {
         const newPost = Object.assign(postsArr, {userData: userData})
+        console.log('np: ',newPost)
         setPosts(newPost)
         setPassedProps(true)
         return (
