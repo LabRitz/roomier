@@ -35,7 +35,7 @@ const Home = (props) => {
           tempArr.push({ lat, lng });
         })
         .catch(err => {
-          console.log(`Geocode err: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
+          console.log(`Geocode err in Home: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
         });
     }
 

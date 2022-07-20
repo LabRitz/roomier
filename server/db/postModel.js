@@ -31,7 +31,11 @@ const post = Schema({
     lastName: {type: String},
     username: {type: String}
   },
-  applicantData: {type: Array}
+  applicantData: {type: Array},
+  geoData: {
+    lat: {type: Number},
+    lng: {type: Number}
+  }
 })
 
 const Post = mongoose.model('post', post);

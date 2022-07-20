@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { useLocation } from 'react-router-dom';
 import NavBar from './NavBar.jsx';
+import Geocode from "react-geocode";
 
 import styles from '../stylesheets/createPost.scss';
 
@@ -10,27 +11,32 @@ const CreatePost = (props) => {
   const userData = location.state;
   console.log('metaData from createPost: ', userData)
   
-  const createPostSubmissions = (e) => {
-      e.preventDefault();
+  const createPostSubmissions = async (e) => {
+    e.preventDefault();
 
-      const address1 = document.getElementById('street1').value;
-      const address2 = document.getElementById('street2').value;
-      const city = document.getElementById('city').value;
-      const state = document.getElementById('state').value;
-      const zipCode = document.getElementById('zipCode').value;
-      const genderPreference = document.getElementById('dropDownMenu').value;
-      const bedroom = document.getElementById('bedroom').value;
-      const bathroom = document.getElementById('bathroom').value;
-      const sqft = document.getElementById('sqft').value;
-      const condition = document.getElementById('condition').value;
-      const utilities = document.getElementById('utilities').value;
-      const rent = document.getElementById('rent').value;
-      const bio = document.getElementById('bio').value;
-      const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
-      const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
-      const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
-      const moveInDate = document.getElementById('date').value;
-     
+    const address1 = document.getElementById('street1').value;
+    const address2 = document.getElementById('street2').value;
+    const city = document.getElementById('city').value;
+    const state = document.getElementById('state').value;
+    const zipCode = document.getElementById('zipCode').value;
+    const genderPreference = document.getElementById('dropDownMenu').value;
+    const bedroom = document.getElementById('bedroom').value;
+    const bathroom = document.getElementById('bathroom').value;
+    const sqft = document.getElementById('sqft').value;
+    const condition = document.getElementById('condition').value;
+    const utilities = document.getElementById('utilities').value;
+    const rent = document.getElementById('rent').value;
+    const bio = document.getElementById('bio').value;
+    const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
+    const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
+    const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
+    const moveInDate = document.getElementById('date').value;
+    
+    
+    try {
+      let data = await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
+      const { lat, lng } = data.results[0].geometry.location;
+      const geoData = {lat: lat, lng: lng}
       if (address1 === '' || 
           city === '' || 
           state === '' || 
@@ -44,47 +50,48 @@ const CreatePost = (props) => {
       }
       else {
         const reqBody = {
-            // picture: ,
-            address: {
-                street1: address1,
-                street2: address2,
-                city: city,
-                state: state,
-                zipCode: zipCode
-            },
-            roommate: {
-                gender: genderPreference,
-            },
-            description: {
-                BR: bedroom,
-                BA: bathroom,
-                sqFt: sqft,
-                pets: pets,
-                smoking: smoking,
-                parking: parking,
-                condition: condition,
-            },
-            moveInDate: moveInDate,
-            utilities: utilities,
-            rent: rent,
-            bio: bio,
-            userData: userData,
-            applications: []
+          // picture: ,
+          address: {
+            street1: address1,
+            street2: address2,
+            city: city,
+            state: state,
+            zipCode: zipCode
+          },
+          roommate: {
+            gender: genderPreference,
+          },
+          description: {
+            BR: bedroom,
+            BA: bathroom,
+            sqFt: sqft,
+            pets: pets,
+            smoking: smoking,
+            parking: parking,
+            condition: condition,
+          },
+          moveInDate: moveInDate,
+          utilities: utilities,
+          rent: rent,
+          bio: bio,
+          userData: userData,
+          applications: [],
+          geoData: geoData
         };
-    
+            
         fetch('/createPost', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(reqBody)
-            })
-            .then(data => data.json()) 
-            .then((formattedData) => {
-                console.log(formattedData)
-            })
-            .catch(err => {
-                console.log('Error thrown in POST request in createPost: ', err)
-            })
-    
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reqBody)
+        })
+        .then(data => data.json()) 
+        .then((formattedData) => {
+          console.log('CreatePost: ', formattedData)
+        })
+        .catch(err => {
+          console.log('Error thrown in POST request in createPost: ', err)
+        })
+        
         document.getElementById('street1').value = '';
         document.getElementById('street2').value = '';
         document.getElementById('city').value = '';
@@ -99,10 +106,14 @@ const CreatePost = (props) => {
         document.getElementById('rent').value = '';
         document.getElementById('bio').value = '';
         document.getElementById('date').value === null;
-        // document.getElementById('dropDownMenuPets').value;
-        // document.getElementById('dropDownMenuSmoking').value;
-        // document.getElementById('dropDownMenuParking').value;
       }
+    } 
+    catch(err) {
+      console.log(`Geocode err: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
+    }
+    finally {
+      
+    }
   
   };
 
