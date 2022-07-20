@@ -34,7 +34,7 @@ const CreatePost = (props) => {
     
     
     try {
-      let data = await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
+      let data = await Geocode.fromAddress(`${address1} ${city} ${state} ${zipCode}`)
       const { lat, lng } = data.results[0].geometry.location;
       const geoData = {lat: lat, lng: lng}
       if (address1 === '' || 

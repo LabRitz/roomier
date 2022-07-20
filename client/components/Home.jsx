@@ -24,24 +24,30 @@ const Home = (props) => {
 
   Geocode.setApiKey(GoogleMapsAPIKey);
   
-  const markers = [];
-  async function onMapLoad() {
-    const tempArr = []
+  // async function onMapLoad() {
+  function onMapLoad() {
+    const markers = [];
+    // const tempArr = []
     for (let i = 0; i < posts.length; i++) {
-      const { street1, city, state, zipCode } = posts[i].address;
-      await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
-        .then(data => {
-          const { lat, lng } = data.results[0].geometry.location;
-          tempArr.push({ lat, lng });
-        })
-        .catch(err => {
-          console.log(`Geocode err in Home: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
-        });
+      if (posts[i].geoData) {
+        console.log('Successful address: ', posts[i].address)
+        console.log('Successful geodata: ', posts[i].geoData)
+        markers.push(<Marker position={posts[i].geoData}></Marker>)
+      } else console.log('no geodata')
+      // const { street1, city, state, zipCode } = posts[i].address;
+      // await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
+      //   .then(data => {
+      //     const { lat, lng } = data.results[0].geometry.location;
+      //     tempArr.push({ lat, lng });
+      //   })
+      //   .catch(err => {
+      //     console.log(`Geocode err in Home: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
+      //   });
     }
 
-    for (let i = 0; i < tempArr.length; i++) {
-      markers.push(<Marker position={tempArr[i]}></Marker>)
-    }
+    // for (let i = 0; i < tempArr.length; i++) {
+    //   markers.push(<Marker position={tempArr[i]}></Marker>)
+    // }
 
     if (isLoaded) {
       render(
