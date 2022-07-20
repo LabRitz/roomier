@@ -33,6 +33,9 @@ const Home = (props) => {
         .then(data => {
           const { lat, lng } = data.results[0].geometry.location;
           tempArr.push({ lat, lng });
+        })
+        .catch(err => {
+          console.log(`Geocode err: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
         });
     }
 
@@ -60,7 +63,6 @@ const Home = (props) => {
       .then(data => data.json())
       .then(postsArr => {
         const newPost = Object.assign(postsArr, {userData: userData})
-        console.log('np: ',newPost)
         setPosts(newPost)
         setPassedProps(true)
         return (
