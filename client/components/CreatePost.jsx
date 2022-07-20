@@ -31,7 +31,15 @@ const CreatePost = (props) => {
       const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
       const moveInDate = document.getElementById('date').value;
      
-      if (address1 === '' || city === '' || state === '' || zipCode === '' || genderPreference === '' || sqft === '' || utilities === '' || rent === '') {
+      if (address1 === '' || 
+          city === '' || 
+          state === '' || 
+          zipCode === '' || 
+          genderPreference === '' || 
+          sqft === '' || 
+          utilities === '' || 
+          rent === '' || 
+          moveInDate === null) {
         alert("Must Require Input Fields");
       }
       else {
@@ -90,10 +98,10 @@ const CreatePost = (props) => {
         document.getElementById('utilities').value = '';
         document.getElementById('rent').value = '';
         document.getElementById('bio').value = '';
+        document.getElementById('date').value === null;
         // document.getElementById('dropDownMenuPets').value;
         // document.getElementById('dropDownMenuSmoking').value;
         // document.getElementById('dropDownMenuParking').value;
-        // document.getElementById('date').value;
       }
   
   };
@@ -104,17 +112,17 @@ const CreatePost = (props) => {
             <div className='createPostRoute'>
                   
                   <div className="price">
-                    <h2>Move In Date</h2>
+                    <h2>Move In Date *</h2>
                     <input type={'date'} id='date'></input>
-                    <h2>List Price</h2>
+                    <h2>List Price *</h2>
                     <div className='cost'>
-                      <h3 id="rentTag">Rent</h3>
+                      <h3 id="rentTag">Rent *</h3>
                       <input type={'number'} id="rent"></input>
-                      <h3 id="utilitiesTag">Utilities</h3>
+                      <h3 id="utilitiesTag">Utilities *</h3>
                       <input type={'number'} id="utilities"></input>
                     </div>
                     <div className="preference">
-                      <h3 id="genderTag">Gender Preference </h3>
+                      <h3 id="genderTag">Gender Preference *</h3>
                       <select name="genders" id="dropDownMenu">
                           <option value='male'>Male</option>
                           <option value='female'>Female</option>
@@ -125,19 +133,19 @@ const CreatePost = (props) => {
                 <div className="house">
                   <h2>Listing Address</h2>
 
-                  <h3 id="addressTag">Address</h3>
+                  <h3 id="addressTag">Address *</h3>
                   <div className="address">
                     <input type={'text'} id="street1" placeholder='Street address or P.O. Box'></input>
                     <input type={'text'} id="street2" placeholder='Apt, suite, unit, building, floor, etc'></input>
                   </div>
 
-                  <h5 id="cityTag">City</h5>
+                  <h5 id="cityTag">City *</h5>
                   <input type={'text'} id="city"></input>
 
-                  <h5 id="stateTag">State</h5>
+                  <h5 id="stateTag">State *</h5>
                   <input type={'text'} id="state"></input>
 
-                  <h5 id="zipTag">Zip Code</h5>
+                  <h5 id="zipTag">Zip Code *</h5>
                   <input type={'text'} id="zipCode"></input>
                 </div>  
 
@@ -146,15 +154,15 @@ const CreatePost = (props) => {
                   <h3 id="DescriptionTag">Description </h3>
                   <div className="basic">
                     <div>
-                      <h5 id="bedroomTag">Bedrooms</h5>
+                      <h5 id="bedroomTag">Bedrooms *</h5>
                       <input type={'number'} id="bedroom"></input>
                     </div>
                     <div>
-                      <h5 id="bathroomTag">Bathrooms</h5>
+                      <h5 id="bathroomTag">Bathrooms *</h5>
                       <input type={'number'} id="bathroom"></input>
                     </div>
                     <div>
-                      <h5 id="sqftTag">Sq ft</h5>
+                      <h5 id="sqftTag">Sqft *</h5>
                       <input type={'number'} id="sqft"></input>
                     </div>
                   </div>

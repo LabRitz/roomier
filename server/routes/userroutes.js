@@ -19,8 +19,8 @@ router.post('/signup',
 //login
 router.post('/', 
   userController.verifyUser, 
-  cookieController.setSSIDCookie, 
-  sessionController.startSession, 
+  // cookieController.setSSIDCookie, 
+  // sessionController.startSession, 
   (req, res) => {
     // console.log('res.cookie: ', res.cookies);
     return res.status(200).json(res.locals.user);

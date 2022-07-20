@@ -14,8 +14,9 @@ const Home = (props) => {
 
   const [posts, setPosts] = useState(null);
   const [passedProps, setPassedProps] = useState(false);
-
-  const GoogleMapsAPIKey = '' //INSERT OWN GOOGLE MAPS API
+  
+  //INSERT OWN GOOGLE MAPS API
+  const GoogleMapsAPIKey = 'AIzaSyCtt8vCUrFi12hwFLomHI-hVt2G2iRP-HA' 
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey
@@ -25,7 +26,6 @@ const Home = (props) => {
   
   const markers = [];
   async function onMapLoad() {
-    console.log('post: ', posts)
     const tempArr = []
     for (let i = 0; i < posts.length; i++) {
       const { street1, city, state, zipCode } = posts[i].address;
@@ -39,10 +39,8 @@ const Home = (props) => {
     for (let i = 0; i < tempArr.length; i++) {
       markers.push(<Marker position={tempArr[i]}></Marker>)
     }
-    
-    console.log('before isloaded')
+
     if (isLoaded) {
-      console.log('map is loaded')
       render(
         <GoogleMap
           center={{ lat: 40.748441, lng: -73.985664 }}
