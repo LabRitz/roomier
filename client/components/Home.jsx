@@ -8,10 +8,11 @@ import { useJsApiLoader, GoogleMap, Marker } from '@react-google-maps/api';
 import Geocode from "react-geocode";
 
 const Home = (props) => {
+
+
   const location = useLocation();
   const userData = location.state;
   // console.log('metaData from Home: ', userData)
-
   const [posts, setPosts] = useState(null);
   const [passedProps, setPassedProps] = useState(false);
   
@@ -77,6 +78,7 @@ const Home = (props) => {
               <NavBar />
               <HomeFeed props={posts} />
               <div id='googleMapDiv'></div>
+
             </div>
           </>
         )
@@ -102,6 +104,7 @@ const Home = (props) => {
             <img/>
           </div>
           <HomeFeed props = {posts}/>
+
           <div id='googleMapDiv'></div>
         </div>
       </>

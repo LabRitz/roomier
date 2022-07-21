@@ -20,7 +20,6 @@ postController.createPost = async (req, res, next) => {
       userData,
       geoData
     } = req.body;
-    
     const newPost = await Post.create({
       address: {
         street1: address.street1,
