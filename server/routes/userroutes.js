@@ -19,8 +19,8 @@ router.post('/signup',
 //login
 router.post('/', 
   userController.verifyUser, 
-  cookieController.setSSIDCookie, 
-  sessionController.startSession, 
+  // cookieController.setSSIDCookie, 
+  // sessionController.startSession, 
   (req, res) => {
     // console.log('res.cookie: ', res.cookies);
     return res.status(200).json(res.locals.user);
@@ -44,6 +44,7 @@ router.get('/findUser', userController.findUser, (req, res) => {
 
 //localhost:3000/home
 router.post('/createPost', postController.createPost, (req,res) => {
+  console.log('create post backend: ', res.locals.createPost);
     return res.status(200).json(res.locals.createPost)
 });
 
