@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { useLocation } from 'react-router-dom';
 import NavBar from './NavBar.jsx';
+import Geocode from "react-geocode";
 
 import styles from '../stylesheets/createPost.scss';
 
@@ -10,73 +11,87 @@ const CreatePost = (props) => {
   const userData = location.state;
   console.log('metaData from createPost: ', userData)
   
-  const createPostSubmissions = (e) => {
-      e.preventDefault();
+  const createPostSubmissions = async (e) => {
+    e.preventDefault();
 
-      const address1 = document.getElementById('street1').value;
-      const address2 = document.getElementById('street2').value;
-      const city = document.getElementById('city').value;
-      const state = document.getElementById('state').value;
-      const zipCode = document.getElementById('zipCode').value;
-      const genderPreference = document.getElementById('dropDownMenu').value;
-      const bedroom = document.getElementById('bedroom').value;
-      const bathroom = document.getElementById('bathroom').value;
-      const sqft = document.getElementById('sqft').value;
-      const condition = document.getElementById('condition').value;
-      const utilities = document.getElementById('utilities').value;
-      const rent = document.getElementById('rent').value;
-      const bio = document.getElementById('bio').value;
-      const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
-      const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
-      const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
-      const moveInDate = document.getElementById('date').value;
-     
-      if (address1 === '' || city === '' || state === '' || zipCode === '' || genderPreference === '' || sqft === '' || utilities === '' || rent === '') {
+    const address1 = document.getElementById('street1').value;
+    const address2 = document.getElementById('street2').value;
+    const city = document.getElementById('city').value;
+    const state = document.getElementById('state').value;
+    const zipCode = document.getElementById('zipCode').value;
+    const genderPreference = document.getElementById('dropDownMenu').value;
+    const bedroom = document.getElementById('bedroom').value;
+    const bathroom = document.getElementById('bathroom').value;
+    const sqft = document.getElementById('sqft').value;
+    const condition = document.getElementById('condition').value;
+    const utilities = document.getElementById('utilities').value;
+    const rent = document.getElementById('rent').value;
+    const bio = document.getElementById('bio').value;
+    const pets = JSON.parse(document.getElementById('dropDownMenuPets').value);
+    const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
+    const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
+    const moveInDate = document.getElementById('date').value;
+    
+    
+    try {
+      let data = await Geocode.fromAddress(`${address1} ${city} ${state} ${zipCode}`)
+      const { lat, lng } = data.results[0].geometry.location;
+      const geoData = {lat: lat, lng: lng}
+      if (address1 === '' || 
+          city === '' || 
+          state === '' || 
+          zipCode === '' || 
+          genderPreference === '' || 
+          sqft === '' || 
+          utilities === '' || 
+          rent === '' || 
+          moveInDate === null) {
         alert("Must Require Input Fields");
       }
       else {
         const reqBody = {
-            // picture: ,
-            address: {
-                street1: address1,
-                street2: address2,
-                city: city,
-                state: state,
-                zipCode: zipCode
-            },
-            roommate: {
-                gender: genderPreference,
-            },
-            description: {
-                BR: bedroom,
-                BA: bathroom,
-                sqFt: sqft,
-                pets: pets,
-                smoking: smoking,
-                parking: parking,
-                condition: condition,
-            },
-            moveInDate: moveInDate,
-            utilities: utilities,
-            rent: rent,
-            bio: bio,
-            userData: userData,
-            applications: []
+          // picture: ,
+          address: {
+            street1: address1,
+            street2: address2,
+            city: city,
+            state: state,
+            zipCode: zipCode
+          },
+          roommate: {
+            gender: genderPreference,
+          },
+          description: {
+            BR: bedroom,
+            BA: bathroom,
+            sqFt: sqft,
+            pets: pets,
+            smoking: smoking,
+            parking: parking,
+            condition: condition,
+          },
+          moveInDate: moveInDate,
+          utilities: utilities,
+          rent: rent,
+          bio: bio,
+          userData: userData,
+          applications: [],
+          geoData: geoData
         };
-    
+            
         fetch('/createPost', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(reqBody)
-            })
-            .then(data => data.json()) 
-            .then((formattedData) => {
-                console.log(formattedData)
-            })
-            .catch(err => {
-                console.log('Error thrown in POST request in createPost: ', err)
-            })
-    
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reqBody)
+        })
+        .then(data => data.json()) 
+        .then((formattedData) => {
+          console.log('CreatePost: ', formattedData)
+        })
+        .catch(err => {
+          console.log('Error thrown in POST request in createPost: ', err)
+        })
+        
         document.getElementById('street1').value = '';
         document.getElementById('street2').value = '';
         document.getElementById('city').value = '';
@@ -90,11 +105,15 @@ const CreatePost = (props) => {
         document.getElementById('utilities').value = '';
         document.getElementById('rent').value = '';
         document.getElementById('bio').value = '';
-        // document.getElementById('dropDownMenuPets').value;
-        // document.getElementById('dropDownMenuSmoking').value;
-        // document.getElementById('dropDownMenuParking').value;
-        // document.getElementById('date').value;
+        document.getElementById('date').value === null;
       }
+    } 
+    catch(err) {
+      console.log(`Geocode err in CreatePost: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
+    }
+    finally {
+      
+    }
   
   };
 
@@ -120,20 +139,18 @@ const CreatePost = (props) => {
         <div className='createPost'>
             <NavBar />
             <div className='createPostRoute'>
-
-                <div className="price">
-                   
-                    <h2>Move In Date</h2>
+                  <div className="price">
+                    <h2>Move In Date *</h2>
                     <input type={'date'} id='date'></input>
-                    <h2>List Price</h2>
+                    <h2>List Price *</h2>
                     <div className='cost'>
-                        <h3 id="rentTag">Rent</h3>
-                        <input type={'number'} id="rent"></input>
-                        <h3 id="utilitiesTag">Utilities</h3>
-                        <input type={'number'} id="utilities"></input>
+                      <h3 id="rentTag">Rent *</h3>
+                      <input type={'number'} id="rent"></input>
+                      <h3 id="utilitiesTag">Utilities *</h3>
+                      <input type={'number'} id="utilities"></input>
                     </div>
                     <div className="preference">
-                      <h3 id="genderTag">Gender Preference </h3>
+                      <h3 id="genderTag">Gender Preference *</h3>
                       <select name="genders" id="dropDownMenu">
                           <option value='male'>Male</option>
                           <option value='female'>Female</option>
@@ -144,38 +161,38 @@ const CreatePost = (props) => {
                 <div className="house">
                     <h2>Listing Address</h2>
 
-                    <h3 id="addressTag">Address</h3>
-                    <div className="address">
-                        <input type={'text'} id="street1" placeholder='Street address or P.O. Box'></input>
-                        <input type={'text'} id="street2" placeholder='Apt, suite, unit, building, floor, etc'></input>
-                    </div>
+                  <h3 id="addressTag">Address *</h3>
+                  <div className="address">
+                    <input type={'text'} id="street1" placeholder='Street address or P.O. Box'></input>
+                    <input type={'text'} id="street2" placeholder='Apt, suite, unit, building, floor, etc'></input>
+                  </div>
 
-                    <h5 id="cityTag">City</h5>
-                    <input type={'text'} id="city"></input>
+                  <h5 id="cityTag">City *</h5>
+                  <input type={'text'} id="city"></input>
 
-                    <h5 id="stateTag">State</h5>
-                    <input type={'text'} id="state"></input>
+                  <h5 id="stateTag">State *</h5>
+                  <input type={'text'} id="state"></input>
 
-                    <h5 id="zipTag">Zip Code</h5>
-                    <input type={'text'} id="zipCode"></input>
-                </div>
+                  <h5 id="zipTag">Zip Code *</h5>
+                  <input type={'text'} id="zipCode"></input>
+                </div>  
 
 
                 <div className="description">
-                    <h3 id="DescriptionTag">Description </h3>
-                    <div className="basic">
-                        <div>
-                            <h5 id="bedroomTag">Bedrooms</h5>
-                            <input type={'number'} id="bedroom"></input>
-                        </div>
-                        <div>
-                            <h5 id="bathroomTag">Bathrooms</h5>
-                            <input type={'number'} id="bathroom"></input>
-                        </div>
-                        <div>
-                            <h5 id="sqftTag">Sq ft</h5>
-                            <input type={'number'} id="sqft"></input>
-                        </div>
+                  <h3 id="DescriptionTag">Description </h3>
+                  <div className="basic">
+                    <div>
+                      <h5 id="bedroomTag">Bedrooms *</h5>
+                      <input type={'number'} id="bedroom"></input>
+                    </div>
+                    <div>
+                      <h5 id="bathroomTag">Bathrooms *</h5>
+                      <input type={'number'} id="bathroom"></input>
+                    </div>
+                    <div>
+                      <h5 id="sqftTag">Sqft *</h5>
+                      <input type={'number'} id="sqft"></input>
+
                     </div>
 
                     <h5 id="petsTag">Pets</h5>

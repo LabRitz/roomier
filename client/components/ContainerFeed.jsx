@@ -6,20 +6,43 @@ import styles from '../stylesheets/containerFeed.scss'
 
 const ContainerFeed = ({props}) => {
 
-  const applications = (props.applications) ? props.applications:[]
+  let applications
+  if (!props.applicantData) {
+    // *****DUMMY DATA******
+    applications = [
+      {
+        firstName: 'Brennan',
+        lastName: 'Lee',
+        username: 'cheekyBoi@clubpenguin.com'
+      },
+      {
+        firstName: 'Big',
+        lastName: 'Addy',
+        username: 'admin@garticphone.com'
+      },
+      {
+        firstName: 'Michael',
+        lastName: 'R',
+        username: 'newPhone@whoDis.com'
+      }
+    ];
+  }
+  else if (props.applicantData.length === 0)  {
+    applications = []
+  }
+  else applications = props.applicantData
+
+  // console.log('apps', applications)
 
   async function handleApply(e) {
     console.log('clicking apply')
     try {
-      const { applicantData } = props
+      const { applicationInfo } = props
       const reqBody = {
-        firstName: applicantData.firstName,
-        lastName: applicantData.lastName,
-        username: applicantData.username
+        firstName: applicationInfo.firstName,
+        lastName: applicationInfo.lastName,
+        username: applicationInfo.username
       }
-
-      console.log('application reqBody, ', reqBody ,'to _id', props._id)
-
       const response = await fetch(`/home/${props._id}`, {
           method:'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -32,7 +55,6 @@ const ContainerFeed = ({props}) => {
       console.log('Error applying to post: ', err)
     }
   }
-
   return (
     <div className='feed'>
       <Card props={props}/>

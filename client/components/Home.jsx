@@ -15,36 +15,47 @@ const Home = (props) => {
   // console.log('metaData from Home: ', userData)
   const [posts, setPosts] = useState(null);
   const [passedProps, setPassedProps] = useState(false);
+  
+  //INSERT OWN GOOGLE MAPS API
+  const GoogleMapsAPIKey = 'AIzaSyCtt8vCUrFi12hwFLomHI-hVt2G2iRP-HA' 
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyC_okJNBkwBu8ceXP1UlIL3jhSzf8YeQiw'
+    googleMapsApiKey: GoogleMapsAPIKey
   })
 
-  Geocode.setApiKey('AIzaSyC_okJNBkwBu8ceXP1UlIL3jhSzf8YeQiw');
+  Geocode.setApiKey(GoogleMapsAPIKey);
   
-  const markers = [];
-  async function onMapLoad() {
-    console.log('post: ', posts)
-    const tempArr = []
+  // async function onMapLoad() {
+  function onMapLoad() {
+    const markers = [];
+    // const tempArr = []
     for (let i = 0; i < posts.length; i++) {
-      const { street1, city, state, zipCode } = posts[i].address;
-      await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
-        .then(data => {
-          const { lat, lng } = data.results[0].geometry.location;
-          tempArr.push({ lat, lng });
-        });
+      if (posts[i].geoData) {
+        console.log('Successful address: ', posts[i].address)
+        console.log('Successful geodata: ', posts[i].geoData)
+        markers.push(<Marker position={posts[i].geoData}></Marker>)
+      } else console.log('no geodata')
+      // const { street1, city, state, zipCode } = posts[i].address;
+      // await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
+      //   .then(data => {
+      //     const { lat, lng } = data.results[0].geometry.location;
+      //     tempArr.push({ lat, lng });
+      //   })
+      //   .catch(err => {
+      //     console.log(`Geocode err in Home: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
+      //   });
     }
 
-    for (let i = 0; i < tempArr.length; i++) {
-      markers.push(<Marker position={tempArr[i]}></Marker>)
-    }
-    
+    // for (let i = 0; i < tempArr.length; i++) {
+    //   markers.push(<Marker position={tempArr[i]}></Marker>)
+    // }
+
     if (isLoaded) {
       render(
         <GoogleMap
           center={{ lat: 40.748441, lng: -73.985664 }}
-          zoom={15}
-          mapContainerStyle={{ width: '100%', height: '100%', top: '0', left: '0', position: 'absolute', zIndex: '-1' }}
+          zoom={13}
+          mapContainerStyle={{ width: '35%', height: '90%', bottom: '2%', top: '8%', left: '2%', position: 'absolute', borderRadius: '12px', boxShadow: '2px 2px 8px gray'}}
         >
           {markers}
         </GoogleMap>,
@@ -54,16 +65,20 @@ const Home = (props) => {
   }
 
   useEffect(() => {
+    // console.log('first useEffect')
     fetch(`/home/${userData.username}`)
       .then(data => data.json())
       .then(postsArr => {
         const newPost = Object.assign(postsArr, {userData: userData})
         setPosts(newPost)
+        setPassedProps(true)
         return (
           <>
             <div className='home'>
               <NavBar />
               <HomeFeed props={posts} />
+              <div id='googleMapDiv'></div>
+
             </div>
           </>
         )
@@ -71,19 +86,25 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log('second useEffect')
+    // console.log('second useEffect')
     if (passedProps) {
       onMapLoad()
     }
   }, [passedProps])
 
   if (posts) {
-
     return (
       <>
         <div className='home'>
           <NavBar />
-          <HomeFeed props={posts} />
+          <div className='background'>
+            <img src='https://i.redd.it/za30ryykl7n81.jpg'></img>
+          </div>
+          <div className="fade">
+            <img/>
+          </div>
+          <HomeFeed props = {posts}/>
+
           <div id='googleMapDiv'></div>
         </div>
       </>

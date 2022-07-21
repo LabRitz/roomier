@@ -60,10 +60,10 @@ router.delete('/profile/:_id', postController.deletePost, (req, res) => {
   return res.status(202).json(res.locals.deleteProfile);
 });
 
-
-
-
 //cookies route
+router.get('/signout', cookieController.deleteCookie , (req,res) => {
+  return res.status(200).json({})
+});
 
 module.exports = router;
 

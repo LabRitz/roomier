@@ -39,14 +39,17 @@ const ContainerApplications = ({props}) => {
 
   // Toggle visibility of applicants
   function viewApplicants(e) {
-    const content = e.target.nextSibling
-    if (content.style.display === 'none') {
-      content.style.display = 'block'
-    } else content.style.display = 'none'
+    if (applications.length === 0) alert(`Hey dummy nobody wants to live with you! (yet) 🙃`)  
+    else {
+      const content = e.target.nextSibling
+      if (content.style.display === 'none') {
+        content.style.display = 'block'
+      } else content.style.display = 'none'
+    }
   }
-  
+
   let applications
-  if (props.applications === undefined) {
+  if (!props.applicantData) {
     // *****DUMMY DATA******
     applications = [
       {
@@ -66,15 +69,15 @@ const ContainerApplications = ({props}) => {
       }
     ];
   }
-  else if (props.applications.length === 0)  {
-    console.log(`Hey dummy nobody wants to live with you (yet)`)  
+  else if (props.applicantData.length === 0)  {
+    applications = []
   }
-  else applications = props.applications
+  else applications = props.applicantData
 
-  // Map applicants to dropdown container
-  const apps = applications.map(app => {
-    <li>{app.firstName} {app.lastName} | {app.username}</li>
-  })
+  // // Map applicants to dropdown container
+  // const apps = applicationData.map(app => {
+  //   <li>{app.firstName} {app.lastName} | {app.username}</li>
+  // })
 
   return (
     <div className='applications'>
