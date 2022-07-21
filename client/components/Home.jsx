@@ -30,8 +30,8 @@ const Home = (props) => {
     // const tempArr = []
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].geoData) {
-        console.log('Successful address: ', posts[i].address)
-        console.log('Successful geodata: ', posts[i].geoData)
+        // console.log('Successful address: ', posts[i].address)
+        // console.log('Successful geodata: ', posts[i].geoData)
         markers.push(<Marker position={posts[i].geoData}></Marker>)
       } else console.log('no geodata')
       // const { street1, city, state, zipCode } = posts[i].address;
