@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 
 import styles from '../stylesheets/card.scss';
 
@@ -14,7 +14,17 @@ const Card = ({props}) => {
         bio
       } = props;
     
-  if (picture === undefined) picture = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg';
+  const [imgIndex, setIndex] = useState(0)
+  const [imgSrc, setImg] = useState('https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg')
+  
+  useEffect(()=> {
+    setTimeout(() => {
+      if (imgIndex + 1 > picture.length) setIndex(0)
+      else setIndex(imgIndex + 1)
+      
+      if (picture.length !== 0) setImg(Object.keys(picture[imgIndex])[0])
+    }, 5000)
+  }, [imgIndex])
 
   if (description.condition === undefined) description.condition = 'Slightly used';
 
@@ -23,7 +33,7 @@ const Card = ({props}) => {
       <div className='card'>
         <div className="header">
           <div className="img">
-            <img src={picture} alt='insert sweet looking apartment'></img>
+            <img src={imgSrc} alt='insert sweet looking apartment'></img>
           </div>
           <div className="data">
             <p className='address'>{address.street1} {address.street2}</p>

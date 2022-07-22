@@ -8,10 +8,11 @@ import { useJsApiLoader, GoogleMap, Marker } from '@react-google-maps/api';
 import Geocode from "react-geocode";
 
 const Home = (props) => {
+
+
   const location = useLocation();
   const userData = location.state;
   // console.log('metaData from Home: ', userData)
-
   const [posts, setPosts] = useState(null);
   const [passedProps, setPassedProps] = useState(false);
   
@@ -30,24 +31,9 @@ const Home = (props) => {
     // const tempArr = []
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].geoData) {
-        // console.log('Successful address: ', posts[i].address)
-        // console.log('Successful geodata: ', posts[i].geoData)
         markers.push(<Marker position={posts[i].geoData}></Marker>)
       } else console.log('no geodata')
-      // const { street1, city, state, zipCode } = posts[i].address;
-      // await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
-      //   .then(data => {
-      //     const { lat, lng } = data.results[0].geometry.location;
-      //     tempArr.push({ lat, lng });
-      //   })
-      //   .catch(err => {
-      //     console.log(`Geocode err in Home: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
-      //   });
     }
-
-    // for (let i = 0; i < tempArr.length; i++) {
-    //   markers.push(<Marker position={tempArr[i]}></Marker>)
-    // }
 
     if (isLoaded) {
       render(
@@ -64,7 +50,6 @@ const Home = (props) => {
   }
 
   useEffect(() => {
-    // console.log('first useEffect')
     fetch(`/home/${userData.username}`)
       .then(data => data.json())
       .then(postsArr => {
@@ -77,6 +62,7 @@ const Home = (props) => {
               <NavBar />
               <HomeFeed props={posts} />
               <div id='googleMapDiv'></div>
+
             </div>
           </>
         )
@@ -84,7 +70,6 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    // console.log('second useEffect')
     if (passedProps) {
       onMapLoad()
     }
@@ -102,6 +87,7 @@ const Home = (props) => {
             <img/>
           </div>
           <HomeFeed props = {posts}/>
+
           <div id='googleMapDiv'></div>
         </div>
       </>

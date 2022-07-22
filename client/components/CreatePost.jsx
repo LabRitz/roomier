@@ -1,15 +1,39 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import NavBar from './NavBar.jsx';
+import {storage} from './firebase'
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
 import Geocode from "react-geocode";
 
-import styles from '../stylesheets/createPost.scss';
+import NavBar from './NavBar.jsx';
+import Gallery from './Gallery.jsx';
 
+import styles from '../stylesheets/createPost.scss';
 
 const CreatePost = (props) => {
   const location = useLocation();
   const userData = location.state;
-  console.log('metaData from createPost: ', userData)
+
+  // Initialize states for 
+  const [imageUpload, setImageUpload] = useState(null);
+  const [imgArr, setImgArr] = useState([])
+  console.log('CreatePost: ', imgArr)
+
+  const firebaseUploadImage = async () => {
+    if (imageUpload) {
+      const imgRef = ref(storage, `images/${imageUpload.name}`);
+      await uploadBytes(imgRef, imageUpload);
+      const imgURL = await getDownloadURL(imgRef);
+      const imgObj = {};
+      imgObj[imgURL] = `images/${imageUpload.name}`;
+      const newArr = [...imgArr, imgObj]
+      setImgArr(newArr);
+      console.log('Uploaded arr: ', imgArr);
+      document.querySelector('#imgPreview').src = imgURL;
+    }
+    else {
+      console.log('it failed')
+    }
+  }
   
   const createPostSubmissions = async (e) => {
     e.preventDefault();
@@ -50,7 +74,7 @@ const CreatePost = (props) => {
       }
       else {
         const reqBody = {
-          // picture: ,
+          picture: imgArr,
           address: {
             street1: address1,
             street2: address2,
@@ -119,10 +143,14 @@ const CreatePost = (props) => {
 
     return (
       <div className='createPost'>
-        <NavBar />
+        <NavBar /> 
+        <Gallery imgArr={imgArr} />
         <div className='createPostRoute'>
-              
               <div className="price">
+                <div className="imageUpload">
+                  <input type={"file"} multiple onChange={(e) => setImageUpload(e.target.files[0])}></input>
+                  <button type='submit' onClick={firebaseUploadImage}>Upload Image</button>
+                </div>
                 <h2>Move In Date *</h2>
                 <input type={'date'} id='date'></input>
                 <h2>List Price *</h2>
