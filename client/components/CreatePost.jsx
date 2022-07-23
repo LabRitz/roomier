@@ -16,18 +16,16 @@ const CreatePost = (props) => {
   // Initialize states for 
   const [imageUpload, setImageUpload] = useState(null);
   const [imgArr, setImgArr] = useState([])
-  console.log('CreatePost: ', imgArr)
 
   const firebaseUploadImage = async () => {
     if (imageUpload) {
-      const imgRef = ref(storage, `images/${imageUpload.name}`);
+      const imgRef = ref(storage, `images/${userData.username}/${imageUpload.name}`);
       await uploadBytes(imgRef, imageUpload);
       const imgURL = await getDownloadURL(imgRef);
       const imgObj = {};
       imgObj[imgURL] = `images/${imageUpload.name}`;
       const newArr = [...imgArr, imgObj]
       setImgArr(newArr);
-      console.log('Uploaded arr: ', imgArr);
       document.querySelector('#imgPreview').src = imgURL;
     }
     else {
@@ -55,7 +53,6 @@ const CreatePost = (props) => {
     const smoking = JSON.parse(document.getElementById('dropDownMenuSmoking').value);
     const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
     const moveInDate = document.getElementById('date').value;
-    
     
     try {
       let data = await Geocode.fromAddress(`${address1} ${city} ${state} ${zipCode}`)
@@ -100,7 +97,8 @@ const CreatePost = (props) => {
           bio: bio,
           userData: userData,
           applications: [],
-          geoData: geoData
+          geoData: geoData,
+          images: imgArr
         };
             
         fetch('/createPost', {
@@ -130,6 +128,7 @@ const CreatePost = (props) => {
         document.getElementById('rent').value = '';
         document.getElementById('bio').value = '';
         document.getElementById('date').value === null;
+        setImgArr([])
       }
     } 
     catch(err) {

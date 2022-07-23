@@ -13,24 +13,18 @@ const Gallery = ({imgArr}) => {
 
   useEffect(() => {
     if (imgArr.length !== 0) {
-      // console.log('useEFfect: ', imgArr)
       setIndex(imgArr.length-1)
-      // console.log('imgArr[index]: ', imgArr[index])
-      // console.log('index: ', index)
       setImg(Object.keys(imgArr[index])[0])
     }
     else setImg('https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg')
   }, [imgArr])
 
   function handleClick(dir) {
-    // console.log('ImageIndex was: ', index)
-    
     if (index + dir < 0) setIndex(imgArr.length - 1)
     else if (index + dir > imgArr.length - 1) setIndex(0)
     else setIndex(index + dir);
+    console.log('new index', index)
 
-    // console.log('ImageIndex now: ', index)
-    // console.log('Object at index: ',imgArr[index])
     setImg(Object.keys(imgArr[index])[0])
   }
 

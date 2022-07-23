@@ -35,7 +35,8 @@ const post = Schema({
   geoData: {
     lat: {type: Number},
     lng: {type: Number}
-  }
+  },
+  images: {type: Array}
 })
 
 const Post = mongoose.model('post', post);
