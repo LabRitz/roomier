@@ -23,7 +23,7 @@ const CreatePost = (props) => {
       await uploadBytes(imgRef, imageUpload);
       const imgURL = await getDownloadURL(imgRef);
       const imgObj = {};
-      imgObj[imgURL] = `images/${imageUpload.name}`;
+      imgObj[imgURL] = `images/${userData.username}/${imageUpload.name}`;
       const newArr = [...imgArr, imgObj]
       setImgArr(newArr);
       document.querySelector('#imgPreview').src = imgURL;
@@ -70,8 +70,10 @@ const CreatePost = (props) => {
         alert("Must Require Input Fields");
       }
       else {
+        console.log('before reqBody: ', imgArr)
+        console.log('before reqBody: ', imgArr.length)
         const reqBody = {
-          picture: imgArr,
+          // picture: imgArr,
           address: {
             street1: address1,
             street2: address2,
@@ -100,7 +102,7 @@ const CreatePost = (props) => {
           geoData: geoData,
           images: imgArr
         };
-            
+        console.log('before fetch: ', reqBody.images)
         fetch('/createPost', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

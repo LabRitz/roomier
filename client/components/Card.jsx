@@ -11,7 +11,8 @@ const Card = ({props}) => {
         moveInDate,
         utilities,
         rent,
-        bio
+        bio,
+        images
       } = props;
     
   const [imgIndex, setIndex] = useState(0)
