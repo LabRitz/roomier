@@ -4,7 +4,7 @@ import React, { Component, useEffect, useState } from 'react';
 
 // imgArr => Array of Object key value pairs { Image urls:  Firebase file paths }
 const Gallery = ({imgArr}) => {
-  // console.log('Gallery imgArr: ', imgArr)
+  console.log('Gallery imgArr: ', imgArr)
   // console.log('Gallery imgArrlength: ', imgArr.length)
 
   // const [arrURLs, setArr] = useState(imgArr)
