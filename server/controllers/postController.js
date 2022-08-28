@@ -8,8 +8,7 @@ const postController = {};
 postController.createPost = async (req, res, next) => {
   try {
     // deconstruct from our post request
-    const { 
-      // picture, 
+    const {  
       address, 
       roommate, 
       description,
@@ -18,9 +17,9 @@ postController.createPost = async (req, res, next) => {
       rent, 
       bio,
       userData,
-      geoData
+      geoData,
+      images
     } = req.body;
-    
     const newPost = await Post.create({
       address: {
         street1: address.street1,
@@ -54,7 +53,8 @@ postController.createPost = async (req, res, next) => {
       geoData: {
         lat: geoData.lat,
         lng: geoData.lng
-      }
+      },
+      images: images
     });
     res.locals.createPost = newPost
     return next();

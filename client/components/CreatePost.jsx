@@ -1,15 +1,37 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import NavBar from './NavBar.jsx';
+import {storage} from './firebase'
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
 import Geocode from "react-geocode";
 
-import styles from '../stylesheets/createPost.scss';
+import NavBar from './NavBar.jsx';
+import Gallery from './Gallery.jsx';
 
+import styles from '../stylesheets/createPost.scss';
 
 const CreatePost = (props) => {
   const location = useLocation();
   const userData = location.state;
-  console.log('metaData from createPost: ', userData)
+
+  // Initialize states for 
+  const [imageUpload, setImageUpload] = useState(null);
+  const [imgArr, setImgArr] = useState([])
+
+  const firebaseUploadImage = async () => {
+    if (imageUpload) {
+      const imgRef = ref(storage, `images/${userData.username}/${imageUpload.name}`);
+      await uploadBytes(imgRef, imageUpload);
+      const imgURL = await getDownloadURL(imgRef);
+      const imgObj = {};
+      imgObj[imgURL] = `images/${userData.username}/${imageUpload.name}`;
+      const newArr = [...imgArr, imgObj]
+      setImgArr(newArr);
+      document.querySelector('#imgPreview').src = imgURL;
+    }
+    else {
+      console.log('it failed')
+    }
+  }
   
   const createPostSubmissions = async (e) => {
     e.preventDefault();
@@ -32,9 +54,8 @@ const CreatePost = (props) => {
     const parking = JSON.parse(document.getElementById('dropDownMenuParking').value);
     const moveInDate = document.getElementById('date').value;
     
-    
     try {
-      let data = await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
+      let data = await Geocode.fromAddress(`${address1} ${city} ${state} ${zipCode}`)
       const { lat, lng } = data.results[0].geometry.location;
       const geoData = {lat: lat, lng: lng}
       if (address1 === '' || 
@@ -49,8 +70,10 @@ const CreatePost = (props) => {
         alert("Must Require Input Fields");
       }
       else {
+        console.log('before reqBody: ', imgArr)
+        console.log('before reqBody: ', imgArr.length)
         const reqBody = {
-          // picture: ,
+          // picture: imgArr,
           address: {
             street1: address1,
             street2: address2,
@@ -76,9 +99,10 @@ const CreatePost = (props) => {
           bio: bio,
           userData: userData,
           applications: [],
-          geoData: geoData
+          geoData: geoData,
+          images: imgArr
         };
-            
+        console.log('before fetch: ', reqBody.images)
         fetch('/createPost', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -106,6 +130,7 @@ const CreatePost = (props) => {
         document.getElementById('rent').value = '';
         document.getElementById('bio').value = '';
         document.getElementById('date').value === null;
+        setImgArr([])
       }
     } 
     catch(err) {
@@ -118,103 +143,104 @@ const CreatePost = (props) => {
   };
 
     return (
-        <div className='createPost'>
-            <NavBar />
-            <div className='createPostRoute'>
-                  
-                  <div className="price">
-                    <h2>Move In Date *</h2>
-                    <input type={'date'} id='date'></input>
-                    <h2>List Price *</h2>
-                    <div className='cost'>
-                      <h3 id="rentTag">Rent *</h3>
-                      <input type={'number'} id="rent"></input>
-                      <h3 id="utilitiesTag">Utilities *</h3>
-                      <input type={'number'} id="utilities"></input>
-                    </div>
-                    <div className="preference">
-                      <h3 id="genderTag">Gender Preference *</h3>
-                      <select name="genders" id="dropDownMenu">
-                          <option value='male'>Male</option>
-                          <option value='female'>Female</option>
-                          <option value='no-preference'>No-preference</option>
-                      </select>
-                    </div>
-                  </div>
-                <div className="house">
-                  <h2>Listing Address</h2>
-
-                  <h3 id="addressTag">Address *</h3>
-                  <div className="address">
-                    <input type={'text'} id="street1" placeholder='Street address or P.O. Box'></input>
-                    <input type={'text'} id="street2" placeholder='Apt, suite, unit, building, floor, etc'></input>
-                  </div>
-
-                  <h5 id="cityTag">City *</h5>
-                  <input type={'text'} id="city"></input>
-
-                  <h5 id="stateTag">State *</h5>
-                  <input type={'text'} id="state"></input>
-
-                  <h5 id="zipTag">Zip Code *</h5>
-                  <input type={'text'} id="zipCode"></input>
-                </div>  
-
-
-                <div className="description">
-                  <h3 id="DescriptionTag">Description </h3>
-                  <div className="basic">
-                    <div>
-                      <h5 id="bedroomTag">Bedrooms *</h5>
-                      <input type={'number'} id="bedroom"></input>
-                    </div>
-                    <div>
-                      <h5 id="bathroomTag">Bathrooms *</h5>
-                      <input type={'number'} id="bathroom"></input>
-                    </div>
-                    <div>
-                      <h5 id="sqftTag">Sqft *</h5>
-                      <input type={'number'} id="sqft"></input>
-                    </div>
-                  </div>
-
-                  <h5 id="petsTag">Pets</h5>
-
-                  <select name="pets" id="dropDownMenuPets">
-                      <option value={true}>Allowed</option>
-                      <option value={false}>Not Allowed</option>
-                  </select>
-
-                  <h5 id="smokingTag">Smoking</h5>
-                  <select name="smoking" id="dropDownMenuSmoking">
-                      <option value={true}>Allowed</option>
-                      <option value={false}>Not Allowed</option>
-                  </select>
-
-                  <h5 id="parkingTag">Parking</h5>
-                  <select name="parking" id="dropDownMenuParking">
-                      <option value={true}>Allowed</option>
-                      <option value={false}>Not Allowed</option>
-                  </select>
-
-                  <h5 id="conditionTag">Condition</h5>
-                  <input type={'text'} id="condition"></input>
+      <div className='createPost'>
+        <NavBar /> 
+        <Gallery imgArr={imgArr} />
+        <div className='createPostRoute'>
+              <div className="price">
+                <div className="imageUpload">
+                  <input type={"file"} multiple onChange={(e) => setImageUpload(e.target.files[0])}></input>
+                  <button type='submit' onClick={firebaseUploadImage}>Upload Image</button>
                 </div>
-                {/* <h3 id="moveInDateTag">Move In Date</h3>
-                <input type={'text'} id="moveInDate" placeholder='Street address or P.O. Box'></input>
-                <button type='submit' id='submitAdress' onClick={createPostSubmissions}>enter</button> */}
-                <div className="bio">
-                  <h3 id="bioTag">Bio</h3>
-                  <input type={'text'} id="bio"></input>
-                  <button type='submit' id='submitPost' onClick={createPostSubmissions}>
-                    <h2>Post</h2>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
-                      <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
-                    </svg>
-                  </button>
+                <h2>Move In Date *</h2>
+                <input type={'date'} id='date'></input>
+                <h2>List Price *</h2>
+                <div className='cost'>
+                  <h3 id="rentTag">Rent *</h3>
+                  <input type={'number'} id="rent"></input>
+                  <h3 id="utilitiesTag">Utilities *</h3>
+                  <input type={'number'} id="utilities"></input>
                 </div>
+                <div className="preference">
+                  <h3 id="genderTag">Gender Preference *</h3>
+                  <select name="genders" id="dropDownMenu">
+                      <option value='male'>Male</option>
+                      <option value='female'>Female</option>
+                      <option value='no-preference'>No-preference</option>
+                  </select>
+                </div>
+              </div>
+            <div className="house">
+              <h2>Listing Address</h2>
+
+              <h3 id="addressTag">Address *</h3>
+              <div className="address">
+                <input type={'text'} id="street1" placeholder='Street address or P.O. Box'></input>
+                <input type={'text'} id="street2" placeholder='Apt, suite, unit, building, floor, etc'></input>
+              </div>
+
+              <h5 id="cityTag">City *</h5>
+              <input type={'text'} id="city"></input>
+
+              <h5 id="stateTag">State *</h5>
+              <input type={'text'} id="state"></input>
+
+              <h5 id="zipTag">Zip Code *</h5>
+              <input type={'text'} id="zipCode"></input>
+            </div>  
+
+
+            <div className="description">
+              <h3 id="DescriptionTag">Description </h3>
+              <div className="basic">
+                <div>
+                  <h5 id="bedroomTag">Bedrooms *</h5>
+                  <input type={'number'} id="bedroom"></input>
+                </div>
+                <div>
+                  <h5 id="bathroomTag">Bathrooms *</h5>
+                  <input type={'number'} id="bathroom"></input>
+                </div>
+                <div>
+                  <h5 id="sqftTag">Sqft *</h5>
+                  <input type={'number'} id="sqft"></input>
+                </div>
+              </div>
+
+              <h5 id="petsTag">Pets</h5>
+
+              <select name="pets" id="dropDownMenuPets">
+                  <option value={true}>Allowed</option>
+                  <option value={false}>Not Allowed</option>
+              </select>
+
+              <h5 id="smokingTag">Smoking</h5>
+              <select name="smoking" id="dropDownMenuSmoking">
+                  <option value={true}>Allowed</option>
+                  <option value={false}>Not Allowed</option>
+              </select>
+
+              <h5 id="parkingTag">Parking</h5>
+              <select name="parking" id="dropDownMenuParking">
+                  <option value={true}>Allowed</option>
+                  <option value={false}>Not Allowed</option>
+              </select>
+
+              <h5 id="conditionTag">Condition</h5>
+              <input type={'text'} id="condition"></input>
+            </div>
+            <div className="bio">
+              <h3 id="bioTag">Bio</h3>
+              <input type={'text'} id="bio"></input>
+              <button type='submit' id='submitPost' onClick={createPostSubmissions}>
+                <h2>Post</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                  <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                </svg>
+              </button>
             </div>
         </div>
+      </div>
     );
 };
 

@@ -9,31 +9,31 @@ const userController = {};
 // sign up
 userController.createUser = async (req, res, next) => {
   try {
-    const { firstName, lastName, username, password } = req.body;
+    const { firstName, lastName, username, password, zipCode } = req.body;
 
     // checking if username or password is empty
-    if (!username || !password) return next('username or password is missing')
+    if (!username || !password) {
+      return next({
+        log: 'userController.createUser error',
+        message: {err: 'Username or password missing in userContoller.createUser'}
+      })
+    }
 
     const results = await User.findOne({username: username})
 
     if (results) {
-      console.log('from userfindone result line 20 :', results)
       res.locals.user = null;
       return next();
     }
 
     // if username/password is not empty, we will create our user
-    const queryResult = await User.create({ firstName, lastName, username, password });
+    const queryResult = await User.create({ firstName, lastName, username, password, zipCode });
 
     // passing into our res so we can access
     res.locals.user = queryResult;
-    // console.log('res.locals.user, ' , res.locals.user)
-
-    // redirect to login
-    // res.redirect('/')
-
     return next();
-  } catch (err) {
+  } 
+  catch (err) {
     return next({
       log: `error caught in userController.createUser: ${err}`,
       message: {err: 'an error occurred when attempting to create a user'}
@@ -61,9 +61,7 @@ userController.verifyUser = async (req, res, next) => {
     // Look to alert user if they want to signup or not - change redirect
     if (!queryResult || !comparePass) {
       console.log('invalid username or password');
-      // res.redirect('/signup')
-      res.locals.user = null
-      // res.send(res.locals.user)
+      res.locals.user = null;
       return next({
         log: `error caught in userController.verifyUser`,
         message: {error: 'an error occurred while attempting to verify a user'}
@@ -73,8 +71,8 @@ userController.verifyUser = async (req, res, next) => {
       res.locals.user = queryResult;
       return next();
     } 
-
-  } catch (err) {
+  } 
+  catch (err) {
     return next({
       log: `error caught in userController.verifyUser : ${err}`,
       message: {err: 'an error occurred while attempting to verify a user'}
@@ -86,10 +84,9 @@ userController.findUser = async (req, res, next) => {
   try {
     const data = await User.find({});
     console.log('data', data)
-    // const formattedData = data.json();
-    // console.log('format', formattedData);
     return next();
-  } catch (err) {
+  } 
+  catch (err) {
     return next({
       log: `error caught in userController.findUser : ${err}`,
       message: {err: 'an error occurred while attempting to find a user'}

@@ -10,6 +10,7 @@ const user = Schema({
   lastName: {type: String, required: true},
   username: {type: String, required: true, unique: true},
   password: {type: String, required: true},
+  zipCode: {type: String}
 })
 
 // Prefunction that uses bcrypt to hash our password and resave
