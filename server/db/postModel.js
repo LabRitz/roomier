@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const post = Schema({
-  picture: {type: String},
+  picture: {type: Array},
   address: {
     street1: {type: String, required: true},
     street2: {type: String},
@@ -31,7 +31,12 @@ const post = Schema({
     lastName: {type: String},
     username: {type: String}
   },
-  applicantData: {type: Array}
+  applicantData: {type: Array},
+  geoData: {
+    lat: {type: Number},
+    lng: {type: Number}
+  },
+  images: {type: Array}
 })
 
 const Post = mongoose.model('post', post);

@@ -32,8 +32,6 @@ const ContainerFeed = ({props}) => {
   }
   else applications = props.applicantData
 
-  // console.log('apps', applications)
-
   async function handleApply(e) {
     console.log('clicking apply')
     try {

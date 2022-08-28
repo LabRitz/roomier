@@ -6,6 +6,7 @@
   flex-direction: column;
   align-items: center;
 
+  
 
   .background {
     position: fixed;
@@ -35,6 +36,11 @@
     row-gap: 24px;
     z-index: 2;
     margin-left: 40%;
+
+    @media screen and (min-width:1700px) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
 
     .feed {
       &:hover {

@@ -10,7 +10,8 @@ const handleSignUp = (e) => {
       firstName: document.getElementById('firstName').value,
       lastName: document.getElementById('lastName').value,
       username: document.getElementById('username').value, 
-      password: document.getElementById('password').value
+      password: document.getElementById('password').value,
+      zipCode: document.getElementById('zipCode').value
     }
 
     fetch('/signup', {
@@ -25,6 +26,7 @@ const handleSignUp = (e) => {
           document.getElementById('password').value = '';
           document.getElementById('firstName').value = '';
           document.getElementById('lastName').value = '';
+          document.getElementById('zipCode').value = '';
           window.open('/', '_self')
         }
         else {
@@ -39,7 +41,7 @@ const handleSignUp = (e) => {
 
 const Signup = (props) => {
   const [phrase, setPhrase] = useState('Roommate');
-  const phrases = ['Roommate', 'Future', 'Life', 'Friend' ]
+  const phrases = ['Roommate', 'Future', 'Life', 'Friend', 'Bed']
   useEffect(()=> {
     const index = phrases.indexOf(phrase);
     const newPhrase = (index === phrases.length - 1) ? phrases[0] : phrases[index+1];
@@ -61,6 +63,7 @@ const Signup = (props) => {
         <input type={'text'} id='lastName' placeholder='Enter your last name'></input>
         <input type={'email'} id="username" placeholder='Enter your email address'></input>
         <input type={'password'} id="password" placeholder='Enter your password'></input>
+        <input type={'text'} id='zipCode' placeholder='Enter your zip code'></input>
         <button type='submit' id='submit' onClick={handleSignUp}>Sign Up</button>
       </div>
     </div>

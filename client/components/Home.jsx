@@ -8,14 +8,16 @@ import { useJsApiLoader, GoogleMap, Marker } from '@react-google-maps/api';
 import Geocode from "react-geocode";
 
 const Home = (props) => {
+
+
   const location = useLocation();
   const userData = location.state;
   // console.log('metaData from Home: ', userData)
-
   const [posts, setPosts] = useState(null);
   const [passedProps, setPassedProps] = useState(false);
-
-  const GoogleMapsAPIKey = '' //INSERT OWN GOOGLE MAPS API
+  
+  //INSERT OWN GOOGLE MAPS API
+  const GoogleMapsAPIKey = 'AIzaSyCtt8vCUrFi12hwFLomHI-hVt2G2iRP-HA' 
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey
@@ -23,31 +25,22 @@ const Home = (props) => {
 
   Geocode.setApiKey(GoogleMapsAPIKey);
   
-  const markers = [];
-  async function onMapLoad() {
-    console.log('post: ', posts)
-    const tempArr = []
+  // async function onMapLoad() {
+  function onMapLoad() {
+    const markers = [];
+    // const tempArr = []
     for (let i = 0; i < posts.length; i++) {
-      const { street1, city, state, zipCode } = posts[i].address;
-      await Geocode.fromAddress(`${street1} ${city} ${state} ${zipCode}`)
-        .then(data => {
-          const { lat, lng } = data.results[0].geometry.location;
-          tempArr.push({ lat, lng });
-        });
+      if (posts[i].geoData) {
+        markers.push(<Marker position={posts[i].geoData}></Marker>)
+      } else console.log('no geodata')
     }
 
-    for (let i = 0; i < tempArr.length; i++) {
-      markers.push(<Marker position={tempArr[i]}></Marker>)
-    }
-    
-    console.log('before isloaded')
     if (isLoaded) {
-      console.log('map is loaded')
       render(
         <GoogleMap
           center={{ lat: 40.748441, lng: -73.985664 }}
           zoom={13}
-          mapContainerStyle={{ width: '35%', height: '90%', bottom: '2%', top: '8%', left: '2%', position: 'absolute', borderRadius: '12px'}}
+          mapContainerStyle={{ width: '35%', height: '90%', bottom: '2%', top: '8%', left: '2%', position: 'absolute', borderRadius: '12px', boxShadow: '2px 2px 8px gray'}}
         >
           {markers}
         </GoogleMap>,
@@ -57,12 +50,10 @@ const Home = (props) => {
   }
 
   useEffect(() => {
-    // console.log('first useEffect')
     fetch(`/home/${userData.username}`)
       .then(data => data.json())
       .then(postsArr => {
         const newPost = Object.assign(postsArr, {userData: userData})
-        console.log('np: ',newPost)
         setPosts(newPost)
         setPassedProps(true)
         return (
@@ -71,6 +62,7 @@ const Home = (props) => {
               <NavBar />
               <HomeFeed props={posts} />
               <div id='googleMapDiv'></div>
+
             </div>
           </>
         )
@@ -78,7 +70,6 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    // console.log('second useEffect')
     if (passedProps) {
       onMapLoad()
     }
@@ -96,6 +87,7 @@ const Home = (props) => {
             <img/>
           </div>
           <HomeFeed props = {posts}/>
+
           <div id='googleMapDiv'></div>
         </div>
       </>
