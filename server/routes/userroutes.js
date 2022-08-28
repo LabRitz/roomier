@@ -16,7 +16,7 @@ router.post('/signup',
 })
 
 // locahost:3000
-//login
+// Login route handler
 router.post('/', 
   userController.verifyUser, 
   // cookieController.setSSIDCookie, 
@@ -25,12 +25,12 @@ router.post('/',
     return res.status(200).json(res.locals.user);
 })
 
-// home
+// Request to get posts for homePage
 router.get('/home/:username', postController.getAllPosts, (req,res ) => {
   return res.status(200).json(res.locals.allPosts);
 });
 
-//update applications in posts 
+// Update applications in posts 
 router.patch('/home/:_id', postController.updateApplicationPost, (req, res) => {
   return res.status(200).send(res.locals.updatedPost);
 })
