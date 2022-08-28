@@ -41,12 +41,7 @@
     left: 10%;
     width: 30%;
     height: 30%;
-    // border: 1px solid black;
 
-    // display: flex;
-    // flex-direction: row;
-    // justify-content: center;
-    // align-items: center;
     #imgBtns {
       position: relative;
       width: 100%;
@@ -86,6 +81,7 @@
     }
 
     img {
+      object-fit: cover;
       position: absolute;
       z-index: 0;
       width: 100%;

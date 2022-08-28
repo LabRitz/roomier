@@ -1,15 +1,15 @@
 import { set } from 'mongoose';
 import React, { Component, useEffect, useState } from 'react';
 
+// import styles from '../stylesheets/gallery.scss'
 
 // imgArr => Array of Object key value pairs { Image urls:  Firebase file paths }
 const Gallery = ({imgArr}) => {
   console.log('Gallery imgArr: ', imgArr)
-  // console.log('Gallery imgArrlength: ', imgArr.length)
 
-  // const [arrURLs, setArr] = useState(imgArr)
-  const [index, setIndex] = useState(0)
-  const [imgSrc, setImg] = useState('')
+  
+  const [index, setIndex] = useState(0) // Index for gallery image
+  const [imgSrc, setImg] = useState('') // Current image source url string
 
   useEffect(() => {
     if (imgArr.length !== 0) {
@@ -23,8 +23,6 @@ const Gallery = ({imgArr}) => {
     if (index + dir < 0) setIndex(imgArr.length - 1)
     else if (index + dir > imgArr.length - 1) setIndex(0)
     else setIndex(index + dir);
-    console.log('new index', index)
-
     setImg(Object.keys(imgArr[index])[0])
   }
 

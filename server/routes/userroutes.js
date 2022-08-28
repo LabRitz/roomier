@@ -22,13 +22,11 @@ router.post('/',
   // cookieController.setSSIDCookie, 
   // sessionController.startSession, 
   (req, res) => {
-    // console.log('res.cookie: ', res.cookies);
     return res.status(200).json(res.locals.user);
 })
 
 // home
 router.get('/home/:username', postController.getAllPosts, (req,res ) => {
-  // console.log('getAllPosts route running.')
   return res.status(200).json(res.locals.allPosts);
 });
 

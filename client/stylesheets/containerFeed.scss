@@ -7,8 +7,8 @@
 // } 
 
 .feed {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 9fr 1fr;
   align-items: center;
   padding: 2%;
   border-radius: 12px;
