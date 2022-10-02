@@ -17,6 +17,16 @@ describe('API Test', () => {
       })
   });
 
+  test('GET /home/:username', (done) => {
+    request('http://localhost:3000/')
+      .get('/home/test123@gmail.com')
+      .expect(404)
+      .end(function(err, res) {
+        if (err) throw err;
+        return done()
+      })
+  });
+
   test('POST /', (done) => {
     request('http://localhost:3000')
       .post('/')
@@ -37,5 +47,32 @@ describe('API Test', () => {
         return done()
       })
   });
+
+  test('POST /signup', (done) => {
+    request('http://localhost:3000')
+      .post('/signup')
+      .expect("Content-Type", /json/)
+      .send({
+        firstName: 'Test',
+        lastName: 'Test',
+        username: 'test@email.com',
+        password: '123',
+        zipCode: '00000'
+      })
+      .expect(200)
+      .expect(res => {
+        res.body.firstName = 'Test',
+        res.body.lastName = 'Test',
+        username = 'test@email.com',
+        zipCode = '00000'
+      })
+      .end(function(err, res) {
+        if (err) throw err;
+        return done()
+      })
+  });
+
+  
+
 
 })
