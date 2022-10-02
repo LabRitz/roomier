@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1664741382548" clover="3.2.0">
-  <project timestamp="1664741382548" name="All files">
-    <metrics statements="217" coveredstatements="115" conditionals="22" coveredconditionals="8" methods="37" coveredmethods="8" elements="276" coveredelements="131" complexity="0" loc="217" ncloc="217" packages="5" files="10" classes="10"/>
+<coverage generated="1664742285784" clover="3.2.0">
+  <project timestamp="1664742285784" name="All files">
+    <metrics statements="214" coveredstatements="118" conditionals="22" coveredconditionals="8" methods="37" coveredmethods="8" elements="273" coveredelements="134" complexity="0" loc="214" ncloc="214" packages="5" files="10" classes="10"/>
     <package name="server">
-      <metrics statements="38" coveredstatements="31" conditionals="2" coveredconditionals="2" methods="7" coveredmethods="3"/>
+      <metrics statements="38" coveredstatements="35" conditionals="2" coveredconditionals="2" methods="7" coveredmethods="4"/>
       <file name="server.js" path="/Users/brennan/Documents/Codesmith/group-scratch/find-a-roommate/server/server.js">
-        <metrics statements="38" coveredstatements="31" conditionals="2" coveredconditionals="2" methods="7" coveredmethods="3"/>
+        <metrics statements="38" coveredstatements="35" conditionals="2" coveredconditionals="2" methods="7" coveredmethods="4"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
@@ -37,10 +37,10 @@
         <line num="63" count="0" type="stmt"/>
         <line num="68" count="1" type="stmt"/>
         <line num="71" count="1" type="stmt"/>
-        <line num="72" count="0" type="stmt"/>
-        <line num="77" count="0" type="stmt"/>
-        <line num="78" count="0" type="stmt"/>
-        <line num="79" count="0" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="77" count="1" type="stmt"/>
+        <line num="78" count="1" type="stmt"/>
+        <line num="79" count="1" type="stmt"/>
         <line num="82" count="1" type="stmt"/>
         <line num="83" count="1" type="stmt"/>
         <line num="86" count="1" type="stmt"/>
@@ -62,21 +62,20 @@
       </file>
     </package>
     <package name="server.controllers">
-      <metrics statements="120" coveredstatements="43" conditionals="18" coveredconditionals="6" methods="13" coveredmethods="3"/>
+      <metrics statements="117" coveredstatements="43" conditionals="18" coveredconditionals="6" methods="13" coveredmethods="3"/>
       <file name="cookieController.js" path="/Users/brennan/Documents/Codesmith/group-scratch/find-a-roommate/server/controllers/cookieController.js">
-        <metrics statements="14" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="1"/>
-        <line num="1" count="1" type="stmt"/>
+        <metrics statements="13" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="1"/>
         <line num="3" count="1" type="stmt"/>
-        <line num="8" count="1" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="14" count="1" type="stmt"/>
-        <line num="17" count="1" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
         <line num="20" count="0" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
         <line num="26" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
         <line num="35" count="0" type="stmt"/>
         <line num="38" count="1" type="stmt"/>
       </file>
@@ -152,12 +151,12 @@
         <line num="33" count="1" type="stmt"/>
         <line num="35" count="1" type="stmt"/>
         <line num="37" count="1" type="stmt"/>
-        <line num="38" count="1" type="stmt"/>
-        <line num="40" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
         <line num="47" count="1" type="stmt"/>
       </file>
       <file name="userController.js" path="/Users/brennan/Documents/Codesmith/group-scratch/find-a-roommate/server/controllers/userController.js">
-        <metrics statements="36" coveredstatements="15" conditionals="14" coveredconditionals="6" methods="3" coveredmethods="1"/>
+        <metrics statements="34" coveredstatements="15" conditionals="14" coveredconditionals="6" methods="3" coveredmethods="1"/>
         <line num="2" count="1" type="stmt"/>
         <line num="4" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
@@ -183,17 +182,15 @@
         <line num="59" count="1" type="cond" truecount="3" falsecount="1"/>
         <line num="60" count="0" type="stmt"/>
         <line num="61" count="0" type="stmt"/>
-        <line num="62" count="0" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
         <line num="68" count="1" type="stmt"/>
-        <line num="69" count="1" type="stmt"/>
-        <line num="73" count="0" type="stmt"/>
-        <line num="80" count="1" type="stmt"/>
+        <line num="72" count="0" type="stmt"/>
+        <line num="79" count="1" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
         <line num="81" count="0" type="stmt"/>
         <line num="82" count="0" type="stmt"/>
-        <line num="83" count="0" type="stmt"/>
-        <line num="84" count="0" type="stmt"/>
-        <line num="87" count="0" type="stmt"/>
-        <line num="94" count="1" type="stmt"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="92" count="1" type="stmt"/>
       </file>
     </package>
     <package name="server.db">
@@ -231,9 +228,9 @@
       </file>
     </package>
     <package name="server.routes">
-      <metrics statements="28" coveredstatements="18" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="1"/>
+      <metrics statements="28" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="0"/>
       <file name="userroutes.js" path="/Users/brennan/Documents/Codesmith/group-scratch/find-a-roommate/server/routes/userroutes.js">
-        <metrics statements="28" coveredstatements="18" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="1"/>
+        <metrics statements="28" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="10" coveredmethods="0"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
@@ -243,7 +240,7 @@
         <line num="13" count="1" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
         <line num="21" count="1" type="stmt"/>
-        <line num="26" count="1" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
         <line num="30" count="1" type="stmt"/>
         <line num="31" count="0" type="stmt"/>
         <line num="35" count="1" type="stmt"/>

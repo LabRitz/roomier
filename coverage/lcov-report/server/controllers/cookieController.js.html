@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">61.53% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/14</span>
+                <span class='fraction'>8/13</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">61.53% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/14</span>
+                <span class='fraction'>8/13</span>
             </div>
         
             
@@ -101,12 +101,7 @@
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -116,11 +111,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -130,7 +125,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -139,38 +139,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const cookieParser = require('cookie-parser');
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+const cookieParser = require('cookie-parser');
 &nbsp;
 const cookieController = {};
 &nbsp;
-/**
-* setSSIDCookie - store the user id in a cookie
-*/
+&nbsp;
+// setSSIDCookie - store the user id in a cookie
 cookieController.setSSIDCookie = async (req, res, next) =&gt; {
   // store our user._id as SSID, httpOnly
   await res.cookie('ssid ', res.locals.user._id, {
     httpOnly: true,
+    maxAge: 30000
   })
-&nbsp;
   return next();
 }
 &nbsp;
+// Verify existing logged in user
 cookieController.getCookie = <span class="fstat-no" title="function not covered" >as</span>ync (req, res, next) =&gt; {
   const cookie = <span class="cstat-no" title="statement not covered" >req.headers.cookie;</span>
-<span class="cstat-no" title="statement not covered" >  console.log('cookieController.getCookie: ', cookie)</span>
 <span class="cstat-no" title="statement not covered" >  return next();</span>
 }
 &nbsp;
-//signout
+// Signout
 cookieController.deleteCookie = <span class="fstat-no" title="function not covered" >as</span>ync (req,res,next) =&gt; {
-<span class="cstat-no" title="statement not covered" >  console.log('req', req.headers.cookie)</span>
 <span class="cstat-no" title="statement not covered" >  res.cookie('ssid', 'none', {</span>
     expires: new Date(Date.now() + 5 * 1000),
     httpOnly: true,
     })
-  // req.headers.cookie.remove({
-  //   name: 'ssid',
-  // }) 
+<span class="cstat-no" title="statement not covered" >  req.headers.cookie.remove({</span>
+    name: 'ssid',
+  }) 
   .status(200)
   .json({success: true, message: "User successfully signout"})
 <span class="cstat-no" title="statement not covered" >  return next()</span>
@@ -184,7 +184,7 @@ module.exports = cookieController;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-10-02T20:09:42.532Z
+                at 2022-10-02T20:24:45.774Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

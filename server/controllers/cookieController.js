@@ -1,35 +1,35 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 const cookieParser = require('cookie-parser');
 
 const cookieController = {};
 
-/**
-* setSSIDCookie - store the user id in a cookie
-*/
+
+// setSSIDCookie - store the user id in a cookie
 cookieController.setSSIDCookie = async (req, res, next) => {
   // store our user._id as SSID, httpOnly
   await res.cookie('ssid ', res.locals.user._id, {
     httpOnly: true,
+    maxAge: 30000
   })
-
   return next();
 }
 
+// Verify existing logged in user
 cookieController.getCookie = async (req, res, next) => {
   const cookie = req.headers.cookie;
-  console.log('cookieController.getCookie: ', cookie)
   return next();
 }
 
-//signout
+// Signout
 cookieController.deleteCookie = async (req,res,next) => {
-  console.log('req', req.headers.cookie)
   res.cookie('ssid', 'none', {
     expires: new Date(Date.now() + 5 * 1000),
     httpOnly: true,
     })
-  // req.headers.cookie.remove({
-  //   name: 'ssid',
-  // }) 
+  req.headers.cookie.remove({
+    name: 'ssid',
+  }) 
   .status(200)
   .json({success: true, message: "User successfully signout"})
   return next()

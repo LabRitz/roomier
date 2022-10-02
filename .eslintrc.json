@@ -17,5 +17,7 @@
         "react"
     ],
     "rules": {
+        "no-undefined": "off",
+        "no-unused-vars": "off"
     }
 }

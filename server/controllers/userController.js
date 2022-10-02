@@ -57,7 +57,6 @@ userController.verifyUser = async (req, res, next) => {
     // redirect to signup endpoint if does not match
     // Look to alert user if they want to signup or not - change redirect
     if (!queryResult || !comparePass) {
-      console.log('invalid username or password');
       res.locals.user = null;
       return next({
         log: `error caught in userController.verifyUser`,
@@ -80,7 +79,6 @@ userController.verifyUser = async (req, res, next) => {
 userController.findUser = async (req, res, next) => {
   try {
     const data = await User.find({});
-    console.log('data', data)
     return next();
   } 
   catch (err) {
