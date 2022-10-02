@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
+/* eslint-disable no-undef */
 const bcrypt = require('bcryptjs');
-const Schema = mongoose.Schema;
 
 const User = require('../db/userModel');
 
@@ -44,8 +43,6 @@ userController.createUser = async (req, res, next) => {
 // login
 userController.verifyUser = async (req, res, next) => {
   try {
-    // console.log('verifyUser reqBody: ', req.body)
-
     const { username, password } = req.body;
 
     // checking if username or password is empty

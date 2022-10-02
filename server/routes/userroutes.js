@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const express = require('express');
 const router = express.Router();
 
@@ -19,8 +20,8 @@ router.post('/signup',
 // Login route handler
 router.post('/', 
   userController.verifyUser, 
-  // cookieController.setSSIDCookie, 
-  // sessionController.startSession, 
+  cookieController.setSSIDCookie, 
+  sessionController.startSession, 
   (req, res) => {
     return res.status(200).json(res.locals.user);
 })

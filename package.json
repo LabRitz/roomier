@@ -7,7 +7,7 @@
     "start": "nodemon server/server.js",
     "build": "NODE_ENV=production webpack",
     "dev": "NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve --open ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watchAll --verbose --coverage"
   },
   "repository": {
     "type": "git",
@@ -52,12 +52,14 @@
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.31.8",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^29.1.2",
     "nodemon": "^1.18.9",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "react-router-dom": "^5.1.0",
     "style-loader": "^3.3.1",
+    "supertest": "^6.2.4",
     "webpack": "^5.64.1",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.5.0"

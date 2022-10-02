@@ -1,27 +1,20 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 
-import styles from '../stylesheets/login.scss';
+import '../stylesheets/login.scss';
 
 
-const Login = (props) => {
+const Login = () => {
 
   const [ID, setID] = useState('')
   const [phrase, setPhrase] = useState('Roommate');
 
-  const handleLogin = (e) => {
-    // e.preventDefault();
-
-      // console.log({username: document.getElementById('username').value, password: document.getElementById('password').value});
-      
-      // setID('brennan')
-      
+  const handleLogin = () => {      
     const reqBody = {
       username: document.getElementById('username').value, 
       password: document.getElementById('password').value
     }
 
-    // fetch('http://localhost:3000', {
     fetch('/', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -30,11 +23,9 @@ const Login = (props) => {
       .then(formattedData => {
         console.log('data: ', formattedData)
         if (formattedData.err) {
-          // document.getElementById('accNotFound').innerHTML = "Account doesn't exist, please try again or create account";
           alert("Account doesn't exist, please try again or create account");
         }
         else if (formattedData.error) {
-          // document.getElementById('accNotFound').innerHTML = "Password incorrect";
           alert("Password incorrect");
         }
         else {
@@ -49,7 +40,6 @@ const Login = (props) => {
     const homeLink = document.querySelector('.homeLink')
     if (ID !== '') homeLink.style.visibility = 'visible'
   }, [ID])
-
 
   const phrases = ['Roommate', 'Future', 'Life', 'Friend' ]
   useEffect(()=> {
@@ -93,7 +83,3 @@ const Login = (props) => {
 }
 
 export default Login;
-
-// import {useNavgiate}
-// let navigate = useNavigate()
-// navigateToHome = navigate('/home')

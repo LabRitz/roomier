@@ -14,9 +14,7 @@ const NavBar = () => {
     'roommate', 
     'future', 
     'friend', 
-    'bed',
-    'dorito',
-    'milk steak'
+    'bed'
   ]
   useEffect(()=> {
     const index = phrases.indexOf(phrase);

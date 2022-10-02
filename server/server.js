@@ -1,4 +1,4 @@
-const { application } = require('express');
+/* eslint-disable no-undef */
 const express = require('express');
 const path = require('path');
 const expressSession = require('express-session');
@@ -83,3 +83,4 @@ app.listen(port,() => {
     console.log(`Server is running on port: ${port}`)
 })
 
+module.exports = app
