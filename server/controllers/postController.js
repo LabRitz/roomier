@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -70,7 +71,6 @@ postController.createPost = async (req, res, next) => {
 //Get Post
 postController.getAllPosts = async (req, res, next) => {
   try {
-    // grab username somehow
     const username = req.params.username
 
     // updated query results - find everything where username is not username
