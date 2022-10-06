@@ -70,8 +70,6 @@ const CreatePost = (props) => {
         alert("Must Require Input Fields");
       }
       else {
-        console.log('before reqBody: ', imgArr)
-        console.log('before reqBody: ', imgArr.length)
         const reqBody = {
           address: {
             street1: address1,
@@ -101,7 +99,6 @@ const CreatePost = (props) => {
           geoData: geoData,
           images: imgArr
         };
-        console.log('before fetch: ', reqBody.images)
         fetch('/createPost', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

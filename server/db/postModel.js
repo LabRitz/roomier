@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -33,6 +34,8 @@ const post = Schema({
   },
   applicantData: {type: Array},
   geoData: {
+    type: {type: String}, // Type: 'Point' (GeoJSON Object)
+    coordinates: {type: Array}, // [long, lat]
     lat: {type: Number},
     lng: {type: Number}
   },

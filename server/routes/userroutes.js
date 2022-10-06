@@ -16,6 +16,13 @@ router.post('/signup',
     return res.status(200).json(res.locals.user)
 })
 
+// Request to get posts by distance
+router.post('/home/:username', 
+  postController.filterPostsByDistance, 
+  (req,res ) => {
+    return res.status(200).json(res.locals.allPosts);
+});
+
 // locahost:3000
 // Login route handler
 router.post('/', 
