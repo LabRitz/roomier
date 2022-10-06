@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -51,6 +52,8 @@ postController.createPost = async (req, res, next) => {
       },
       applicantData: [],
       geoData: {
+        type: 'Point',
+        coordinates: [geoData.lng, geoData.lat],
         lat: geoData.lat,
         lng: geoData.lng
       },
@@ -70,15 +73,10 @@ postController.createPost = async (req, res, next) => {
 //Get Post
 postController.getAllPosts = async (req, res, next) => {
   try {
-    // grab username somehow
     const username = req.params.username
 
     // updated query results - find everything where username is not username
     const queryResult = await Post.find({'userData.username': {$ne: username}});
-
-    // object to house our find request
-    // const queryResult = await Post.find({});
-    // console.log(queryResult);
     
     res.locals.allPosts = queryResult;
     
@@ -90,8 +88,7 @@ postController.getAllPosts = async (req, res, next) => {
   })}
 };
 
-
-
+// Populate user's own posts
 postController.getProfilePosts = async (req, res, next) => {
   try {
     // user email that we are grabbing
@@ -119,47 +116,27 @@ postController.updateApplicationPost = async (req,res,next) => {
     const { firstName, lastName, username } = req.body;
     const id = req.params._id;
 
-    console.log(id)
-
     const newApplicant = {
       firstName: firstName,
       lastName: lastName,
       username: username
     };
 
-    console.log('step 1:', newApplicant)
-
     // Step1: Find the post matching the id
     const foundPost = await Post.findOne({ _id : id })
     // Step2: Linear search the post's applicantData array and find a match with applicantData.username
     for (let i = 0; i < foundPost.applicantData.length; i++) {
       if (foundPost.applicantData[i].username === username) {
-        console.log('found applicant in applicantData')
         res.locals.updatedPost = false;
         return next();
       }
     }
-      
-    // Return back that username is not in the applicantData array
-
-
-    // // linear search to see if user is alrdy an applicant
-    // const results = await Post.findOne({'applicantData.username' : username})
-
-    // console.log('finding here 2',results)
-    
-    // if (results) {
-    //   console.log('from updateApplicantPost result :', results)
-    //   res.locals.updatedPost = false;
-    //   return next();
-    // }
 
     // continue if user is not applicant
     const queryResult = await Post.updateOne(
       { _id : id },
       { $push: { applicantData: newApplicant } }
     )
-    console.log('succesfully updated: ', id)
     res.locals.updatedPost = queryResult.acknowledged;
     return next();
   } catch (err) {
@@ -187,19 +164,32 @@ postController.deletePost = async (req, res, next) => {
       message: {err: 'an error occurred while attempting to delete a post in profile'}
     })
   }
-  
 }
 
-// // completed Post
-// postController.completePost = async (req, res, next) => {
-//   try {
-    
-//   } catch (err){
-//     return next ({
-//       log: `error caught in postController.completePost : ${err}`,
-//       message: {err: 'an error occurred while attempting to complete a post in profile'}
-//     })
-//   }
-// }
+// Filter for posts by distance
+postController.filterPostsByDistance = async (req, res, next) => {
+  const { lng, lat } = req.body
+  const username = req.params.username
+
+  try {
+    const queryResult = await Post.aggregate([
+      {
+        $geoNear: {
+          near: { type: 'Point', coordinates: [lng, lat] } ,
+          spherical: true,
+          query:{'userData.username': {$ne: username}},
+          distanceField: 'calcDistance'
+        }
+      }
+    ])
+    res.locals.allPosts = queryResult;
+    return next();
+  } catch (err) {
+    return next ({
+      log: `error caught in postController.filterPostsByDistance: ${err}`,
+      message: {err: 'an error occurred while attempting to filter for posts'}
+    })
+  }
+}
 
 module.exports = postController;

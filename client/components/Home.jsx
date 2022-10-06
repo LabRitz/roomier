@@ -31,7 +31,11 @@ const Home = (props) => {
     // const tempArr = []
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].geoData) {
-        markers.push(<Marker position={posts[i].geoData}></Marker>)
+        const posObj = {
+          lng: posts[i].geoData.coordinates[0],
+          lat: posts[i].geoData.coordinates[1]
+        }
+        markers.push(<Marker position={posObj}></Marker>)
       } else console.log('no geodata')
     }
 
