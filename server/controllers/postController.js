@@ -172,16 +172,26 @@ postController.filterPostsByDistance = async (req, res, next) => {
   const username = req.params.username
 
   try {
-    const queryResult = await Post.aggregate([
-      {
-        $geoNear: {
-          near: { type: 'Point', coordinates: [lng, lat] } ,
-          spherical: true,
-          query:{'userData.username': {$ne: username}},
-          distanceField: 'calcDistance'
+    const queryResult = await Post.find({
+      geoData: { 
+        $near: {
+          $geometry: { type: "Point",  coordinates: [ lng, lat ] },
+          $minDistance: 1000,
+          $maxDistance: 5000
         }
       }
-    ])
+    })
+
+    // const queryResult = await Post.aggregate([
+    //   {
+    //     $geoNear: {
+    //       near: { type: 'Point', coordinates: [lng, lat] } ,
+    //       spherical: true,
+    //       query:{'userData.username': {$ne: username}},
+    //       distanceField: 'calcDistance'
+    //     }
+    //   }
+    // ])
     res.locals.allPosts = queryResult;
     return next();
   } catch (err) {
