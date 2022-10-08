@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import ContainerFeed from './ContainerFeed.jsx';
 
@@ -9,13 +9,16 @@ import styles from '../stylesheets/homeFeed.scss'
 const HomeFeed = ({props, zipCode, setZipCode, setDistance}) => {
   
   //Initialize state to apt array
-  const [state, setState] = useState(props)
+  const [feed, setFeed] = useState([]);
 
-  const feed = []
-  for (let i = 0; i < state.length; i++) {
-    const data = Object.assign(state[i], {applicationInfo: state.userData})
-    feed.push(<ContainerFeed props={data}/>)
-  }
+  useEffect(() => {
+    const tempArr = [];
+    for (let i = 0; i < props.length; i++) {
+      const data = Object.assign(props[i], {applicationInfo: props.userData})
+      tempArr.push(<ContainerFeed props={data}/>)
+    }
+    setFeed(tempArr)
+  }, [props])  
 
   // Set user's location 
   const handleInput = (val) => {
