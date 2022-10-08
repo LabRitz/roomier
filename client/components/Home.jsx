@@ -12,7 +12,7 @@ const Home = (props) => {
 
   const location = useLocation();
   const userData = location.state;
-  // console.log('metaData from Home: ', userData)
+
   const [posts, setPosts] = useState(null);
   const [passedProps, setPassedProps] = useState(false);
   
@@ -25,7 +25,6 @@ const Home = (props) => {
 
   Geocode.setApiKey(GoogleMapsAPIKey);
   
-  // async function onMapLoad() {
   function onMapLoad() {
     const markers = [];
     // const tempArr = []
