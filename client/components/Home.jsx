@@ -13,8 +13,7 @@ const Home = (props) => {
   const location = useLocation();
   const userData = location.state;
 
-  const [posts, setPosts] = useState(null);
-  const [passedProps, setPassedProps] = useState(false);
+  const [posts, setPosts] = useState([]);
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(userData.zipCode); 
@@ -27,19 +26,26 @@ const Home = (props) => {
     googleMapsApiKey: GoogleMapsAPIKey
   })
 
+  const [markers, setMarkers] = useState([]);
+
   Geocode.setApiKey(GoogleMapsAPIKey);
   
-  async function onMapLoad() {
-    const markers = [];
+  function getMarkers() {
+    const tempMarkers = [];
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].geoData) {
         const posObj = {
           lng: posts[i].geoData.coordinates[0],
           lat: posts[i].geoData.coordinates[1]
         }
-        markers.push(<Marker position={posObj}></Marker>)
+        tempMarkers.push(<Marker position={posObj}></Marker>)
       } else console.log('no geodata')
+
     }
+    setMarkers(tempMarkers);
+  }
+
+  async function getMap() {
     console.log('isLOaded: ', isLoaded);
     console.log('Error for loaded: ', loadError);
     if (isLoaded) {
@@ -76,7 +82,6 @@ const Home = (props) => {
     const postsArr = await res.json()
     const newPost = Object.assign(postsArr, {userData: userData})
     setPosts(newPost)
-    setPassedProps(true)
     return (
       <>
         <div className='home'>
@@ -89,39 +94,33 @@ const Home = (props) => {
   }
 
   useEffect(() => {
-    console.log('inside of getPosts useEffect');
     getPosts()
+    getMarkers()
+    getMap()
   }, [zipCode, distance]);
 
-  useEffect(() => {
-    if (passedProps) {
-      onMapLoad()
-    }
-  }, [passedProps])
-
-  if (posts) {
-    return (
-      <>
-        <div className='home'>
-          <NavBar />
-          <div className='background'>
-            <img src='https://i.redd.it/za30ryykl7n81.jpg'></img>
-          </div>
-          <div className="fade">
-            <img/>
-          </div>
-          <HomeFeed 
-            props = {posts} 
-            zipCode = {zipCode} 
-            setZipCode = {setZipCode}
-            distance = {distance}
-            setDistance = {setDistance}/>
-
-          <div id='googleMapDiv'></div>
+  return (
+    <>
+      <div className='home'>
+        <NavBar />
+        <div className='background'>
+          <img src='https://i.redd.it/za30ryykl7n81.jpg'></img>
         </div>
-      </>
-    )
-  } else return null
+        <div className="fade">
+          <img/>
+        </div>
+        <HomeFeed 
+          props = {posts} 
+          zipCode = {zipCode} 
+          setZipCode = {setZipCode}
+          distance = {distance}
+          setDistance = {setDistance}/>
+
+        <div id='googleMapDiv'></div>
+      </div>
+    </>
+  )
+
 }
 
 export default Home;

@@ -15,14 +15,13 @@ const HomeFeed = ({props, zipCode, setZipCode, setDistance}) => {
     const tempArr = [];
     for (let i = 0; i < props.length; i++) {
       const data = Object.assign(props[i], {applicationInfo: props.userData})
-      tempArr.push(<ContainerFeed props={data}/>)
+      tempArr.push(<ContainerFeed key={i} props={data}/>)
     }
     setFeed(tempArr)
   }, [props])  
 
   // Set user's location 
   const handleInput = (val) => {
-    console.log('val: ', val);
     setZipCode(val)
   }
 
