@@ -1,5 +1,5 @@
 <p align="center">
-<img src= "./client/assets/roomier.svg" width="300" height="300" align="center">
+<img src= "./client/assets/roomier.png" width="300" height="300" align="center">
 </p>
 <h2 align="center" style="font-size: 40px">find a roommate</h2>
 <p align="center">
