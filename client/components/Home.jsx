@@ -26,12 +26,13 @@ const Home = (props) => {
     googleMapsApiKey: GoogleMapsAPIKey
   })
 
-  const [markers, setMarkers] = useState([]);
-
   Geocode.setApiKey(GoogleMapsAPIKey);
+  
+  const [markers, setMarkers] = useState([]);
   
   function getMarkers() {
     const tempMarkers = [];
+    console.log('posts', posts.length)
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].geoData) {
         const posObj = {
@@ -42,7 +43,9 @@ const Home = (props) => {
       } else console.log('no geodata')
 
     }
+    console.log('temp', tempMarkers.length)
     setMarkers(tempMarkers);
+    console.log('set', markers.length)
   }
 
   async function getMap() {
@@ -93,11 +96,21 @@ const Home = (props) => {
     )
   }
 
+  // Cascading dependency
+  // 1. Get Posts based on ZipCode and Distance
+  // 2. Configure markers based on posts
+  // 3. Render map based on markers and posts
   useEffect(() => {
     getPosts()
-    getMarkers()
-    getMap()
   }, [zipCode, distance]);
+
+  useEffect(() => {
+    getMarkers()
+  }, [posts])
+
+  useEffect(() => {
+    getMap()
+  }, [markers])
 
   return (
     <>
