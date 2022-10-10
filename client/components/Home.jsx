@@ -12,37 +12,48 @@ const Home = (props) => {
 
   const location = useLocation();
   const userData = location.state;
-  // console.log('metaData from Home: ', userData)
-  const [posts, setPosts] = useState(null);
-  const [passedProps, setPassedProps] = useState(false);
+
+  const [posts, setPosts] = useState([]);
+
+  // TODO: Make single request to convert zipcode to geospatial coordinate on every change
+  const [zipCode, setZipCode] = useState(userData.zipCode); 
+  const [distance, setDistance] = useState(3218.688)
   
   //INSERT OWN GOOGLE MAPS API
   const GoogleMapsAPIKey = 'AIzaSyCtt8vCUrFi12hwFLomHI-hVt2G2iRP-HA' 
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey
   })
 
+  const [markers, setMarkers] = useState([]);
+
   Geocode.setApiKey(GoogleMapsAPIKey);
   
-  // async function onMapLoad() {
-  function onMapLoad() {
-    const markers = [];
-    // const tempArr = []
+  function getMarkers() {
+    const tempMarkers = [];
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].geoData) {
         const posObj = {
           lng: posts[i].geoData.coordinates[0],
           lat: posts[i].geoData.coordinates[1]
         }
-        markers.push(<Marker position={posObj}></Marker>)
+        tempMarkers.push(<Marker position={posObj}></Marker>)
       } else console.log('no geodata')
-    }
 
+    }
+    setMarkers(tempMarkers);
+  }
+
+  async function getMap() {
+    console.log('isLOaded: ', isLoaded);
+    console.log('Error for loaded: ', loadError);
     if (isLoaded) {
+      let geocode = await Geocode.fromAddress(zipCode)
+      const {lng, lat}  = geocode.results[0].geometry.location
       render(
         <GoogleMap
-          center={{ lat: 40.748441, lng: -73.985664 }}
+          center={{ lat: lat, lng: lng }}
           zoom={13}
           mapContainerStyle={{ width: '35%', height: '90%', bottom: '2%', top: '8%', left: '2%', position: 'absolute', borderRadius: '12px', boxShadow: '2px 2px 8px gray'}}
         >
@@ -53,50 +64,63 @@ const Home = (props) => {
     }
   }
 
-  useEffect(() => {
-    fetch(`/home/${userData.username}`)
-      .then(data => data.json())
-      .then(postsArr => {
-        const newPost = Object.assign(postsArr, {userData: userData})
-        setPosts(newPost)
-        setPassedProps(true)
-        return (
-          <>
-            <div className='home'>
-              <NavBar />
-              <HomeFeed props={posts} />
-              <div id='googleMapDiv'></div>
+  async function getPosts() {
+    let geocode = await Geocode.fromAddress(zipCode)
 
-            </div>
-          </>
-        )
-      })
-  }, []);
-
-  useEffect(() => {
-    if (passedProps) {
-      onMapLoad()
+    const reqBody = {
+      lng : geocode.results[0].geometry.location.lng,
+      lat : geocode.results[0].geometry.location.lat,
+      minDistance : 0,
+      maxDistance : distance
     }
-  }, [passedProps])
 
-  if (posts) {
+    const res = await fetch(`/home/${userData.username}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(reqBody)
+    })
+    const postsArr = await res.json()
+    const newPost = Object.assign(postsArr, {userData: userData})
+    setPosts(newPost)
     return (
       <>
         <div className='home'>
           <NavBar />
-          <div className='background'>
-            <img src='https://i.redd.it/za30ryykl7n81.jpg'></img>
-          </div>
-          <div className="fade">
-            <img/>
-          </div>
-          <HomeFeed props = {posts}/>
-
+          <HomeFeed props={posts} />
           <div id='googleMapDiv'></div>
         </div>
       </>
     )
-  } else return null
+  }
+
+  useEffect(() => {
+    getPosts()
+    getMarkers()
+    getMap()
+  }, [zipCode, distance]);
+
+  return (
+    <>
+      <div className='home'>
+        <NavBar />
+        <div className='background'>
+          <img src='https://i.redd.it/za30ryykl7n81.jpg'></img>
+        </div>
+        <div className="fade">
+          <img/>
+        </div>
+        <HomeFeed 
+          props = {posts} 
+          zipCode = {zipCode} 
+          setZipCode = {setZipCode}
+          distance = {distance}
+          setDistance = {setDistance}/>
+
+        <div id='googleMapDiv'></div>
+      </div>
+    </>
+  )
+
 }
 
 export default Home;

@@ -167,8 +167,9 @@ postController.deletePost = async (req, res, next) => {
 }
 
 // Filter for posts by distance
+// Distance measured in meters (m)
 postController.filterPostsByDistance = async (req, res, next) => {
-  const { lng, lat } = req.body
+  const { lng, lat , minDistance, maxDistance} = req.body
   const username = req.params.username
 
   try {
@@ -176,8 +177,8 @@ postController.filterPostsByDistance = async (req, res, next) => {
       geoData: { 
         $near: {
           $geometry: { type: "Point",  coordinates: [ lng, lat ] },
-          $minDistance: 1000,
-          $maxDistance: 5000
+          $minDistance: minDistance,
+          $maxDistance: maxDistance
         }
       }
     })
