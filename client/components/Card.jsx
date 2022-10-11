@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { Component, useState, useEffect } from 'react';
 
 import styles from '../stylesheets/card.scss';
@@ -5,7 +6,6 @@ import Gallery from './Gallery.jsx';
 
 const Card = ({props}) => {
   let {
-        // picture,
         address,
         roommate,
         description,
@@ -36,7 +36,6 @@ const Card = ({props}) => {
         <div className="header">
           <div className="img">
             <Gallery imgArr={images}/>
-            {/* <img src={imgSrc} alt='insert sweet looking apartment'></img> */}
           </div>
           <div className="data">
             <p className='address'>{address.street1} {address.street2}</p>

@@ -7,7 +7,7 @@ import Geocode from "react-geocode";
 import NavBar from './NavBar.jsx';
 import Gallery from './Gallery.jsx';
 
-import styles from '../stylesheets/createPost.scss';
+import '../stylesheets/createPost.scss';
 
 const CreatePost = (props) => {
   const location = useLocation();
@@ -70,10 +70,7 @@ const CreatePost = (props) => {
         alert("Must Require Input Fields");
       }
       else {
-        console.log('before reqBody: ', imgArr)
-        console.log('before reqBody: ', imgArr.length)
         const reqBody = {
-          // picture: imgArr,
           address: {
             street1: address1,
             street2: address2,
@@ -102,7 +99,6 @@ const CreatePost = (props) => {
           geoData: geoData,
           images: imgArr
         };
-        console.log('before fetch: ', reqBody.images)
         fetch('/createPost', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -134,12 +130,8 @@ const CreatePost = (props) => {
       }
     } 
     catch(err) {
-      console.log(`Geocode err in CreatePost: Unable to resolve coordinates of ${street1} ${city} ${state} ${zipCode}:`, err)
-    }
-    finally {
-      
-    }
-  
+      console.log(`Geocode err in CreatePost: Unable to resolve coordinates of ${address1} ${city} ${state} ${zipCode}:`, err)
+    }  
   };
 
     return (
@@ -234,7 +226,7 @@ const CreatePost = (props) => {
               <input type={'text'} id="bio"></input>
               <button type='submit' id='submitPost' onClick={createPostSubmissions}>
                 <h2>Post</h2>
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" className="bi bi-send-fill" viewBox="0 0 16 16">
                   <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
                 </svg>
               </button>

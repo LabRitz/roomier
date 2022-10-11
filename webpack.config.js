@@ -1,12 +1,16 @@
+/* eslint-disable no-undef */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './client/index.js',
-  plugins: [new HtmlWebpackPlugin({
-    template: path.resolve(__dirname, '/index.html'),
-    filename: 'index.html'
-  })],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, '/index.html'),
+      filename: 'index.html',
+      // favicon: "favicon.ico"
+    }),
+  ],
   devtool: 'inline-source-map',
   devServer: {
     static: {
