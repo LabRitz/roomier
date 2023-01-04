@@ -1,0 +1,1 @@
+exports.createPost = require('./createPost');
