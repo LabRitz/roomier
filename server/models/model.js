@@ -1,6 +1,5 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose');
-const express = require ('express');
-const cors = require ('cors');
 require('dotenv').config()
 
 /* --------------------------------------------
@@ -24,4 +23,5 @@ mongoose.connect(URI, {
         })
     .catch((error) => {
         console.log("Unable to connect to MongoDB!");
-        console.error(error);});
+        console.error(error);
+    });
