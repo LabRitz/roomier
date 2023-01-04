@@ -20,6 +20,7 @@ const createUser = async (req, res, next) => {
     const queryResult = await User.create({ firstName, lastName, username, password, zipCode });
 
     // passing into our res so we can access
+    // console.log(queryResult);
     return res.status(200).json(queryResult);
   } 
   catch (err) {
