@@ -1,7 +1,7 @@
 require('dotenv').config();
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const User = require('../db/userModel');
-const axios = require('axios');
+const fetch = require('node-fetch');
 
 function googleAuth(passport) {
   passport.use(new GoogleStrategy({
@@ -10,13 +10,8 @@ function googleAuth(passport) {
       callbackURL: '/login/auth/google/callback',
     }, 
     async(accessToken, refreshToken, profile, done) => {
-    //   console.log(profile);
-
       const { given_name, family_name, email } = profile._json;
       const sub = profile._json.sub;
-
-      // console.log('in access')
-      // console.log(profile)
 
       const userBody = {
         firstName: given_name,
@@ -27,29 +22,46 @@ function googleAuth(passport) {
       };
 
       try {
-        let login = await axios.post("http://localhost:3000/", {
+        //makes request to verify if user exists
+        let login = await fetch("http://localhost:3000/", {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
             username: email,
             password: sub
-          },
-        );
+          })
+        });
 
-        console.log('login in passport.js: ', login.data);
+        const loginJSON = await login.json();
 
-        if (login.data !== null) {
-            done(null, login);
+        //if user already exists
+        if (loginJSON) {
+            done(null, loginJSON);
         }
 
-        else {
-            let signup = await axios.post("http://localhost:3000/signup", userBody);
+        //if user does not exist
 
-            await axios.post("http://localhost:3000/", {
-                username: email,
-                password: sub
+        else {
+            //make request to create user
+            let signup = await fetch("http://localhost:3000/signup", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify(userBody)
             });
 
-            // console.log('signup: ', signup);
+            let signupJSON = await signup.json();
 
-            done(null, signup)
+            //makes request to verify user
+            await fetch("http://localhost:3000/", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                username: email,
+                password: sub
+              })
+            });
+
+            done(null, signupJSON)
         }
 
       } catch (err) {
@@ -59,11 +71,10 @@ function googleAuth(passport) {
   )
   
   passport.serializeUser((user, done) => {
-    done(null, user.data._id);
+    done(null, user._id);
   })
 
   passport.deserializeUser((id, done) => {
-    console.log('userId in passport.deserializeUser', id);
     User.findById(id, (err, user) => done(err, user))
   })
 }

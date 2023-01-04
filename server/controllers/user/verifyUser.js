@@ -5,8 +5,7 @@ const User = require('../../db/userModel');
 const verifyUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    // console.log('username: ', username, 'password: ', password)
-
+    
     // checking if username or password is empty
     if (!username || !password) return next('username or password is missing')
 
