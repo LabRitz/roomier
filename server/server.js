@@ -34,11 +34,9 @@ require('./config/passport')(passport)
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/login/auth/google', passport.authenticate('google', { scope: ['profile'] }))
+app.get('/login/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 
-app.get('/login/auth/google/callback', passport.authenticate('google', { failureDirect: '/'}), (req, res) => {
-    res.redirect('/');
-})
+app.get('/login/auth/google/callback', passport.authenticate('google', { failureDirect: '/', successRedirect: '/'}))
 
 // --------------------------------------------------------------------------------------------//
 //connect to mongoDB
