@@ -5,6 +5,7 @@
     },
     "extends": [
         "airbnb-base",
+        "airbnb/hooks",
         "eslint:recommended",
         "plugin:react/recommended"
     ],
