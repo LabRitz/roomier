@@ -4,42 +4,30 @@ import { Link } from 'react-router-dom'
 import '../stylesheets/login.scss';
 
 
-const Login = () => {
+const Login = ({ setUserInfo }) => {
 
-  const [ID, setID] = useState('')
   const [phrase, setPhrase] = useState('Roommate');
 
-  const handleLogin = () => {      
+  const handleLogin = async () => {      
     const reqBody = {
       username: document.getElementById('username').value, 
       password: document.getElementById('password').value
     }
-
-    fetch('/', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(reqBody)})
-      .then(data => data.json())
-      .then(formattedData => {
-        console.log('data: ', formattedData)
-        if (formattedData.err) {
-          alert("Account doesn't exist, please try again or create account");
-        }
-        else if (formattedData.error) {
-          alert("Password incorrect");
-        }
-        else {
-          setID(formattedData);
-        }
-      })
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
+    try {
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(reqBody)
+      });
+      const data = await res.json();
+      if (data == null) alert("Credentials incorrect. Please try again or create account");
+      else setUserInfo(data);
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    } catch (err) {
+      console.log('CAUGHT ERROR', err)
+    }
   }
-
-  useEffect(() => {
-    const homeLink = document.querySelector('.homeLink')
-    if (ID !== '') homeLink.style.visibility = 'visible'
-  }, [ID])
 
   const phrases = ['Roommate', 'Future', 'Life', 'Friend' ]
   useEffect(()=> {
@@ -64,10 +52,6 @@ const Login = () => {
         <input type={'password'} id="password" placeholder='Enter your password'></input>
         <button type='submit' id='submit' onClick={handleLogin}>Login</button>
         <div className='homeLink'>
-          <Link to={{
-            pathname: '/home',
-            state: ID
-            }}>lol here's the real login</Link>
         </div>
         <a href='/login/auth/google'>
           Google Login 

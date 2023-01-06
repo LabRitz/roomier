@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect, Routes } from 'react-router-dom';
 
 import Login from './Login.jsx';
@@ -10,18 +10,28 @@ import Profile from './Profile.jsx';
 
 const App = (props) => {
 
+  const [userInfo, setUserInfo] = useState('');
   return (
-    <Router>
-      <Switch>
-      
-        <Route exact path='/' component={Login} />
-        <Route path='/signup' component={Signup}/>
-        <Route path='/home' component={Home}/>
-        <Route path='/createPost' component={CreatePost}/>
-        <Route path='/profile' component={Profile}/>
+    (userInfo == '') ? (
+      <>
+      <Router>
+        <Routes>
+          <Route exact path='/' element={<Login setUserInfo={setUserInfo}/>} />
+          <Route path='/signup' element={<Signup setUserInfo={setUserInfo}/>}/>
+        </Routes>
+      </Router>
+      </>
+      ) :(
+      <Router>
+        <Routes>
 
-      </Switch>
-    </Router>
+          <Route exact path='/' element={<Home userInfo={userInfo}/>}/>
+          <Route path='/createPost' element={<CreatePost userInfo={userInfo}/>}/>
+          <Route path='/profile' element={<Profile userInfo={userInfo}/>}/>
+
+        </Routes>
+      </Router>
+    )
   )
 
 }
