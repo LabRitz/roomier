@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect, Routes } from 'react-router-dom';
 
 import Login from './Login.jsx';
@@ -8,20 +8,42 @@ import CreatePost from './CreatePost.jsx';
 import Profile from './Profile.jsx';
 
 
-const App = (props) => {
+const App = () => {
+  const [userInfo, setUserInfo] = useState('');
+
+  const verifySession = async () => {
+    const res = await fetch('/currentSession')
+    const hasSession = await res.json()
+
+    if (hasSession) setUserInfo(hasSession)
+    else console.log('User does not have current session')
+  }
+
+  useEffect(() => {
+    verifySession()
+  }, [])
 
   return (
-    <Router>
-      <Switch>
-      
-        <Route exact path='/' component={Login} />
-        <Route path='/signup' component={Signup}/>
-        <Route path='/home' component={Home}/>
-        <Route path='/createPost' component={CreatePost}/>
-        <Route path='/profile' component={Profile}/>
+    (userInfo == '') ? (
+      <>
+      <Router>
+        <Routes>
+          <Route exact path='/' element={<Login setUserInfo={setUserInfo}/>} />
+          <Route path='/signup' element={<Signup setUserInfo={setUserInfo}/>}/>
+        </Routes>
+      </Router>
+      </>
+      ) :(
+      <Router>
+        <Routes>
 
-      </Switch>
-    </Router>
+          <Route exact path='/' element={<Home userInfo={userInfo}/>}/>
+          <Route path='/createPost' element={<CreatePost userInfo={userInfo}/>}/>
+          <Route path='/profile' element={<Profile userInfo={userInfo}/>}/>
+
+        </Routes>
+      </Router>
+    )
   )
 
 }

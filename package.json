@@ -43,6 +43,7 @@
     "react-dom": "^16.5.2",
     "react-geocode": "^0.2.3",
     "react-router": "^5.1.0",
+    "react-router-dom": "^6.6.1",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.2"
   },
@@ -61,7 +62,6 @@
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "react-router-dom": "^5.1.0",
     "style-loader": "^3.3.1",
     "supertest": "^6.2.4",
     "webpack": "^5.64.1",

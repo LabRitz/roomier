@@ -1,5 +1,4 @@
 import React, { Component, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { render } from 'react-dom';
 
 import NavBar from './NavBar.jsx';
@@ -7,11 +6,9 @@ import HomeFeed from './HomeFeed.jsx';
 import { useJsApiLoader, GoogleMap, Marker } from '@react-google-maps/api';
 import Geocode from "react-geocode";
 
-const Home = (props) => {
-
-
-  const location = useLocation();
-  const userData = location.state;
+const Home = ({userInfo}) => {
+  
+  const userData = userInfo
 
   const [posts, setPosts] = useState([]);
 
@@ -20,7 +17,7 @@ const Home = (props) => {
   const [distance, setDistance] = useState(3218.688)
   
   //INSERT OWN GOOGLE MAPS API
-  const GoogleMapsAPIKey = 'AIzaSyCtt8vCUrFi12hwFLomHI-hVt2G2iRP-HA' 
+  const GoogleMapsAPIKey = 'AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM' 
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey

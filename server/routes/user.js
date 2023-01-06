@@ -10,7 +10,7 @@ const session = require('../controllers/session')
 
 // Serve index.html to client
 router.get('/home/:username', post.getAllPosts);
-router.get('/getcookie', cookie.getCookie);
+router.get('/currentSession', cookie.getCookie, session.findSession, user.findUser);
 router.get('/profile/:username', post.getProfilePosts);
 router.get('/signout', cookie.deleteCookie, (req,res) => res.status(200).json({}));
 // router.get('/findUser', 
