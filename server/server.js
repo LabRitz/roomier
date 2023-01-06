@@ -5,7 +5,8 @@ const cors = require("cors");
 const expressSession = require("express-session");
 const passport = require("passport");
 
-const { DOMAIN, PORT, SERVER_PORT } = require("config");
+const { SERVER_PORT } = require("config");
+const { startSession } = require('./controllers/session')
 
 require("dotenv").config();
 
@@ -42,7 +43,15 @@ app.get(
 
 app.get(
   "/login/auth/google/callback",
-  passport.authenticate("google", { failureDirect: "/", successRedirect: "/" })
+  passport.authenticate("google", { failureDirect: "/"}),
+  (req, res, next) => {
+    res.cookie('ssid', req.session.passport.user._id);
+    const user = { _id: req.session.passport.user._id }
+    res.locals.user = req.session.passport.user;
+    next();
+  }, 
+  startSession,
+  (req, res) => res.redirect('/')
 );
 
 // --------------------------------------------------------------------------------------------//

@@ -1,7 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 import { render } from "react-dom";
 
-import NavBar from "./NavBar.jsx";
 import HomeFeed from "./HomeFeed.jsx";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 import Geocode from "react-geocode";

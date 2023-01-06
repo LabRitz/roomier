@@ -3,6 +3,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const User = require('../db/userModel');
 const fetch = require('node-fetch');
 
+const { DOMAIN, PROTOCOL, SERVER_PORT } = require('config')
+
 function googleAuth(passport) {
   passport.use(new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
@@ -23,7 +25,7 @@ function googleAuth(passport) {
 
       try {
         //makes request to verify if user exists
-        let login = await fetch("http://localhost:3000/", {
+        const res = await fetch(`${PROTOCOL}${DOMAIN}:${SERVER_PORT}/oauth`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
@@ -31,39 +33,32 @@ function googleAuth(passport) {
             password: sub
           })
         });
-
-        const loginJSON = await login.json();
+        const loginJSON = await res.json();
 
         //if user already exists
-        if (loginJSON) {
-            done(null, loginJSON);
-        }
-
+        if (loginJSON) done(null, loginJSON);
+        
         //if user does not exist
-
         else {
-            //make request to create user
-            let signup = await fetch("http://localhost:3000/signup", {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify(userBody)
-            });
+          //make request to create user
+          const response = await fetch(`${PROTOCOL}${DOMAIN}:${SERVER_PORT}/signup`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(userBody)
+          });
+          const signupJSON = await response.json();
 
-            let signupJSON = await signup.json();
-
-            //makes request to verify user
-            await fetch("http://localhost:3000/", {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({
-                username: email,
-                password: sub
-              })
-            });
-
-            done(null, signupJSON)
+          //makes request to verify user
+          await fetch(`${PROTOCOL}${DOMAIN}:${SERVER_PORT}/`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              username: email,
+              password: sub
+            })
+          });
+          done(null, signupJSON)
         }
-
       } catch (err) {
         console.log("err: ", err);
       }
@@ -71,11 +66,11 @@ function googleAuth(passport) {
   )
   
   passport.serializeUser((user, done) => {
-    done(null, user._id);
+    done(null, user);
   })
 
-  passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => done(err, user))
+  passport.deserializeUser((user, done) => {
+    User.findById(user._id, (err, user) => done(err, user))
   })
 }
 
