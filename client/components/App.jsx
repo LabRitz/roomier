@@ -1,30 +1,55 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect, Routes } from 'react-router-dom';
+import React, { Component, useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import Login from './Login.jsx';
-import Signup from './Signup.jsx';
-import Home from './Home.jsx';
-import CreatePost from './CreatePost.jsx';
-import Profile from './Profile.jsx';
+import Login from "./Login.jsx";
+import Signup from "./Signup.jsx";
+import Home from "./Home.jsx";
+import CreatePost from "./CreatePost.jsx";
+import Profile from "./Profile.jsx";
+import NavBar from "./NavBar.jsx";
 
+const App = () => {
+  const [userInfo, setUserInfo] = useState("");
 
-const App = (props) => {
+  const verifySession = async () => {
+    const res = await fetch("/currentSession");
+    const hasSession = await res.json();
 
-  return (
-    <Router>
-      <Switch>
-      
-        <Route exact path='/' component={Login} />
-        <Route path='/signup' component={Signup}/>
-        <Route path='/home' component={Home}/>
-        <Route path='/createPost' component={CreatePost}/>
-        <Route path='/profile' component={Profile}/>
+    if (hasSession) setUserInfo(hasSession);
+    else console.log("User does not have current session");
+  };
 
-      </Switch>
-    </Router>
-  )
+  useEffect(() => {
+    verifySession();
+  }, []);
 
-}
+  return userInfo == "" ? (
+    <>
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<Login setUserInfo={setUserInfo} />} />
+          <Route
+            path="/signup"
+            element={<Signup setUserInfo={setUserInfo} />}
+          />
+        </Routes>
+      </Router>
+    </>
+  ) : (
+    <>
+      <Router>
+        <NavBar setUserInfo={setUserInfo} />
+        <Routes>
+          <Route exact path="/" element={<Home userInfo={userInfo} />} />
+          <Route
+            path="/createPost"
+            element={<CreatePost userInfo={userInfo} />}
+          />
+          <Route path="/profile" element={<Profile userInfo={userInfo} />} />
+        </Routes>
+      </Router>
+    </>
+  );
+};
 
 export default App;
-

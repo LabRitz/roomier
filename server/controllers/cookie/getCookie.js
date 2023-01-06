@@ -1,7 +1,10 @@
 // Verify existing logged in user
 const getCookie = async (req, res, next) => {
-  const cookie = req.headers.cookie;
-  return res.status(200).json({});
+  const userId = req.cookies.ssid;
+
+  if (!userId) res.status(200).send(false)
+  res.locals.userId = userId;
+  return next();
 }
 
 module.exports = getCookie;

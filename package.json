@@ -43,6 +43,7 @@
     "react-dom": "^16.5.2",
     "react-geocode": "^0.2.3",
     "react-router": "^5.1.0",
+    "react-router-dom": "^6.6.1",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.2"
   },
@@ -53,6 +54,7 @@
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.1",
     "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-react": "^7.31.8",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^29.1.2",
@@ -61,7 +63,6 @@
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "react-router-dom": "^5.1.0",
     "style-loader": "^3.3.1",
     "supertest": "^6.2.4",
     "webpack": "^5.64.1",
