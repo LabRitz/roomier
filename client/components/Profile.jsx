@@ -1,8 +1,8 @@
-import React, { Component, useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { Component, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
-import NavBar from './NavBar.jsx';
-import ProfileFeed from './ProfileFeed.jsx';
+import NavBar from "./NavBar.jsx";
+import ProfileFeed from "./ProfileFeed.jsx";
 
 const Profile = (props) => {
   const location = useLocation();
@@ -13,32 +13,28 @@ const Profile = (props) => {
 
   useEffect(() => {
     fetch(`/profile/${userData.username}`)
-      .then(data => data.json())
-      .then(postsArr => {
-        setPosts(postsArr)
+      .then((data) => data.json())
+      .then((postsArr) => {
+        setPosts(postsArr);
         return (
           <>
-            <div className='profile'>
-              <NavBar />
-              <ProfileFeed props={posts}/>
+            <div className="profile">
+              <ProfileFeed props={posts} />
             </div>
           </>
-        )
-      })
-  }, [])
+        );
+      });
+  }, []);
 
   if (posts) {
     return (
       <>
-        <div className='profile'>
-          <NavBar />
-          <ProfileFeed props={posts}/>
+        <div className="profile">
+          <ProfileFeed props={posts} />
         </div>
       </>
-    )
-  } else return null
-  
-
-}
+    );
+  } else return null;
+};
 
 export default Profile;
