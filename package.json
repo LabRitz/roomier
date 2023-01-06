@@ -1,29 +1,32 @@
 {
-  "name": "find-a-roommate",
+  "name": "roomier",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
-    "build": "NODE_ENV=production webpack",
-    "dev": "NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve --open ",
-    "test": "jest --watchAll --verbose --coverage"
+    "build": "NODE_ENV=production webpack --config=./webpack/production.webpack.js",
+    "dev": "NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve --config=./webpack/development.webpack.js --open ",
+    "dev:server": "NODE_ENV=development nodemon server/server.js",
+    "dev:client": "NODE_ENV=development webpack serve --config=./webpack/development.webpack.js",
+    "test": "NODE_ENV=development jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blee3395/find-a-roommate.git"
+    "url": "git+https://github.com/labritz/roomier.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/blee3395/find-a-roommate/issues"
+    "url": "https://github.com/labritz/roomier/issues"
   },
-  "homepage": "https://github.com/blee3395/find-a-roommate#readme",
+  "homepage": "https://github.com/labritz/roomier#readme",
   "dependencies": {
     "@react-google-maps/api": "^2.12.1",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
+    "config": "^3.3.8",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
@@ -53,6 +56,7 @@
     "eslint-plugin-react": "^7.31.8",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^29.1.2",
+    "jest-environment-jsdom": "^29.3.1",
     "nodemon": "^1.18.9",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
