@@ -31,9 +31,13 @@ router.get("/", (req, res) =>
 router.post("/signup", user.createUser);
 router.post("/home/:username", post.filterPostsByDistance);
 router.post("/createPost", post.createPost);
-// Login route handler
-router.post(
-  "/",
+router.post("/oauth",
+  user.verifyUser,
+  (req, res) => {
+    return res.status(200).json(res.locals.user);
+  }
+);
+router.post("/",
   user.verifyUser,
   cookie.setSSIDCookie,
   session.startSession,
