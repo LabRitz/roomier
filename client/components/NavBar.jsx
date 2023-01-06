@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "../stylesheets/navbar.scss";
 
 const NavBar = ({ setUserInfo }) => {
-  const location = useLocation();
-  const userData = location.state;
   // console.log('metaData from navBar: ', userData)
 
   const [phrase, setPhrase] = useState("roommate");
@@ -30,10 +28,7 @@ const NavBar = ({ setUserInfo }) => {
     <div className="nav">
       <div className="leftBtn">
         <Link
-          to={{
-            pathname: "/home",
-            state: userData,
-          }}
+          to={{pathname:'/'}}
         >
           <img src="https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg" />
           {/* <button class='logoBtn'>
@@ -44,10 +39,7 @@ const NavBar = ({ setUserInfo }) => {
           </button> */}
         </Link>
         <Link
-          to={{
-            pathname: "/home",
-            state: userData,
-          }}
+          to={{pathname:'/'}}
         >
           <h1>find a {phrase}...</h1>
           {/* <img src='https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg'/> */}
@@ -58,7 +50,6 @@ const NavBar = ({ setUserInfo }) => {
         <Link
           to={{
             pathname: "/createPost",
-            state: userData,
           }}
         >
           <button className="post">
@@ -78,7 +69,6 @@ const NavBar = ({ setUserInfo }) => {
         <Link
           to={{
             pathname: "/profile",
-            state: userData,
           }}
         >
           <button className="textBtn version profile">
@@ -95,10 +85,7 @@ const NavBar = ({ setUserInfo }) => {
           </button>
         </Link>
         <Link
-          to={{
-            pathname: "/",
-            state: userData,
-          }}
+          to={{pathname:'/'}}
         >
           <button
             className="textBtn version profile"
