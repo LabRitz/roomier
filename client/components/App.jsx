@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect, Routes } from 'react-router-dom';
 
 import Login from './Login.jsx';
@@ -8,9 +8,21 @@ import CreatePost from './CreatePost.jsx';
 import Profile from './Profile.jsx';
 
 
-const App = (props) => {
-
+const App = () => {
   const [userInfo, setUserInfo] = useState('');
+
+  const verifySession = async () => {
+    const res = await fetch('/currentSession')
+    const hasSession = await res.json()
+
+    if (hasSession) setUserInfo(hasSession)
+    else console.log('User does not have current session')
+  }
+
+  useEffect(() => {
+    verifySession()
+  }, [])
+
   return (
     (userInfo == '') ? (
       <>

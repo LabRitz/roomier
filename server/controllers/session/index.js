@@ -1,2 +1,2 @@
-exports.isLoggedIn = require('./isLoggedIn')
+exports.findSession = require('./findSession')
 exports.startSession = require('./startSession')
