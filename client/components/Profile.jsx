@@ -1,12 +1,9 @@
 import React, { Component, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
-import NavBar from "./NavBar.jsx";
 import ProfileFeed from "./ProfileFeed.jsx";
 
-const Profile = (props) => {
-  const location = useLocation();
-  const userData = location.state;
+const Profile = ({ userInfo }) => {
+  const userData = userInfo;
   // console.log('metaData from profile: ', userData)
 
   const [posts, setPosts] = useState(null);

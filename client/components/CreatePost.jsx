@@ -1,17 +1,14 @@
 import React, { Component, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { storage } from "./firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
 
-import NavBar from "./NavBar.jsx";
 import Gallery from "./Gallery.jsx";
 
 import "../stylesheets/createPost.scss";
 
-const CreatePost = (props) => {
-  const location = useLocation();
-  const userData = location.state;
+const CreatePost = ({ userInfo }) => {
+  const userData = userInfo;
 
   // Initialize states for
   const [imageUpload, setImageUpload] = useState(null);
