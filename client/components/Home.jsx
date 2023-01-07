@@ -15,7 +15,7 @@ const Home = ({ userInfo }) => {
   const [distance, setDistance] = useState(3218.688);
 
   //INSERT OWN GOOGLE MAPS API
-  const GoogleMapsAPIKey = process.env.GOOGLE_MAPS_API;
+  const GoogleMapsAPIKey = 'AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM';
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey,
@@ -27,7 +27,6 @@ const Home = ({ userInfo }) => {
 
   function getMarkers() {
     const tempMarkers = [];
-    console.log("posts", posts.length);
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].geoData) {
         const posObj = {
@@ -37,14 +36,10 @@ const Home = ({ userInfo }) => {
         tempMarkers.push(<Marker position={posObj}></Marker>);
       } else console.log("no geodata");
     }
-    console.log("temp", tempMarkers.length);
     setMarkers(tempMarkers);
-    console.log("set", markers.length);
   }
 
   async function getMap() {
-    console.log("isLOaded: ", isLoaded);
-    console.log("Error for loaded: ", loadError);
     if (isLoaded) {
       let geocode = await Geocode.fromAddress(zipCode);
       const { lng, lat } = geocode.results[0].geometry.location;

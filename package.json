@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/server.js",
+    "start": "node server/server.js",
     "build": "NODE_ENV=production webpack --config=./webpack/production.webpack.js",
     "dev": "NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve --config=./webpack/development.webpack.js --open ",
     "dev:server": "NODE_ENV=development nodemon server/server.js",
