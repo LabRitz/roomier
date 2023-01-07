@@ -3,7 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
-const { DOMAIN, PORT, SERVER_PORT } = require('config')
+const { PROTOCOL, DOMAIN, PORT, SERVER_PORT } = require('config')
 
 module.exports = {
   entry: {
@@ -16,7 +16,7 @@ module.exports = {
     host: DOMAIN,
     port: PORT,
     static: {
-      directory: path.resolve(__dirname, 'build'),
+      directory: path.resolve(__dirname) + '../../dist',
       publicPath: '/'
     },
     client: {
@@ -24,9 +24,7 @@ module.exports = {
     },
     hot: true,
     proxy: {
-      '/': `http://${DOMAIN}:${SERVER_PORT}`,
-      // '/signup': `http://${DOMAIN}:${SERVER_PORT}`,
-      // '/createPost': `http://${DOMAIN}:${SERVER_PORT}`,
+      '/': `${PROTOCOL}${DOMAIN}:${SERVER_PORT}`,
       compress: true,
       port: PORT,
     },
@@ -34,7 +32,7 @@ module.exports = {
 
   output: {
     publicPath: ``,
-    path: path.resolve(__dirname, '..dist/assets'),
+    path: path.resolve(__dirname) + '../../dist',
     filename: '[name].[contenthash]].js',
     clean: true
   },

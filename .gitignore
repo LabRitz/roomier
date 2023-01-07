@@ -2,3 +2,7 @@ node_modules
 build
 .env
 coverage
+dist
+.DS_Store
+roomier.zip
+
