@@ -3,3 +3,4 @@ build
 .env
 coverage
 dist
+.DS_Store
