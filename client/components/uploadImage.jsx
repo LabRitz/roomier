@@ -2,10 +2,7 @@ import { useState } from 'react';
 import {storage} from './firebase'
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
 
-// User.findById(id).exec().then((user) => user.gallery.push(link))
-
-
-function UploadImage() {
+const UploadImage = () => {
   const [imageUpload, setImageUpload] = useState(null);
   const [imgArr, setImgArr] = useState([])
   
