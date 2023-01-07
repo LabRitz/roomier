@@ -1,0 +1,7 @@
+FROM node:16.13
+WORKDIR /usr/src/app
+RUN npm install --save-dev webpack
+COPY package*.json /usr/src/app
+RUN npm install
+EXPOSE 3000
+ENTRYPOINT ["node", "./server/server.js"]
