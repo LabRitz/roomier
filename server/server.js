@@ -3,6 +3,7 @@ const express = require("express");
 const cookieparser = require("cookie-parser");
 const cors = require("cors");
 const expressSession = require("express-session");
+const path = require('path')
 const passport = require("passport");
 
 const { SERVER_PORT } = require("config");
@@ -17,6 +18,7 @@ app.use(cookieparser());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../dist/')));
 
 // Route all requests to MainRouter
 app.use("/", require("./routes/user"));
