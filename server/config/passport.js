@@ -48,15 +48,6 @@ function googleAuth(passport) {
           });
           const signupJSON = await response.json();
 
-          //makes request to verify user
-          await fetch(`${PROTOCOL}${DOMAIN}:${SERVER_PORT}/`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              username: email,
-              password: sub
-            })
-          });
           done(null, signupJSON)
         }
       } catch (err) {
