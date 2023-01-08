@@ -30,9 +30,7 @@ const ContainerFeed = ({props}) => {
     }
   }
   
-  useEffect(() => {
 
-  },[application])
 
 
   return (
