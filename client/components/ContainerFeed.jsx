@@ -1,37 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 
 import Card from './Card.jsx';
 
 import styles from '../stylesheets/containerFeed.scss'
 
 const ContainerFeed = ({props}) => {
-
-  let applications
-  if (!props.applicantData) {
-    // *****DUMMY DATA******
-    applications = [
-      {
-        firstName: 'Brennan',
-        lastName: 'Lee',
-        username: 'cheekyBoi@clubpenguin.com'
-      },
-      {
-        firstName: 'Big',
-        lastName: 'Addy',
-        username: 'admin@garticphone.com'
-      },
-      {
-        firstName: 'Michael',
-        lastName: 'R',
-        username: 'newPhone@whoDis.com'
-      }
-    ];
-  }
-  else if (props.applicantData.length === 0)  {
-    applications = []
-  }
-  else applications = props.applicantData
-
+  
+  const [application, setApplication] = useState(!props.applicantData ? [] : props.applicantData)
   async function handleApply(e) {
     console.log('clicking apply')
     try {
@@ -42,23 +17,28 @@ const ContainerFeed = ({props}) => {
         username: applicationInfo.username
       }
       const response = await fetch(`/home/${props._id}`, {
-          method:'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(reqBody)
-        })
+        method:'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reqBody)
+      })
       const data = await response.json();
       console.log('Response from applying to post: ', data)
+      if (data) setApplication([].concat(application.slice(),reqBody )); // only update if patch request is true/not error
     }
     catch(err) {
       console.log('Error applying to post: ', err)
     }
   }
+  
+
+
+
   return (
     <div className='feed'>
       <Card props={props}/>
       <div className="apply">
         <button className='apply' onClick={(e) => handleApply(e)}>Apply</button>
-        <p>{applications.length} pending application(s)</p>
+        <p>{application.length} pending application(s)</p>
       </div>
     </div>
   )
