@@ -15,7 +15,7 @@ const Home = ({ userInfo }) => {
   const [distance, setDistance] = useState(3218.688);
 
   //INSERT OWN GOOGLE MAPS API
-  const GoogleMapsAPIKey = process.env.GOOGLE_MAPS_API;
+  const GoogleMapsAPIKey = 'AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM';
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey,

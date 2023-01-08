@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FB_APIKEY,
-  authDomain: process.env.REACT_APP_FB_AUTHDOMAIN,
-  projectId: process.env.REACT_APP_FB_PROJECTID,
-  storageBucket: process.env.REACT_APP_FB_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FB_MESSAGING_SENDERID,
-  appId: process.env.REACT_APP_FB_APPID,
-  measurementId: process.env.REACT_APP_FB_MEASUREMENTID
+  apiKey: "AIzaSyBOnee-KSyXhLZu8BtDO9VPbCPpAYUHK_I",
+  authDomain: "roomier-1cc68.firebaseapp.com",
+  projectId: "roomier-1cc68",
+  storageBucket: "roomier-1cc68.appspot.com",
+  messagingSenderId: "498568617132",
+  appId: "1:498568617132:web:15275ea991c04a880c5309",
+  measurementId: "G-H9WYGT2GCD"
 };
 
 const app = initializeApp(firebaseConfig);
