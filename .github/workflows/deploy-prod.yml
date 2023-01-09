@@ -1,0 +1,42 @@
+name: Prod Deploy to EB
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest     
+
+    steps:
+      - uses: actions/checkout@v2
+
+        # Zip file package to deploy to S3 bucket
+      - name: Create ZIP
+        # run: git archive -v -o roomier-deploy.zip --format=zip HEAD
+        run: zip -r roomier-deploy.zip ./
+
+        # Access AWS using GitHub mounted secrets
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: "us-east-1"
+
+        # Copy zip file contents to S3 bucket
+      - name: Upload package to S3 bucket
+        run: aws s3 cp roomier-deploy.zip s3://roomier-s3-deploy/
+
+        # Deploy to Prod
+      - name: Create new ElasticBeanstalk Application Version
+      run: |
+        aws elasticbeanstalk create-application-version \
+        --application-name Roomier \
+        --source-bundle S3Bucket="roomier-s3-deploy",S3Key="roomier-deploy.zip" \
+        --version-label "ver-${{ github.sha }}" \
+        --description "commit-sha-${{ github.sha }}"
+
+      - name: Deploy new ElasticBeanstalk Application Version
+        run: aws elasticbeanstalk update-environment --environment-name Myawesomeapp-env-1 --version-label "ver-${{ github.sha }}"
