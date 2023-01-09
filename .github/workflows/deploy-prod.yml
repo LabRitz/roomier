@@ -39,4 +39,4 @@ jobs:
         --description "commit-sha-${{ github.sha }}"
 
       - name: Deploy new ElasticBeanstalk Application Version
-        run: aws elasticbeanstalk update-environment --environment-name Myawesomeapp-env-1 --version-label "ver-${{ github.sha }}"
+        run: aws elasticbeanstalk update-environment --environment-name roomier --version-label "ver-${{ github.sha }}"
