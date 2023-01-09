@@ -54,7 +54,7 @@ const Signup = (props) => {
     <div className='router'>
       <div className="logo">
         <img src='https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg'/>
-        <h4>a Team Tassled Wobbegong thing</h4>
+        <h4>a LabRitz thing</h4>
         <h6>looking for a Zillow corporate sponsorship</h6>
       </div>
       <div className="login">
