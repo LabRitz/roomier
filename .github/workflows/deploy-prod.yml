@@ -2,7 +2,8 @@ name: Prod Deploy to EB
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: 
+    - main
 
 jobs:
   prod_deploy:
@@ -32,12 +33,12 @@ jobs:
 
       # Deploy to Prod
     - name: Create new ElasticBeanstalk Application Version
-    run: |
-      aws elasticbeanstalk create-application-version \
-      --application-name Roomier \
-      --source-bundle S3Bucket="roomier-s3-deploy",S3Key="roomier-deploy.zip" \
-      --version-label "ver-${{ github.sha }}" \
-      --description "commit-sha-${{ github.sha }}"
+      run: |
+        aws elasticbeanstalk create-application-version \
+        --application-name Roomier \
+        --source-bundle S3Bucket="roomier-s3-deploy",S3Key="roomier-deploy.zip" \
+        --version-label "ver-${{ github.sha }}" \
+        --description "commit-sha-${{ github.sha }}"
 
     - name: Deploy new ElasticBeanstalk Application Version
       run: aws elasticbeanstalk update-environment --environment-name roomier --version-label "ver-${{ github.sha }}"

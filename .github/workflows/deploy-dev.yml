@@ -2,7 +2,8 @@ name: Dev Deploy to EB
 
 on:
   pull_request:
-    branches: [ "dev" ]
+    branches: 
+    - dev
 
 jobs:
   dev_deploy:
@@ -32,12 +33,12 @@ jobs:
 
       # Deploy to Dev
     - name: Create new ElasticBeanstalk Application Version
-    run: |
-      aws elasticbeanstalk create-application-version \
-      --application-name Roomier \
-      --source-bundle S3Bucket="roomier-dev-s3-deploy",S3Key="roomier-dev-deploy.zip" \
-      --version-label "ver-${{ github.sha }}" \
-      --description "commit-sha-${{ github.sha }}"
+      run: |
+        aws elasticbeanstalk create-application-version \
+        --application-name Roomier \
+        --source-bundle S3Bucket="roomier-dev-s3-deploy",S3Key="roomier-dev-deploy.zip" \
+        --version-label "ver-${{ github.sha }}" \
+        --description "commit-sha-${{ github.sha }}"
 
     - name: Deploy new ElasticBeanstalk Application Version
       run: aws elasticbeanstalk update-environment --environment-name roomier-dev --version-label "ver-${{ github.sha }}"
