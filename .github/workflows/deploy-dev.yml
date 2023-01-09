@@ -16,8 +16,8 @@ jobs:
 
       # Zip file package to deploy to S3 bucket
     - name: Create ZIP
-      # run: git archive -v -o roomier-deploy.zip --format=zip HEAD
-      run: zip -r roomier-dev-deploy.zip ./
+      run: git archive -v -o roomier-deploy.zip --format=zip HEAD
+      # run: zip -r roomier-dev-deploy.zip ./
 
       # Access AWS using GitHub mounted secrets
     - name: Configure AWS Credentials
