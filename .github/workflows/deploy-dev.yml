@@ -5,7 +5,7 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  deploy:
+  upload_and_deploy:
     runs-on: ${{matrix.os}}      
 
     strategy:
