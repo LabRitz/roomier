@@ -2,7 +2,7 @@ name: Deploy Roomier on AWS Elastic Beanstalk
 
 env:
   APP_NAME: Roomier-dev
-  S3_BUCKET: rommier-dev-s3-deploy
+  S3_BUCKET: roomier-dev-s3-deploy
   AWS_REGION: us-east-1
   AWS_PLATFORM: Docker
   PIPELINE_ID: ${GITHUB_RUN_ID}-${GITHUB_RUN_NUMBER}
