@@ -8,8 +8,9 @@ env:
   PIPELINE_ID: ${GITHUB_RUN_ID}-${GITHUB_RUN_NUMBER}
 
 on:
-  push:
-    branches: [ main ]
+  pull_request:
+    branches: 
+    - dev
 
 jobs:
   create_eb_version:
