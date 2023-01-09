@@ -6,11 +6,9 @@ on:
 
 jobs:
   prod_deploy:
-    runs-on: ${{matrix.os}}      
+    name: Deploy
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]     
+    runs-on: ubuntu-latest    
 
     steps:
     - uses: actions/checkout@v2
@@ -34,7 +32,7 @@ jobs:
 
       # Deploy to Prod
     - name: Create new ElasticBeanstalk Application Version
-    run: |
+      run: |
       aws elasticbeanstalk create-application-version \
       --application-name Roomier \
       --source-bundle S3Bucket="roomier-s3-deploy",S3Key="roomier-deploy.zip" \

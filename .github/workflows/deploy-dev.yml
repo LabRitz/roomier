@@ -6,11 +6,9 @@ on:
 
 jobs:
   dev_deploy:
-    runs-on: ${{matrix.os}}      
+    name: Deploy
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest    
 
     steps:
     - uses: actions/checkout@v2
