@@ -1,4 +1,4 @@
-name: Prod Deploy to EB
+name: Dev Deploy to EB
 
 on:
   pull_request:
@@ -29,7 +29,7 @@ jobs:
       - name: Upload package to S3 bucket
         run: aws s3 cp roomier-dev-deploy.zip s3://roomier-dev-s3-deploy/
 
-        # Deploy to Prod
+        # Deploy to Dev
       - name: Create new ElasticBeanstalk Application Version
       run: |
         aws elasticbeanstalk create-application-version \
