@@ -77,7 +77,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
       <AppBar position="fixed" style={{background: '#98C1D9'}}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Avatar alt={userInfo.firstName} sx={{ width: 112, bgcolor: 'transparent', display: { xs: 'none', md: 'flex' }, mr: 1 }} variant='rounded'>
+            <Avatar onClick={() => navigate('/')} alt={userInfo.firstName} sx={{ width: 112, bgcolor: 'transparent', display: { xs: 'none', md: 'flex' }, mr: 1 }} variant='rounded'>
               <img className='navBarLogo' src="https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg" />
             </Avatar>
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -137,17 +137,10 @@ const NavBar = ({ userInfo, setUserInfo }) => {
               </Avatar>
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {/* {pages.map((page) => ( */}
-                <Button
-                  // key={page.title}
-                  // onClick={() => handleCloseNavMenu(page.nav)}
-                  sx={{ my: 2, color: '#293241', display: 'block' }}
-                >
-                  find a {phrase}...
-                </Button>
-              {/* ))} */}
+              <Button sx={{ my: 2, color: '#293241', display: 'block' }}>
+                find a {phrase}...
+              </Button>
             </Box>
-
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
