@@ -32,7 +32,7 @@ jobs:
 
       # Deploy to Prod
     - name: Create new ElasticBeanstalk Application Version
-      run: |
+    run: |
       aws elasticbeanstalk create-application-version \
       --application-name Roomier \
       --source-bundle S3Bucket="roomier-s3-deploy",S3Key="roomier-deploy.zip" \
