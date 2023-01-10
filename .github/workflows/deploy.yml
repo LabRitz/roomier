@@ -1,34 +1,40 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+name: TEST Deploy Roomier on AWS Elastic Beanstalk
 
-name: Node.js CI
+env:
+  APP_NAME: test
+  S3_BUCKET: roomier-dev-s3-deploy
+  AWS_REGION: us-east-1
+  AWS_PLATFORM: Docker
+  PIPELINE_ID: ${GITHUB_RUN_ID}-${GITHUB_RUN_NUMBER}
 
 on:
-  pull_request:
-    branches: [ "main" ]
+  push:
+    branches: 
+    - test/deploy
 
 jobs:
-  build:
-
-    runs-on: ${{matrix.os}}     
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest]
-        node-version: [14.x, 16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+  create_eb_version:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - name: Running Tests
-      run: npm run test
-    - run: npm run build --if-present
+      - uses: actions/checkout@v2
+      - name: Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - run: |
+          AWS_VERSION_LABEL=${{env.APP_NAME}}-${{env.PIPELINE_ID}}
 
-# publish:
-#   needs: build
+          echo "Creating Source Bundle"
+          git archive -v -o ${{env.APP_NAME}}.zip --format=zip HEAD
+          S3_KEY="$AWS_VERSION_LABEL.zip"
+
+          echo "Uploading Source Bundle to S3"
+          aws s3 cp ${{env.APP_NAME}}.zip s3://${{env.S3_BUCKET}}/${S3_KEY} --region ${{env.AWS_REGION}}
+
+          echo "Creating Elastic Beanstalk version"
+          aws elasticbeanstalk create-application-version --application-name ${{env.APP_NAME}} --version-label $AWS_VERSION_LABEL --region ${{env.AWS_REGION}} --source-bundle S3Bucket=${{env.S3_BUCKET}},S3Key=${S3_KEY} --auto-create-application
+
+          echo "Deploy new ElasticBeanstalk Application Version"
+          aws elasticbeanstalk update-environment --environment-name test --version-label $AWS_VERSION_LABEL
