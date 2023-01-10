@@ -10,7 +10,7 @@ env:
 on:
   pull_request:
     branches: 
-    - dev
+    # - dev
 
 jobs:
   create_eb_version:
