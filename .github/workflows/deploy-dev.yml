@@ -36,6 +36,9 @@ jobs:
           echo "Creating Elastic Beanstalk version"
           aws elasticbeanstalk create-application-version --application-name ${{env.APP_NAME}} --version-label $AWS_VERSION_LABEL --region ${{env.AWS_REGION}} --source-bundle S3Bucket=${{env.S3_BUCKET}},S3Key=${S3_KEY} --auto-create-application
 
+          echo "Deploy new ElasticBeanstalk Application Version"
+          aws elasticbeanstalk update-environment --environment-name Roomierdev-env --version-label $AWS_VERSION_LABEL
+
   # deploy_aws:
   #   needs: [create_eb_version]
   #   runs-on: ubuntu-latest
