@@ -1,7 +1,7 @@
 name: Deploy Roomier on AWS Elastic Beanstalk
 
 env:
-  APP_NAME: Roomier-dev
+  APP_NAME: roomier
   S3_BUCKET: roomier-dev-s3-deploy
   AWS_REGION: us-east-1
   AWS_PLATFORM: Docker
