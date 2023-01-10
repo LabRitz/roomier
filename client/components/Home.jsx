@@ -12,7 +12,7 @@ const Home = ({ userInfo }) => {
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(userData.zipCode);
-  const [distance, setDistance] = useState(3218.688);
+  const [distance, setDistance] = useState(1609.344);
 
   //INSERT OWN GOOGLE MAPS API
   const GoogleMapsAPIKey = "AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM";
