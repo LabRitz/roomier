@@ -3,7 +3,7 @@ name: Prod Deploy to EB
 on:
   pull_request:
     branches: 
-    - main
+    # - main
 
 jobs:
   prod_deploy:
