@@ -20,7 +20,7 @@ const Login = ({ setUserInfo }) => {
         body: JSON.stringify(reqBody)
       });
       const data = await res.json();
-      if (data == null) alert("Credentials incorrect. Please try again or create account");
+      if (data == null || data.err) alert("Credentials incorrect. Please try again or create account");
       else setUserInfo(data);
       document.getElementById('username').value = '';
       document.getElementById('password').value = '';
