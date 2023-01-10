@@ -38,7 +38,7 @@ const App = () => {
   ) : (
     <>
       <Router>
-        <NavBar setUserInfo={setUserInfo} />
+        <NavBar userInfo={userInfo} setUserInfo={setUserInfo} />
         <Routes>
           <Route exact path="/" element={<Home userInfo={userInfo} />} />
           <Route
