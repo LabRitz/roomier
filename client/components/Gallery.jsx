@@ -1,28 +1,16 @@
-/* eslint-disable react/prop-types */
-import { set } from 'mongoose';
 import React, { Component, useEffect, useState } from 'react';
 
-// import styles from '../stylesheets/gallery.scss'
+import styles from '../stylesheets/gallery.scss'
 
 // imgArr => Array of Object key value pairs { Image urls:  Firebase file paths }
-const Gallery = ({imgArr}) => {
-  
+const Gallery = ({ imgArr }) => {
+  const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
   const [index, setIndex] = useState(0) // Index for gallery image
-  const [imgSrc, setImg] = useState('') // Current image source url string
-
-  useEffect(() => {
-    if (imgArr.length !== 0) {
-      setIndex(imgArr.length-1)
-      setImg(Object.keys(imgArr[index])[0])
-    }
-    else setImg('https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg')
-  }, [imgArr])
-
+ 
   function handleClick(dir) {
     if (index + dir < 0) setIndex(imgArr.length - 1)
     else if (index + dir > imgArr.length - 1) setIndex(0)
     else setIndex(index + dir);
-    setImg(Object.keys(imgArr[index])[0])
   }
 
   return (
@@ -39,7 +27,7 @@ const Gallery = ({imgArr}) => {
           </svg>
         </button>
       </div>
-      <img src={imgSrc} id="imgPreview" alt='picture of rental property'></img>
+      <img src={(!imgArr[index]) ? defaultImg : Object.keys(imgArr[index])[0]} id="imgPreview" alt='picture of rental property'></img>
     </div>
   )
 }
