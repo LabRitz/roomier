@@ -1,24 +1,39 @@
 /* eslint-disable react/prop-types */
-import React, { Component } from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
 
 import ContainerFeed from './ContainerFeed.jsx';
+import PostModal from './PostModal.jsx';
 
-import styles from '../stylesheets/homeFeed.scss'
+import styles from '../stylesheets/homeFeed.scss';
 
-const HomeFeed = ({props, zipCode, setZipCode, setDistance}) => {
-  
-  //Initialize state to apt array
-  const [feed, setFeed] = useState([]);
+const HomeFeed = ({posts, zipCode, setZipCode, setDistance}) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  useEffect(() => {
-    const tempArr = [];
-    for (let i = 0; i < props.length; i++) {
-      const data = Object.assign(props[i], {applicationInfo: props.userData})
-      tempArr.push(<ContainerFeed key={i} props={data}/>)
-    }
-    setFeed(tempArr)
-  }, [props])  
+  const [postInfo, setPostInfo] = useState({
+    address:'',
+    roommate:{
+      gender:''
+    },
+    description:{
+      condition:'',
+      BA:0,
+      BR:0,
+      sqFt:0,
+      pets: false,
+      smoking: false,
+      parking: false,
+    },
+    moveInDate:'',
+    utilities:'',
+    rent:'',
+    bio:'',
+    images:{'key': 'value'}
+  })
 
   // Set user's location 
   const handleInput = (val) => {
@@ -36,7 +51,6 @@ const HomeFeed = ({props, zipCode, setZipCode, setDistance}) => {
       <div className='homeFeed'>
         <div className="filter">
           <div className="userLocation">
-            {/* zipcode => converted to geospatial coordinates in Home.jsx*/}
             <input 
               id='zipCode'
               type="number" 
@@ -55,8 +69,16 @@ const HomeFeed = ({props, zipCode, setZipCode, setDistance}) => {
             </select>
           </div>
         </div>
-        {feed}
+        <ImageList sx={{ width: '100%', height: '100%' }} cols={2} rowHeight={350}>
+          {posts.map((post) => (
+            <ImageListItem key={post._id}>
+              <ContainerFeed key={post._id} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo}/>
+            </ImageListItem>
+          ))}
+        </ImageList>
       </div>
+
+      <PostModal postInfo={postInfo} open={open} handleClose={handleClose}/>
     </>
   )
 

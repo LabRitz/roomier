@@ -86,7 +86,7 @@ const Home = ({ userInfo }) => {
     return (
       <>
         <div className="home">
-          <HomeFeed props={posts} />
+          <HomeFeed posts={posts} />
           <div id="googleMapDiv"></div>
         </div>
       </>
@@ -119,7 +119,7 @@ const Home = ({ userInfo }) => {
           <img />
         </div>
         <HomeFeed
-          props={posts}
+          posts={posts}
           zipCode={zipCode}
           setZipCode={setZipCode}
           distance={distance}
