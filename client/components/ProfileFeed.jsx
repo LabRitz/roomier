@@ -76,7 +76,7 @@ const ProfileFeed = ({props}) => {
 
   const feed = []
   for (let i = 0; i < state.length; i++) {
-    feed.push(<ContainerApplication props={state[i]}/>)
+    feed.push(<ContainerApplication postInfo={state[i]}/>)
   }
 
   return (
