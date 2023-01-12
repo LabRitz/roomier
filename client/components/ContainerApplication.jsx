@@ -4,9 +4,9 @@ import Card from './Card.jsx';
 
 import styles from '../stylesheets/containerApplication.scss'
 
-const ContainerApplications = ({props}) => {
+const ContainerApplications = ({postInfo}) => {
   function handleUpdate(e) {
-    alert(`haha that tickles @${props._id}`)
+    alert(`haha that tickles @${postInfo._id}`)
     // do something
     // pls
   }
@@ -15,7 +15,7 @@ const ContainerApplications = ({props}) => {
     try {
       const app = e.target.parentNode.parentNode.parentNode.parentNode
       console.log(app)
-      const response = await fetch(`/profile/${props._id}`, {
+      const response = await fetch(`/profile/${postInfo._id}`, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
         })
@@ -49,7 +49,7 @@ const ContainerApplications = ({props}) => {
   }
 
   let applications
-  if (!props.applicantData) {
+  if (!postInfo.applicantData) {
     // *****DUMMY DATA******
     applications = [
       {
@@ -69,10 +69,10 @@ const ContainerApplications = ({props}) => {
       }
     ];
   }
-  else if (props.applicantData.length === 0)  {
+  else if (postInfo.applicantData.length === 0)  {
     applications = []
   }
-  else applications = props.applicantData
+  else applications = postInfo.applicantData
 
   // // Map applicants to dropdown container
   // const apps = applicationData.map(app => {
@@ -81,7 +81,7 @@ const ContainerApplications = ({props}) => {
 
   return (
     <div className='applications'>
-      <Card props={props}/>
+      <Card postInfo={postInfo}/>
       <div className="apply">
         <div className="buttons">
           <button className='update' onClick={(e) => handleUpdate(e)}>
