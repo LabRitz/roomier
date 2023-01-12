@@ -4,29 +4,17 @@ import React, { Component, useState, useEffect } from 'react';
 import styles from '../stylesheets/card.scss';
 import Gallery from './Gallery.jsx';
 
-const Card = ({props}) => {
-  let {
-        address,
-        roommate,
-        description,
-        moveInDate,
-        utilities,
-        rent,
-        bio,
-        images
-      } = props;
-    
-  // const [imgIndex, setIndex] = useState(0)
-  // const [imgSrc, setImg] = useState('https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg')
-  
-  // useEffect(()=> {
-  //   setTimeout(() => {
-  //     if (imgIndex + 1 > picture.length) setIndex(0)
-  //     else setIndex(imgIndex + 1)
-      
-  //     if (picture.length !== 0) setImg(Object.keys(picture[imgIndex])[0])
-  //   }, 5000)
-  // }, [imgIndex])
+const Card = ({ postInfo }) => {
+  const {
+    address,
+    roommate,
+    description,
+    moveInDate,
+    utilities,
+    rent,
+    bio,
+    images
+  } = postInfo;
 
   if (description.condition === undefined) description.condition = 'Slightly used';
 
