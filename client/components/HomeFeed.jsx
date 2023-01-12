@@ -12,7 +12,7 @@ import styles from '../stylesheets/homeFeed.scss';
 
 const postsPerPage = 6;
 
-const HomeFeed = ({posts, zipCode, setZipCode, setDistance}) => {  
+const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {  
   // Handlers for post modal open and close
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -79,7 +79,7 @@ const HomeFeed = ({posts, zipCode, setZipCode, setDistance}) => {
           </div>
           <div className="distance">
             <label htmlFor="distance">Distance(mi):</label>
-            <select name='distance' id='distance' onChange={handleDistance}>
+            <select name='distance' id='distance' defaultValue={Math.round(distance/1609.344)} onChange={handleDistance}>
               <option value={1}>1 mi</option>
               <option value={2}>2 mi</option>
               <option value={5}>5 mi</option>
