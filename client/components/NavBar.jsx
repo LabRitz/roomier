@@ -172,8 +172,8 @@ const NavBar = ({ userInfo, setUserInfo }) => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Fab sx={{position:'fixed', bottom: 24, right: 24}} color="primary" aria-label="edit">
-        <EditIcon onClick={() => navigate('/createPost')}/>
+      <Fab sx={{position:'fixed', bottom: 24, right: 24}} color="primary" aria-label="edit" onClick={() => navigate('/createPost')}>
+        <EditIcon/>
       </Fab>
     </>
   );
