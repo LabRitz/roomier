@@ -64,7 +64,7 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo }) => {
       </CardContent>
       <CardActions sx={{pt:0}}>
         <Tooltip title="Submit contact info">
-          <Button sx={{mr:1}} onClick={(e) => handleApply(e)} size="small">Apply</Button>
+          <Button sx={{mr:1}} onClick={() => handleApply()} size="small">Apply</Button>
         </Tooltip>
         <Typography variant="body2" noWrap='true' color="text.secondary">
           {application.length} in review
