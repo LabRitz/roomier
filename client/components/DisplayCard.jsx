@@ -13,8 +13,6 @@ import Typography from '@mui/material/Typography';
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
 const DisplayCard = ({ postInfo }) => {
-  console.log(postInfo)
-
   const {
     address,
     applicantData,
