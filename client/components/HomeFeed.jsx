@@ -10,7 +10,8 @@ import PostModal from './PostModal.jsx';
 
 import styles from '../stylesheets/homeFeed.scss';
 
-const postsPerPage = 6;
+const distances = [1, 2, 5, 10];
+const postsPerPage = [2, 4, 6, 12];
 
 const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {  
   // Handlers for post modal open and close
@@ -18,8 +19,11 @@ const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  // Set user selected posts per page
+  const[numPosts, setNumPosts] = useState(6)
+
   // Set current page of posts to display
-  const [displayPosts, setDisplayPosts] = useState(posts.slice(0, postsPerPage));
+  const [displayPosts, setDisplayPosts] = useState(posts.slice(0, numPosts));
   
   // Set Post infor for modal display
   const [postInfo, setPostInfo] = useState({
@@ -55,14 +59,19 @@ const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {
   }
 
   // Handle pagination
-  const handleChange = (event, value) => {
-    setDisplayPosts(posts.slice(postsPerPage*(value-1), postsPerPage*value))
+  const handlePages = (event, value) => {
+    setDisplayPosts(posts.slice(numPosts*(value-1), numPosts*value))
+  }
+
+   // Handle pagination
+   const handlePostsPerPage = (e) => {
+    setNumPosts(e.target.value)
   }
 
   // Render posts in each page on load or filter change
   useEffect(() => {
-    setDisplayPosts(posts.slice(0, postsPerPage))
-  }, [posts])
+    setDisplayPosts(posts.slice(0, numPosts))
+  }, [posts, numPosts])
 
   return (
     <>
@@ -80,10 +89,17 @@ const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {
           <div className="distance">
             <label htmlFor="distance">Distance(mi):</label>
             <select name='distance' id='distance' defaultValue={Math.round(distance/1609.344)} onChange={handleDistance}>
-              <option value={1}>1 mi</option>
-              <option value={2}>2 mi</option>
-              <option value={5}>5 mi</option>
-              <option value={10}>10 mi</option>
+              {distances.map(dist => (
+                 <option value={dist}>{dist} mi</option>
+              ))}
+            </select>
+          </div>
+          <div className="postsPerPage">
+            <label htmlFor="postsPerPage">Posts per page:</label>
+            <select name='postsPerPage' id='postsPerPage' defaultValue={6} onChange={handlePostsPerPage}>
+              {postsPerPage.map(opt => (
+                <option value={opt}>{opt}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -95,9 +111,9 @@ const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {
           ))}
         </ImageList>
         <Pagination 
-          count={Math.ceil(posts.length/postsPerPage)} 
+          count={Math.ceil(posts.length/numPosts)} 
           defaultPage={1} boundaryCount={2} 
-          onChange={handleChange}/>
+          onChange={handlePages}/>
       </div>
 
       <PostModal postInfo={postInfo} open={open} handleClose={handleClose}/>
