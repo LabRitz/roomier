@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Pagination from '@mui/material/Pagination';
+import { AnimatePresence } from 'framer-motion';
 
 import ContainerFeed from './ContainerFeed.jsx';
 import PostModal from './PostModal.jsx';
@@ -104,11 +105,13 @@ const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {
           </div>
         </div>
         <ImageList sx={{ width: '100%', height: '100%' }} cols={2} rowHeight={350}>
-          {displayPosts.map((post) => (
-            <ImageListItem key={post._id}>
-              <ContainerFeed key={post._id} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo}/>
-            </ImageListItem>
-          ))}
+          <AnimatePresence initial={false}>
+            {displayPosts.map((post) => (
+              <ImageListItem key={post._id}>
+                <ContainerFeed key={post._id} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo}/>
+              </ImageListItem>
+            ))}
+          </AnimatePresence>
         </ImageList>
         <Pagination 
           count={Math.ceil(posts.length/numPosts)} 
