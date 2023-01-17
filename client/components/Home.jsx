@@ -132,12 +132,12 @@ const Home = ({ userInfo }) => {
       </Box>
     ) : (
       <div className="home">
-        <div className="background">
+        {/* <div className="background">
           <img src="https://i.redd.it/za30ryykl7n81.jpg"></img>
-        </div>
-        <div className="fade">
+        </div> */}
+        {/* <div className="fade">
           <img />
-        </div>
+        </div> */}
         <HomeFeed
           posts={posts}
           zipCode={zipCode}
