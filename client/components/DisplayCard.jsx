@@ -74,25 +74,25 @@ const DisplayCard = ({ postInfo }) => {
         </CardActions>
       </Paper>
       <Paper elevation={0} sx={{p:3, pt:2, pb:1, width:'50%'}}>
-        <Typography variant="h4" noWrap='false' component="div" color="text.darkBlue">
+        <Typography variant="h4" noWrap={false} component="div" color="text.darkBlue">
           {address.street1} {address.street2}
         </Typography>
-        <Typography gutterBottom variant="h5" noWrap='false' component="div" color="text.darkBlue">
+        <Typography gutterBottom variant="h5" noWrap={false} component="div" color="text.darkBlue">
           {address.city}, {address.state} {address.zipCode}
         </Typography>
-        <Typography gutterBottom variant="h5" noWrap='true' color="text.darkBlue">
+        <Typography gutterBottom variant="h5" noWrap={true} color="text.darkBlue">
           ${rent}/mo
         </Typography>
-        <Typography variant="h6" noWrap='true' color="text.secondary">
+        <Typography variant="h6" noWrap={true} color="text.secondary">
           {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
         </Typography>
-        <Typography gutterBottom variant="subtitle2" noWrap='true' color="text.primary">
+        <Typography gutterBottom variant="subtitle2" noWrap={true} color="text.primary">
           Available: {new Date(moveInDate).toLocaleDateString()}
         </Typography>
-        <Typography gutterBottom variant="body2" noWrap='true' color="text.primary">
+        <Typography gutterBottom variant="body2" noWrap={true} color="text.primary">
           Looking for: {roommate.gender}
         </Typography>
-        <Typography mb={0} variant="body1" paragraph='true' color="text.primary" sx={{fontSize:12}}>
+        <Typography mb={0} variant="body1" paragraph={true} color="text.primary" sx={{fontSize:12}}>
           {bio}
         </Typography>
       </Paper>

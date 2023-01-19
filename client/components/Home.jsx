@@ -36,6 +36,7 @@ const Home = ({ userInfo }) => {
 
   const [isLoading, setIsLoading] = useState(false)
 
+  const [filterArr, setFilterArr] = useState([])
   const [posts, setPosts] = useState([]);
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
@@ -84,23 +85,32 @@ const Home = ({ userInfo }) => {
   }
 
   const getPosts = async () => {
-    let geocode = await Geocode.fromAddress(zipCode);
-
-    const reqBody = {
-      lng: geocode.results[0].geometry.location.lng,
-      lat: geocode.results[0].geometry.location.lat,
-      minDistance: 0,
-      maxDistance: distance,
-    };
-
-    const res = await fetch(`/home/${userData.username}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(reqBody),
-    });
-    const postsArr = await res.json();
-    const newPost = Object.assign(postsArr, { userData: userData });
-    setPosts(newPost);
+    try {
+      const geocode = await Geocode.fromAddress(zipCode);
+      // Gracefully handle for non OK requests
+      if (geocode.status !== 'OK') return setPosts([]);
+  
+      const res = await fetch(`/home/${userData.username}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lng: geocode.results[0].geometry.location.lng,
+          lat: geocode.results[0].geometry.location.lat,
+          minDistance: 0,
+          maxDistance: distance,
+        }),
+      });
+      const postsArr = await res.json();
+      const filterPosts = (filterArr.length !== 0) ? postsArr.filter(post => {
+        for (const filter of filterArr) {
+          if (post.description[filter.toLowerCase()]) return post
+        }
+      }): postsArr;
+      const newPosts = Object.assign(filterPosts, { userData: userData });
+      setPosts(newPosts);
+    } catch (err) {
+      console.log('ERROR: Cannot get posts at zip code', err)
+    }
   }
 
   // Cascading dependency of useEffect
@@ -114,7 +124,7 @@ const Home = ({ userInfo }) => {
   
   useEffect(() => {
     getPosts();
-  }, [zipCode, distance]);
+  }, [zipCode, distance, filterArr]);
 
   useEffect(() => {
     getMarkers();
@@ -132,18 +142,14 @@ const Home = ({ userInfo }) => {
       </Box>
     ) : (
       <div className="home">
-        {/* <div className="background">
-          <img src="https://i.redd.it/za30ryykl7n81.jpg"></img>
-        </div> */}
-        {/* <div className="fade">
-          <img />
-        </div> */}
         <HomeFeed
           posts={posts}
           zipCode={zipCode}
           setZipCode={setZipCode}
           distance={distance}
           setDistance={setDistance}
+          filterArr={filterArr}
+          setFilterArr={setFilterArr}
         />
         <div id="googleMapDiv"></div>
       </div>

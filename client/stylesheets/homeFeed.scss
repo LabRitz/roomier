@@ -28,29 +28,17 @@
   }
 
   .homeFeed {
-    padding-top: 120px;
+    padding-top: 80px;
     padding-bottom: 66px;
     width:60%;
     display: grid;
     grid-template-columns: 1fr;
-    row-gap: 24px;
     z-index: 2;
     margin-left: 40%;
 
     @media screen and (min-width:2000px) {
       display: grid;
       grid-template-columns: 1fr 1fr;
-    }
-
-    .feed {
-      // ****commented out effects because giving transofmr errors to gallery
-      &:hover {
-        // transform: scale(1.05);
-        // transition-duration: 500ms;
-      }
-      &:not(:hover) {
-        // transition-duration: 500ms;
-      }
     }
   }
   #googleMapDiv {

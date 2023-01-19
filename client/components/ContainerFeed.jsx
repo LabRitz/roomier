@@ -62,13 +62,13 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo }) => {
             sx={{ height: 180 }}
             image={(!images[0]) ? defaultImg : Object.keys(images[0])[0]}
           />
-          <Typography gutterBottom variant="h5" noWrap='true' component="div" color="text.darkBlue">
+          <Typography gutterBottom variant="h5" noWrap={true} component="div" color="text.darkBlue">
             ${rent}/mo
           </Typography>
-          <Typography variant="subtitle2" noWrap='true' color="text.darkBlue">
+          <Typography variant="subtitle2" noWrap={true} color="text.darkBlue">
             {address.street1} {address.street2}
           </Typography>
-          <Typography variant="body2" noWrap='true' color="text.secondary">
+          <Typography variant="body2" noWrap={true} color="text.secondary">
             {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
           </Typography>
         </CardContent>
@@ -76,7 +76,7 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo }) => {
           <Tooltip title="Submit contact info">
             <Button sx={{mr:1}} onClick={() => handleApply()} size="small">Apply</Button>
           </Tooltip>
-          <Typography variant="body2" noWrap='true' color="text.secondary">
+          <Typography variant="body2" noWrap={true} color="text.secondary">
             {application.length} in review
           </Typography>
         </CardActions>

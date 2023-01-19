@@ -4,6 +4,19 @@ import { useState, useEffect } from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Pagination from '@mui/material/Pagination';
+
+import { useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Chip from '@mui/material/Chip';
+import ListItemText from '@mui/material/ListItemText';
+import Checkbox from '@mui/material/Checkbox';
+
 import { AnimatePresence } from 'framer-motion';
 
 import ContainerFeed from './ContainerFeed.jsx';
@@ -11,22 +24,27 @@ import PostModal from './PostModal.jsx';
 
 import styles from '../stylesheets/homeFeed.scss';
 
-const distances = [1, 2, 5, 10];
-const postsPerPage = [2, 4, 6, 12];
+function getStyles(filter, filterName, theme) {
+  return {
+    fontWeight:
+      filterName.indexOf(filter) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
-const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {  
+const filters = [
+  'Pets',
+  'Smoking',
+  'Parking',
+];
+const distances = [1, 2, 5, 10, 25, 50];
+const postsPerPage = [2, 4, 6, 12, 24];
+
+const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr }) => {  
+  const theme = useTheme();
+
   // Handlers for post modal open and close
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  // Set user selected posts per page
-  const[numPosts, setNumPosts] = useState(6)
-
-  // Set current page of posts to display
-  const [displayPosts, setDisplayPosts] = useState(posts.slice(0, numPosts));
-  
-  // Set Post infor for modal display
   const [postInfo, setPostInfo] = useState({
     address:'',
     roommate:{
@@ -47,27 +65,40 @@ const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {
     bio:'',
     images:{'key': 'value'}
   })
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  
+  // Filter states
+  const [minPrice, setMinPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(0)
+  const [minSqft, setMinSqft] = useState(0)
+  const [maxSqft, setMaxSqft] = useState(0)
+  const [minBR, setMinBR] = useState(0)
+  const [minBA, setMinBA] = useState(0)
 
-  // Set user's location 
-  const handleInput = (val) => {
-    setZipCode(val)
-  }
+  // Set user selected posts per page
+  const[numPosts, setNumPosts] = useState(6)
 
-  // Set user's max distance
-  const handleDistance = (e) => {
-    const meters = 1609.344 * e.target.value;
-    setDistance(meters)
-  }
+  // Set current page of posts to display
+  const [displayPosts, setDisplayPosts] = useState(posts.slice(0, numPosts));  
 
-  // Handle pagination
-  const handlePages = (event, value) => {
-    setDisplayPosts(posts.slice(numPosts*(value-1), numPosts*value))
-  }
+  // Handle user input functions
+  const handleInput = (e) => { if (e.target.value.length === 5) setZipCode(e.target.value) }
+  const handleDistance = (e) => { setDistance(1609.344 * e.target.value) }
+  const handlePages = (event, value) => { setDisplayPosts(posts.slice(numPosts*(value-1), numPosts*value)) }
+  const handlePostsPerPage = (e) => { setNumPosts(e.target.value) }
 
-   // Handle pagination
-   const handlePostsPerPage = (e) => {
-    setNumPosts(e.target.value)
-  }
+  // Set filter array in Home state with each change
+  const handleChip = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setFilterArr(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value
+    );
+  };
 
   // Render posts in each page on load or filter change
   useEffect(() => {
@@ -78,33 +109,91 @@ const HomeFeed = ({posts, zipCode, setZipCode, distance, setDistance}) => {
     <>
       <div className='homeFeed'>
         <div className="filter">
-          <div className="userLocation">
-            <input 
-              id='zipCode'
-              type="number" 
-              placeholder={zipCode} 
-              pattern="^(?(^00000(|-0000))|(\d{5}(|-\d{4})))$"
-            ></input>
-            <button onClick={() => handleInput(document.getElementById('zipCode').value)}>Submit</button>
-          </div>
-          <div className="distance">
-            <label htmlFor="distance">Distance(mi):</label>
-            <select name='distance' id='distance' defaultValue={Math.round(distance/1609.344)} onChange={handleDistance}>
-              {distances.map(dist => (
-                 <option value={dist}>{dist} mi</option>
+          <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
+            {(posts.length > 0) ? (
+              <TextField
+                id="zipCode"
+                label="Zipcode"
+                defaultValue={zipCode}
+                onChange={handleInput}
+                size="small"
+                inputProps={{ 
+                  inputMode: 'numeric', 
+                  pattern: '^\d{5}(?:[-\s]\d{4})?$' 
+                }}
+              /> ) : (
+              <TextField
+                error
+                id="zipCode"
+                label="Zipcode"
+                defaultValue={zipCode}
+                onChange={handleInput}
+                helperText="No results"
+                size="small"
+              /> )}  
+          </FormControl>
+
+          <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
+            <InputLabel id="distance-select-label" sx={{ fontSize: 12 }}>Distance (mi)</InputLabel>
+            <Select
+              labelId="distance-select-label"
+              id="distance-select"
+              value={Math.round(distance/1609.344)}
+              onChange={handleDistance}
+              input={<OutlinedInput id="distance-select" label="Distance (mi)"/>}
+            >
+              {distances.map((dist, i) => (
+                <MenuItem key={i} value={dist}>{dist} mi</MenuItem>
               ))}
-            </select>
-          </div>
-          <div className="postsPerPage">
-            <label htmlFor="postsPerPage">Posts per page:</label>
-            <select name='postsPerPage' id='postsPerPage' defaultValue={6} onChange={handlePostsPerPage}>
-              {postsPerPage.map(opt => (
-                <option value={opt}>{opt}</option>
+            </Select>
+          </FormControl>
+         
+          <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
+            <InputLabel id="filter-chip-label">Filter</InputLabel>
+              <Select
+                labelId="filter-chip-label"
+                id="filter-chip"
+                multiple
+                value={filterArr}
+                onChange={handleChip}
+                input={<OutlinedInput id="select-filter" label="Filter" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+              {filters.map((filter) => (
+                <MenuItem
+                  key={filter}
+                  value={filter}
+                  style={getStyles(filter, filterArr, theme)}
+                >
+                  <Checkbox checked={filterArr.indexOf(filter) > -1} />
+                  <ListItemText primary={filter} />
+                </MenuItem>
               ))}
-            </select>
-          </div>
+            </Select>
+          </FormControl>   
+
+          <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
+            <InputLabel id="ppp-select-label" sx={{ fontSize: 12 }}># of Posts</InputLabel>
+            <Select
+              labelId="ppp-select-label"
+              id="ppp-select"
+              value={numPosts}
+              onChange={handlePostsPerPage}
+              input={<OutlinedInput id="ppp-select" label="# of Posts"/>}
+            >
+              {postsPerPage.map((opt, i) => (
+                <MenuItem key={i} value={opt}>{opt}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
-        <ImageList sx={{ width: '100%', height: '100%' }} cols={2} rowHeight={350}>
+        <ImageList sx={{ width: '100%', height: '100%', mb:4}} cols={2} rowHeight={350}>
           <AnimatePresence initial={false}>
             {displayPosts.map((post) => (
               <ImageListItem key={post._id}>
