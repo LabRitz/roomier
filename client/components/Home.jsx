@@ -115,7 +115,10 @@ const Home = ({ userInfo }) => {
       if (post.rent >= priceRange[0] && post.rent <= priceRange[1]) {
         if (filterArr.length !== 0) {
           for (const filter of filterArr) {
-            if (post.description[filter.toLowerCase()]) newPosts.push(post)
+            if (post.description[filter.toLowerCase()]) {
+              newPosts.push(post)
+              break
+            }
           }
         }
         else newPosts.push(post)
