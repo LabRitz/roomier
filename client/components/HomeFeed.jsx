@@ -19,6 +19,9 @@ import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import Slider from '@mui/material/Slider';
 import { Button } from '@mui/material';
+import ToggleButton from '@mui/material/ToggleButton';
+import FilterListIcon from '@mui/icons-material/FilterList';
+
 
 import { AnimatePresence } from 'framer-motion';
 
@@ -108,6 +111,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
   const handleClose = () => setOpen(false);
   
   // Filter states
+  const [showFilter, setShowFilter] = useState(false)
   const [minSqft, setMinSqft] = useState(0)
   const [maxSqft, setMaxSqft] = useState(0)
   const [minBR, setMinBR] = useState(0)
@@ -217,51 +221,64 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
               ))}
             </Select>
           </FormControl>
+
+          <ToggleButton
+            sx={{mt:1}}
+            size="small"
+            value="filter"
+            selected={showFilter}
+            onChange={() => setShowFilter(!showFilter)}
+          >
+            <FilterListIcon/>
+          </ToggleButton>
         </div>
-        <div className="filter" style={{display: 'flex', flexDirection: 'row', columnGap: '2px', alignItems: 'center'}}>
-          <Box sx={{ p:1, width: 195, display: 'flex', flexDirection: 'column'}} size="small">
-            <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
-            <PrettoSlider
-              min={0}
-              step={10}
-              max={10000}
-              value={priceRange}
-              onChange={handlePrice}
-              valueLabelDisplay="auto"
-              disableSwap
-            />
-          </Box>
-          <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
-            <InputLabel id="filter-chip-label">Filter</InputLabel>
-              <Select
-                labelId="filter-chip-label"
-                id="filter-chip"
-                multiple
-                value={filterArr}
-                onChange={handleChip}
-                input={<OutlinedInput id="select-filter" label="Filter" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-              {filters.map((filter) => (
-                <MenuItem
-                  key={filter}
-                  value={filter}
-                  style={getStyles(filter, filterArr, theme)}
+
+        { showFilter && 
+          <div className="filter" style={{display: 'flex', flexDirection: 'row', columnGap: '2px', alignItems: 'center'}}>
+            <Box sx={{ p:1, width: 195, display: 'flex', flexDirection: 'column'}} size="small">
+              <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
+              <PrettoSlider
+                min={0}
+                step={10}
+                max={10000}
+                value={priceRange}
+                onChange={handlePrice}
+                valueLabelDisplay="auto"
+                disableSwap
+              />
+            </Box>
+            <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
+              <InputLabel id="filter-chip-label">Options</InputLabel>
+                <Select
+                  labelId="filter-chip-label"
+                  id="filter-chip"
+                  multiple
+                  value={filterArr}
+                  onChange={handleChip}
+                  input={<OutlinedInput id="select-filter" label="Options" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
                 >
-                  <Checkbox checked={filterArr.indexOf(filter) > -1} />
-                  <ListItemText primary={filter} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>  
-          <Button onClick={applyFilter}>Filter</Button>
-        </div>
+                {filters.map((filter) => (
+                  <MenuItem
+                    key={filter}
+                    value={filter}
+                    style={getStyles(filter, filterArr, theme)}
+                  >
+                    <Checkbox checked={filterArr.indexOf(filter) > -1} />
+                    <ListItemText primary={filter} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>  
+            <Button onClick={applyFilter}>Filter</Button>
+          </div>
+        }
 
         <ImageList sx={{ width: '100%', height: '100%', mb:4}} cols={2} rowHeight={350}>
           <AnimatePresence initial={false}>
