@@ -1,4 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
+import { render } from 'react-dom'
 import { createRoot } from 'react-dom/client';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -38,6 +39,7 @@ const Home = ({ userInfo }) => {
 
   const [filterArr, setFilterArr] = useState([])
   const [posts, setPosts] = useState([]);
+  const [filterPosts, setFilterPosts] = useState([])
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(userData.zipCode);
@@ -51,7 +53,7 @@ const Home = ({ userInfo }) => {
 
   const getMarkers = () => {
     const tempMarkers = [];
-    posts.map((post, i) => {
+    filterPosts.map((post, i) => {
       if (post.geoData) {
         const posObj = {
           lng: post.geoData.coordinates[0],
@@ -69,17 +71,14 @@ const Home = ({ userInfo }) => {
         const geocode = await Geocode.fromAddress(zipCode);
         const { lng, lat } = geocode.results[0].geometry.location;
         
-        const container = document.getElementById("googleMapDiv")
-        const root = createRoot(container);
-        root.render(
+        render( 
           <GoogleMap
             center={{ lat: lat, lng: lng }}
             zoom={13}
             mapContainerStyle={mapContainerStyle}
           >
             {markers}
-          </GoogleMap>
-        );
+          </GoogleMap> , document.getElementById("googleMapDiv"));
       } catch (err) {
         console.log('ERROR: Cannot load Google Maps', err)
       }
@@ -103,34 +102,42 @@ const Home = ({ userInfo }) => {
         }),
       });
       const postsArr = await res.json();
-      const filterPosts = (filterArr.length !== 0) ? postsArr.filter(post => {
-        for (const filter of filterArr) {
-          if (post.description[filter.toLowerCase()]) return post
-        }
-      }): postsArr;
-      const newPosts = Object.assign(filterPosts, { userData: userData });
+      const newPosts = Object.assign(postsArr, { userData: userData });
       setPosts(newPosts);
     } catch (err) {
       console.log('ERROR: Cannot get posts at zip code', err)
     }
   }
 
+  const applyFilter = () => {
+    const newPosts = (filterArr.length !== 0) ? posts.filter(post => {
+      for (const filter of filterArr) {
+        if (post.description[filter.toLowerCase()]) return post
+      }
+    }): posts;
+    setFilterPosts(newPosts)
+  }
+
   // Cascading dependency of useEffect
   // 1. Get Posts based on ZipCode and Distance
-  // 2. Configure markers based on posts
-  // 3. Render map based on markers and posts
+  // 2. Filter posts by user filter
+  // 3. Configure markers based on posts
+  // 4. Render map based on markers and posts
   useEffect(() => {
-    // Start Loading indicator
     setIsLoading(true)
   },[])
   
   useEffect(() => {
     getPosts();
-  }, [zipCode, distance, filterArr]);
+  }, [zipCode, distance]);
+
+  useEffect(() => {
+    applyFilter();
+  }, [posts, filterArr]);
 
   useEffect(() => {
     getMarkers();
-  }, [posts]);
+  }, [filterPosts]);
 
   useEffect(() => {
     getMap();
@@ -145,7 +152,7 @@ const Home = ({ userInfo }) => {
     ) : (
       <div className="home">
         <HomeFeed
-          posts={posts}
+          posts={filterPosts}
           zipCode={zipCode}
           setZipCode={setZipCode}
           distance={distance}
