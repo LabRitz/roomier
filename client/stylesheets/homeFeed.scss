@@ -40,17 +40,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
     }
-
-    .feed {
-      // ****commented out effects because giving transofmr errors to gallery
-      &:hover {
-        // transform: scale(1.05);
-        // transition-duration: 500ms;
-      }
-      &:not(:hover) {
-        // transition-duration: 500ms;
-      }
-    }
   }
   #googleMapDiv {
     position: fixed;
