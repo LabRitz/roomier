@@ -44,6 +44,8 @@ const Home = ({ userInfo }) => {
   const [zipCode, setZipCode] = useState(userData.zipCode);
   const [distance, setDistance] = useState(1609.344);
   const [priceRange, setPriceRange] = useState([3000, 8000]);
+  const [br, setBR] = useState(0)
+  const [ba, setBA] = useState(1)
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey,
@@ -112,7 +114,10 @@ const Home = ({ userInfo }) => {
   const applyFilter = () => {
     const newPosts = []
     posts.forEach(post => {
-      if (post.rent >= priceRange[0] && post.rent <= priceRange[1]) {
+      if (post.rent >= priceRange[0] && 
+          post.rent <= priceRange[1] &&
+          post.description.BR >= br && 
+          post.description.BA >= ba ) {
         if (filterArr.length !== 0) {
           for (const filter of filterArr) {
             if (post.description[filter.toLowerCase()]) {
@@ -171,6 +176,10 @@ const Home = ({ userInfo }) => {
           priceRange={priceRange} 
           setPriceRange={setPriceRange}
           applyFilter={applyFilter}
+          br={br}
+          setBR={setBR}
+          ba={ba}
+          setBA={setBA}
         />
         <div id="googleMapDiv"></div>
       </div>
