@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { render } from "react-dom";
+import { createRoot } from 'react-dom/client';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -68,15 +68,17 @@ const Home = ({ userInfo }) => {
       try {
         const geocode = await Geocode.fromAddress(zipCode);
         const { lng, lat } = geocode.results[0].geometry.location;
-        render(
+        
+        const container = document.getElementById("googleMapDiv")
+        const root = createRoot(container);
+        root.render(
           <GoogleMap
             center={{ lat: lat, lng: lng }}
             zoom={13}
             mapContainerStyle={mapContainerStyle}
           >
             {markers}
-          </GoogleMap>,
-          document.getElementById("googleMapDiv")
+          </GoogleMap>
         );
       } catch (err) {
         console.log('ERROR: Cannot load Google Maps', err)
