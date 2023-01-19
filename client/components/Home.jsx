@@ -1,6 +1,5 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { render } from 'react-dom'
-import { createRoot } from 'react-dom/client';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -44,6 +43,7 @@ const Home = ({ userInfo }) => {
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(userData.zipCode);
   const [distance, setDistance] = useState(1609.344);
+  const [priceRange, setPriceRange] = useState([3000, 8000]);
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey,
@@ -110,11 +110,17 @@ const Home = ({ userInfo }) => {
   }
 
   const applyFilter = () => {
-    const newPosts = (filterArr.length !== 0) ? posts.filter(post => {
-      for (const filter of filterArr) {
-        if (post.description[filter.toLowerCase()]) return post
+    const newPosts = []
+    posts.forEach(post => {
+      if (post.rent >= priceRange[0] && post.rent <= priceRange[1]) {
+        if (filterArr.length !== 0) {
+          for (const filter of filterArr) {
+            if (post.description[filter.toLowerCase()]) newPosts.push(post)
+          }
+        }
+        else newPosts.push(post)
       }
-    }): posts;
+    })
     setFilterPosts(newPosts)
   }
 
@@ -133,7 +139,7 @@ const Home = ({ userInfo }) => {
 
   useEffect(() => {
     applyFilter();
-  }, [posts, filterArr]);
+  }, [posts]);
 
   useEffect(() => {
     getMarkers();
@@ -159,6 +165,9 @@ const Home = ({ userInfo }) => {
           setDistance={setDistance}
           filterArr={filterArr}
           setFilterArr={setFilterArr}
+          priceRange={priceRange} 
+          setPriceRange={setPriceRange}
+          applyFilter={applyFilter}
         />
         <div id="googleMapDiv"></div>
       </div>
