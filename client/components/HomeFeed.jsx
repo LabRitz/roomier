@@ -80,9 +80,11 @@ const PrettoSlider = styled(Slider)({
 const filters = ['Pets', 'Smoking', 'Parking'];
 const distances = [1, 2, 5, 10, 25, 50];
 const postsPerPage = [2, 4, 6, 12, 24];
+const bedrooms = [0, 1, 2, 3, 4]
+const bathrooms = [1, 2, 3, 4]
 const priceGap = 100;
 
-const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, applyFilter }) => {  
+const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, applyFilter, br, setBR, ba, setBA }) => {  
   const theme = useTheme();
 
   // Handlers for post modal open and close
@@ -128,6 +130,8 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
   const handleDistance = (e) => { setDistance(1609.344 * e.target.value) }
   const handlePages = (event, value) => { setDisplayPosts(posts.slice(numPosts*(value-1), numPosts*value)) }
   const handlePostsPerPage = (e) => { setNumPosts(e.target.value) }  
+  const handleBR = (e) => { setBR(e.target.value) }  
+  const handleBA = (e) => { setBA(e.target.value) }  
 
   // Dynamically update price selection based on range slider
   const handlePrice = (event, newValue, activeThumb) => {
@@ -247,6 +251,37 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                 disableSwap
               />
             </Box>
+            <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
+              <InputLabel id="br-select-label" sx={{ fontSize: 14 }}>BR</InputLabel>
+              <Select
+                sx={{ fontSize: 14 }}
+                labelId="br-select-label"
+                id="br-select"
+                value={br}
+                onChange={handleBR}
+                input={<OutlinedInput id="br-select" label="BR"/>}
+              >
+                {bedrooms.map((opt, i) => (
+                  <MenuItem key={i} value={opt}>{opt}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
+              <InputLabel id="ba-select-label" sx={{ fontSize: 14 }}>BA</InputLabel>
+              <Select
+                sx={{ fontSize: 14 }}
+                labelId="ba-select-label"
+                id="ba-select"
+                value={ba}
+                onChange={handleBA}
+                input={<OutlinedInput id="ba-select" label="BA"/>}
+              >
+                {bathrooms.map((opt, i) => (
+                  <MenuItem key={i} value={opt}>{opt}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
             <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
               <InputLabel id="filter-chip-label">Options</InputLabel>
                 <Select
