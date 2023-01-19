@@ -134,7 +134,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
           </FormControl>
 
           <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
-            <InputLabel id="distance-select-label" sx={{ fontSize: 12 }}>Distance (mi)</InputLabel>
+            <InputLabel id="distance-select-label" sx={{ fontSize: 14 }}>Distance (mi)</InputLabel>
             <Select
               labelId="distance-select-label"
               id="distance-select"
@@ -179,7 +179,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
           </FormControl>   
 
           <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
-            <InputLabel id="ppp-select-label" sx={{ fontSize: 12 }}># of Posts</InputLabel>
+            <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
             <Select
               labelId="ppp-select-label"
               id="ppp-select"
