@@ -51,13 +51,13 @@ const Home = ({ userInfo }) => {
 
   const getMarkers = () => {
     const tempMarkers = [];
-    posts.map(post => {
+    posts.map((post, i) => {
       if (post.geoData) {
         const posObj = {
           lng: post.geoData.coordinates[0],
           lat: post.geoData.coordinates[1],
         };
-        tempMarkers.push(<Marker position={posObj}></Marker>);
+        tempMarkers.push(<Marker key={i} position={posObj}></Marker>);
       } else console.log("ALERT: Post contains no geospatial data");
     })
     setMarkers(tempMarkers);
