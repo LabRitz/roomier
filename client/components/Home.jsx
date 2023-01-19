@@ -1,5 +1,5 @@
-import React, { Component, useState, useEffect } from "react";
-import { render } from "react-dom";
+import React, { useState, useEffect } from "react";
+import { render } from 'react-dom'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -38,10 +38,12 @@ const Home = ({ userInfo }) => {
 
   const [filterArr, setFilterArr] = useState([])
   const [posts, setPosts] = useState([]);
+  const [filterPosts, setFilterPosts] = useState([])
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(userData.zipCode);
   const [distance, setDistance] = useState(1609.344);
+  const [priceRange, setPriceRange] = useState([3000, 8000]);
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey,
@@ -51,13 +53,13 @@ const Home = ({ userInfo }) => {
 
   const getMarkers = () => {
     const tempMarkers = [];
-    posts.map(post => {
+    filterPosts.map((post, i) => {
       if (post.geoData) {
         const posObj = {
           lng: post.geoData.coordinates[0],
           lat: post.geoData.coordinates[1],
         };
-        tempMarkers.push(<Marker position={posObj}></Marker>);
+        tempMarkers.push(<Marker key={i} position={posObj}></Marker>);
       } else console.log("ALERT: Post contains no geospatial data");
     })
     setMarkers(tempMarkers);
@@ -68,16 +70,15 @@ const Home = ({ userInfo }) => {
       try {
         const geocode = await Geocode.fromAddress(zipCode);
         const { lng, lat } = geocode.results[0].geometry.location;
-        render(
+        
+        render( 
           <GoogleMap
             center={{ lat: lat, lng: lng }}
             zoom={13}
             mapContainerStyle={mapContainerStyle}
           >
             {markers}
-          </GoogleMap>,
-          document.getElementById("googleMapDiv")
-        );
+          </GoogleMap> , document.getElementById("googleMapDiv"));
       } catch (err) {
         console.log('ERROR: Cannot load Google Maps', err)
       }
@@ -101,34 +102,48 @@ const Home = ({ userInfo }) => {
         }),
       });
       const postsArr = await res.json();
-      const filterPosts = (filterArr.length !== 0) ? postsArr.filter(post => {
-        for (const filter of filterArr) {
-          if (post.description[filter.toLowerCase()]) return post
-        }
-      }): postsArr;
-      const newPosts = Object.assign(filterPosts, { userData: userData });
+      const newPosts = Object.assign(postsArr, { userData: userData });
       setPosts(newPosts);
     } catch (err) {
       console.log('ERROR: Cannot get posts at zip code', err)
     }
   }
 
+  const applyFilter = () => {
+    const newPosts = []
+    posts.forEach(post => {
+      if (post.rent >= priceRange[0] && post.rent <= priceRange[1]) {
+        if (filterArr.length !== 0) {
+          for (const filter of filterArr) {
+            if (post.description[filter.toLowerCase()]) newPosts.push(post)
+          }
+        }
+        else newPosts.push(post)
+      }
+    })
+    setFilterPosts(newPosts)
+  }
+
   // Cascading dependency of useEffect
   // 1. Get Posts based on ZipCode and Distance
-  // 2. Configure markers based on posts
-  // 3. Render map based on markers and posts
+  // 2. Filter posts by user filter
+  // 3. Configure markers based on posts
+  // 4. Render map based on markers and posts
   useEffect(() => {
-    // Start Loading indicator
     setIsLoading(true)
   },[])
   
   useEffect(() => {
     getPosts();
-  }, [zipCode, distance, filterArr]);
+  }, [zipCode, distance]);
+
+  useEffect(() => {
+    applyFilter();
+  }, [posts]);
 
   useEffect(() => {
     getMarkers();
-  }, [posts]);
+  }, [filterPosts]);
 
   useEffect(() => {
     getMap();
@@ -143,13 +158,16 @@ const Home = ({ userInfo }) => {
     ) : (
       <div className="home">
         <HomeFeed
-          posts={posts}
+          posts={filterPosts}
           zipCode={zipCode}
           setZipCode={setZipCode}
           distance={distance}
           setDistance={setDistance}
           filterArr={filterArr}
           setFilterArr={setFilterArr}
+          priceRange={priceRange} 
+          setPriceRange={setPriceRange}
+          applyFilter={applyFilter}
         />
         <div id="googleMapDiv"></div>
       </div>

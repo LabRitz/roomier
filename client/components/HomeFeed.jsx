@@ -16,6 +16,12 @@ import Select from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
+import { styled } from '@mui/material/styles';
+import Slider from '@mui/material/Slider';
+import { Button } from '@mui/material';
+import ToggleButton from '@mui/material/ToggleButton';
+import FilterListIcon from '@mui/icons-material/FilterList';
+
 
 import { AnimatePresence } from 'framer-motion';
 
@@ -24,7 +30,7 @@ import PostModal from './PostModal.jsx';
 
 import styles from '../stylesheets/homeFeed.scss';
 
-function getStyles(filter, filterName, theme) {
+const getStyles = (filter, filterName, theme) => {
   return {
     fontWeight:
       filterName.indexOf(filter) === -1
@@ -33,15 +39,50 @@ function getStyles(filter, filterName, theme) {
   };
 }
 
-const filters = [
-  'Pets',
-  'Smoking',
-  'Parking',
-];
+const PrettoSlider = styled(Slider)({
+  height: 6,
+  '& .MuiSlider-track': {
+    border: 'none',
+  },
+  '& .MuiSlider-thumb': {
+    height: 18,
+    width: 18,
+    backgroundColor: '#fff',
+    border: '2px solid currentColor',
+    '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+      boxShadow: 'inherit',
+    },
+    '&:before': {
+      display: 'none',
+    },
+  },
+  '& .MuiSlider-valueLabel': {
+    lineHeight: 1.2,
+    fontSize: 12,
+    background: 'unset',
+    padding: 0,
+    width: 32,
+    height: 32,
+    borderRadius: '50% 50% 50% 0',
+    backgroundColor: '#3D5A80',
+    transformOrigin: 'bottom left',
+    transform: 'translate(50%, -80%) rotate(-45deg) scale(0)',
+    '&:before': { display: 'none' },
+    '&.MuiSlider-valueLabelOpen': {
+      transform: 'translate(50%, -80%) rotate(-45deg) scale(1)',
+    },
+    '& > *': {
+      transform: 'rotate(45deg)',
+    },
+  },
+});
+
+const filters = ['Pets', 'Smoking', 'Parking'];
 const distances = [1, 2, 5, 10, 25, 50];
 const postsPerPage = [2, 4, 6, 12, 24];
+const priceGap = 100;
 
-const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr }) => {  
+const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, applyFilter }) => {  
   const theme = useTheme();
 
   // Handlers for post modal open and close
@@ -70,8 +111,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
   const handleClose = () => setOpen(false);
   
   // Filter states
-  const [minPrice, setMinPrice] = useState(0)
-  const [maxPrice, setMaxPrice] = useState(0)
+  const [showFilter, setShowFilter] = useState(false)
   const [minSqft, setMinSqft] = useState(0)
   const [maxSqft, setMaxSqft] = useState(0)
   const [minBR, setMinBR] = useState(0)
@@ -87,7 +127,26 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
   const handleInput = (e) => { if (e.target.value.length === 5) setZipCode(e.target.value) }
   const handleDistance = (e) => { setDistance(1609.344 * e.target.value) }
   const handlePages = (event, value) => { setDisplayPosts(posts.slice(numPosts*(value-1), numPosts*value)) }
-  const handlePostsPerPage = (e) => { setNumPosts(e.target.value) }
+  const handlePostsPerPage = (e) => { setNumPosts(e.target.value) }  
+
+  // Dynamically update price selection based on range slider
+  const handlePrice = (event, newValue, activeThumb) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+
+    if (newValue[1] - newValue[0] < 10) {
+      if (activeThumb === 0) {
+        const clamped = Math.min(newValue[0], 1000000 - priceGap);
+        setPriceRange([clamped, clamped + priceGap]);
+      } else {
+        const clamped = Math.max(newValue[1], priceGap);
+        setPriceRange([clamped - priceGap, clamped]);
+      }
+    } else {
+      setPriceRange(newValue);
+    }
+  };
 
   // Set filter array in Home state with each change
   const handleChip = (event) => {
@@ -134,7 +193,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
           </FormControl>
 
           <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
-            <InputLabel id="distance-select-label" sx={{ fontSize: 12 }}>Distance (mi)</InputLabel>
+            <InputLabel id="distance-select-label" sx={{ fontSize: 14 }}>Distance (mi)</InputLabel>
             <Select
               labelId="distance-select-label"
               id="distance-select"
@@ -146,40 +205,10 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                 <MenuItem key={i} value={dist}>{dist} mi</MenuItem>
               ))}
             </Select>
-          </FormControl>
-         
-          <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
-            <InputLabel id="filter-chip-label">Filter</InputLabel>
-              <Select
-                labelId="filter-chip-label"
-                id="filter-chip"
-                multiple
-                value={filterArr}
-                onChange={handleChip}
-                input={<OutlinedInput id="select-filter" label="Filter" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )}
-              >
-              {filters.map((filter) => (
-                <MenuItem
-                  key={filter}
-                  value={filter}
-                  style={getStyles(filter, filterArr, theme)}
-                >
-                  <Checkbox checked={filterArr.indexOf(filter) > -1} />
-                  <ListItemText primary={filter} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>   
+          </FormControl> 
 
           <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
-            <InputLabel id="ppp-select-label" sx={{ fontSize: 12 }}># of Posts</InputLabel>
+            <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
             <Select
               labelId="ppp-select-label"
               id="ppp-select"
@@ -192,12 +221,70 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
               ))}
             </Select>
           </FormControl>
+
+          <ToggleButton
+            sx={{mt:1}}
+            size="small"
+            value="filter"
+            selected={showFilter}
+            onChange={() => setShowFilter(!showFilter)}
+          >
+            <FilterListIcon/>
+          </ToggleButton>
         </div>
+
+        { showFilter && 
+          <div className="filter" style={{display: 'flex', flexDirection: 'row', columnGap: '2px', alignItems: 'center'}}>
+            <Box sx={{ p:1, width: 195, display: 'flex', flexDirection: 'column'}} size="small">
+              <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
+              <PrettoSlider
+                min={0}
+                step={10}
+                max={10000}
+                value={priceRange}
+                onChange={handlePrice}
+                valueLabelDisplay="auto"
+                disableSwap
+              />
+            </Box>
+            <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
+              <InputLabel id="filter-chip-label">Options</InputLabel>
+                <Select
+                  labelId="filter-chip-label"
+                  id="filter-chip"
+                  multiple
+                  value={filterArr}
+                  onChange={handleChip}
+                  input={<OutlinedInput id="select-filter" label="Options" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                {filters.map((filter) => (
+                  <MenuItem
+                    key={filter}
+                    value={filter}
+                    style={getStyles(filter, filterArr, theme)}
+                  >
+                    <Checkbox checked={filterArr.indexOf(filter) > -1} />
+                    <ListItemText primary={filter} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>  
+            <Button onClick={applyFilter}>Filter</Button>
+          </div>
+        }
+
         <ImageList sx={{ width: '100%', height: '100%', mb:4}} cols={2} rowHeight={350}>
           <AnimatePresence initial={false}>
-            {displayPosts.map((post) => (
-              <ImageListItem key={post._id}>
-                <ContainerFeed key={post._id} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo}/>
+            {displayPosts.map((post, i) => (
+              <ImageListItem key={i}>
+                <ContainerFeed key={i} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo}/>
               </ImageListItem>
             ))}
           </AnimatePresence>
