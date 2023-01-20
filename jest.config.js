@@ -1,7 +1,3 @@
-const { TextEncoder, TextDecoder } = require('util');
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
-
 const config = {
   verbose: true,
   collectCoverage: true,
@@ -11,7 +7,7 @@ const config = {
     // Ignore the below files
     '!**/supertest.test.js',
   ],
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
   testMatch:['**.test.js'],
   testPathIgnorePatterns: [
     './__tests__/',
