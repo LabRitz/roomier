@@ -83,8 +83,9 @@ const postsPerPage = [2, 4, 6, 12, 24];
 const bedrooms = [0, 1, 2, 3, 4]
 const bathrooms = [1, 2, 3, 4]
 const priceGap = 100;
+const sqftGap = 50;
 
-const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, applyFilter, br, setBR, ba, setBA }) => {  
+const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, sqftRange, setSqftRange, applyFilter, br, setBR, ba, setBA }) => {  
   const theme = useTheme();
 
   // Handlers for post modal open and close
@@ -112,12 +113,8 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   
-  // Filter states
+  // Toggle filter div open/closed
   const [showFilter, setShowFilter] = useState(false)
-  const [minSqft, setMinSqft] = useState(0)
-  const [maxSqft, setMaxSqft] = useState(0)
-  const [minBR, setMinBR] = useState(0)
-  const [minBA, setMinBA] = useState(0)
 
   // Set user selected posts per page
   const[numPosts, setNumPosts] = useState(6)
@@ -141,7 +138,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
 
     if (newValue[1] - newValue[0] < 10) {
       if (activeThumb === 0) {
-        const clamped = Math.min(newValue[0], 1000000 - priceGap);
+        const clamped = Math.min(newValue[0], 10000 - priceGap);
         setPriceRange([clamped, clamped + priceGap]);
       } else {
         const clamped = Math.max(newValue[1], priceGap);
@@ -149,6 +146,25 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
       }
     } else {
       setPriceRange(newValue);
+    }
+  };
+
+  // Dynamically update price selection based on range slider
+  const handleSqft = (event, newValue, activeThumb) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+
+    if (newValue[1] - newValue[0] < 10) {
+      if (activeThumb === 0) {
+        const clamped = Math.min(newValue[0], 3000 - sqftGap);
+        setSqftRange([clamped, clamped + sqftGap]);
+      } else {
+        const clamped = Math.max(newValue[1], sqftGap);
+        setSqftRange([clamped - sqftGap, clamped]);
+      }
+    } else {
+      setSqftRange(newValue);
     }
   };
 
@@ -247,6 +263,16 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                 max={10000}
                 value={priceRange}
                 onChange={handlePrice}
+                valueLabelDisplay="auto"
+                disableSwap
+              />
+              <InputLabel id="sqft-range-label" sx={{ fontSize: 12 }}>SqFt:</InputLabel>
+              <PrettoSlider
+                min={200}
+                step={10}
+                max={3000}
+                value={sqftRange}
+                onChange={handleSqft}
                 valueLabelDisplay="auto"
                 disableSwap
               />

@@ -44,6 +44,7 @@ const Home = ({ userInfo }) => {
   const [zipCode, setZipCode] = useState(userData.zipCode);
   const [distance, setDistance] = useState(1609.344);
   const [priceRange, setPriceRange] = useState([3000, 8000]);
+  const [sqftRange, setSqftRange] = useState([200, 1500]);
   const [br, setBR] = useState(0)
   const [ba, setBA] = useState(1)
 
@@ -116,6 +117,8 @@ const Home = ({ userInfo }) => {
     posts.forEach(post => {
       if (post.rent >= priceRange[0] && 
           post.rent <= priceRange[1] &&
+          post.description.sqFt >= sqftRange[0] && 
+          post.description.sqFt <= sqftRange[1] &&
           post.description.BR >= br && 
           post.description.BA >= ba ) {
         if (filterArr.length !== 0) {
@@ -175,6 +178,8 @@ const Home = ({ userInfo }) => {
           setFilterArr={setFilterArr}
           priceRange={priceRange} 
           setPriceRange={setPriceRange}
+          sqftRange={sqftRange} 
+          setSqftRange={setSqftRange}
           applyFilter={applyFilter}
           br={br}
           setBR={setBR}
