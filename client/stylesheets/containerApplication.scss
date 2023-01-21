@@ -1,88 +1,88 @@
-@import './globalVariables.scss';
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;600&display=swap');
+// @import './globalVariables.scss';
+// @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;600&display=swap');
 
-.applications {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 2%;
-  border-top-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  border-top-right-radius: 48px;
-  border-bottom-left-radius: 48px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.512);
-  width: 90%;
-  background: linear-gradient(180deg, rgb(232, 232, 232) 80%, rgba(209, 209, 209, 0.82) 90%, rgba(210, 210, 210, 0.82) 95%);
+// .applications {
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   padding: 2%;
+//   border-top-left-radius: 8px;
+//   border-bottom-right-radius: 8px;
+//   border-top-right-radius: 48px;
+//   border-bottom-left-radius: 48px;
+//   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.512);
+//   width: 100%;
+//   background: linear-gradient(180deg, rgb(232, 232, 232) 80%, rgba(209, 209, 209, 0.82) 90%, rgba(210, 210, 210, 0.82) 95%);
+//   height: 100%;
+//   .apply {
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     .buttons {
+//       display: flex;
+//       flex-direction: row;
+//       justify-content: space-around;
 
-  .apply {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    .buttons {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-
-      button {
-        border: none;
-        background: none;
-      }
-    }
+//       button {
+//         border: none;
+//         background: none;
+//       }
+//     }
     
-    .dropdown {
-      display: inline-block;
-      position: relative;
-      text-align: center;
-      margin-top: 2%;
-      button {
-        border: none;
-        background: none;
-        font-size: 50%;
-        color: rgb(58, 131, 200);
-        &:hover {
-          transform: scale(1.05);
-          filter: brightness(1.1);
-        }
-      }
+//     .dropdown {
+//       display: inline-block;
+//       position: relative;
+//       text-align: center;
+//       margin-top: 2%;
+//       button {
+//         border: none;
+//         background: none;
+//         font-size: 50%;
+//         color: rgb(58, 131, 200);
+//         &:hover {
+//           transform: scale(1.05);
+//           filter: brightness(1.1);
+//         }
+//       }
     
-      .dropdown-applicants {
-        background: rgb(232, 232, 232);
-        display: none;
-        position: absolute;
-        width: auto;
-        box-shadow: 0px 4px 8px rgb(84, 84, 84);
-        border-bottom-left-radius: 16px;
-        border-bottom-right-radius: 4px;
-        border-top-right-radius: 16px;
+//       .dropdown-applicants {
+//         background: rgb(232, 232, 232);
+//         display: none;
+//         position: absolute;
+//         width: auto;
+//         box-shadow: 0px 4px 8px rgb(84, 84, 84);
+//         border-bottom-left-radius: 16px;
+//         border-bottom-right-radius: 4px;
+//         border-top-right-radius: 16px;
 
-        transition-duration: 300ms;
-        padding-top: 5%;
-        padding-bottom: 5%;
-        padding-right: 10%;
-        padding-left: 15%;
+//         transition-duration: 300ms;
+//         padding-top: 5%;
+//         padding-bottom: 5%;
+//         padding-right: 10%;
+//         padding-left: 15%;
         
-        margin-top: 4%;
+//         margin-top: 4%;
 
-        li {
-          font-size: 50%;
-          text-align: left;
-          &:hover {
-            cursor: pointer;
-            color: rgb(58, 131, 200);
-            transition-duration: 300ms;
-          }
+//         li {
+//           font-size: 50%;
+//           text-align: left;
+//           &:hover {
+//             cursor: pointer;
+//             color: rgb(58, 131, 200);
+//             transition-duration: 300ms;
+//           }
 
-          &:not(:hover) {
-            transition-duration: 600ms;
-          }
+//           &:not(:hover) {
+//             transition-duration: 600ms;
+//           }
 
-        }
+//         }
     
-      }
+//       }
     
-    }
+//     }
 
-  }
+//   }
 
-}
+// }
 

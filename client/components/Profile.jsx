@@ -1,37 +1,29 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import ProfileFeed from "./ProfileFeed.jsx";
 
 const Profile = ({ userInfo }) => {
-  const userData = userInfo;
-  // console.log('metaData from profile: ', userData)
+  const [posts, setPosts] = useState([]);
 
-  const [posts, setPosts] = useState(null);
+  const getProfilePosts = async () => {
+    try {
+      const res = await fetch(`/profile/${userInfo.username}`)
+      const data = await res.json()
+      setPosts(data);
+    } catch (err) {
+      console.log('ERROR: Cannot get profile posts', err)
+    }
+  }
 
   useEffect(() => {
-    fetch(`/profile/${userData.username}`)
-      .then((data) => data.json())
-      .then((postsArr) => {
-        setPosts(postsArr);
-        return (
-          <>
-            <div className="profile">
-              <ProfileFeed props={posts} />
-            </div>
-          </>
-        );
-      });
+    getProfilePosts()
   }, []);
 
-  if (posts) {
-    return (
-      <>
-        <div className="profile">
-          <ProfileFeed props={posts} />
-        </div>
-      </>
-    );
-  } else return null;
+  return (posts && 
+    <div className="profile">
+      <ProfileFeed posts={posts} />
+    </div>
+  );
 };
 
 export default Profile;

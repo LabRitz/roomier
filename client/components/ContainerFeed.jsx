@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import Card from '@mui/material/Card';
-import { Button, CardActions } from '@mui/material';
+import { CardActions } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
 import { motion } from 'framer-motion';
 
 import styles from '../stylesheets/containerFeed.scss'
+import UserCardActions from './views/UserCardActions.jsx';
+import ProfileCardActions from './views/ProfileCardActions.jsx';
 
-const ContainerFeed = ({ data, handleOpen, setPostInfo }) => {
+const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, handleDelete }) => {
   const {
     address,
     description,
@@ -25,7 +26,7 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo }) => {
   }
 
   const [application, setApplication] = useState(!data.applicantData ? [] : data.applicantData)
-  async function handleApply(e) {
+  const handleApply = async (e) => {
     try {
       const { applicationInfo } = data
       const reqBody = {
@@ -72,13 +73,23 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo }) => {
             {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
           </Typography>
         </CardContent>
-        <CardActions sx={{pt:0}}>
-          <Tooltip title="Submit contact info">
+       
+        <CardActions sx={{pt:0, display:'flex', justifyContent: 'space-evenly'}}>
+          {(view === 'user') && 
+            <UserCardActions 
+            application={application} 
+            handleApply={handleApply}/>}
+          {(view === 'profile') && 
+            <ProfileCardActions 
+            application={application} 
+            handleUpdate={handleUpdate} 
+            handleDelete={handleDelete}/>}
+          {/* <Tooltip title="Submit contact info">
             <Button sx={{mr:1}} onClick={() => handleApply()} size="small">Apply</Button>
           </Tooltip>
           <Typography variant="body2" noWrap={true} color="text.secondary">
             {application.length} in review
-          </Typography>
+          </Typography> */}
         </CardActions>
       </Card>
     </motion.div>

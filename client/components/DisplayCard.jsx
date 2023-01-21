@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
-const DisplayCard = ({ postInfo }) => {
+const DisplayCard = ({ postInfo, view}) => {
   const {
     address,
     applicantData,
@@ -53,9 +53,17 @@ const DisplayCard = ({ postInfo }) => {
     }
   }
 
+  const handleUpload = async () => {
+    // Need to include Firebase logic
+  }
+
+  const handleRemove = async () => {
+    // Need logic to remove picture from image array
+  }
+
   return (
-    <div style={{display: 'flex', flexDirection:'row'}}>
-      <Paper elevation={0}>
+    <div style={{display: 'flex', flexDirection:'row', minWidth:'300px', height:'100%'}}>
+      <Paper elevation={0} sx={{display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
         <CardMedia
           component="img"
           height="300"
@@ -65,9 +73,15 @@ const DisplayCard = ({ postInfo }) => {
           <IconButton color="inherit" onClick={() => handleClick(-1)}>
             <ArrowBackIosNewIcon fontSize='medium'/>
           </IconButton>
-          <Tooltip title="Submit contact info">
-            <Button sx={{mr:1}} onClick={(e) => handleApply(e)} size="small">Apply</Button>
-          </Tooltip>
+          {(view === 'user') && 
+            <Tooltip title="Submit contact info">
+              <Button onClick={(e) => handleApply(e)} size="small">Apply</Button>
+            </Tooltip>}
+          {(view === 'profile') && 
+            <>
+              <Button onClick={(e) => handleUpload(e)} size="small">Upload Image</Button>
+              <Button onClick={(e) => handleRemove(e)} size="small">Remove Image</Button>
+            </>}
           <IconButton color="inherit" onClick={() => handleClick(1)}>
             <ArrowForwardIosIcon fontSize='medium'/>
           </IconButton>
@@ -92,7 +106,17 @@ const DisplayCard = ({ postInfo }) => {
         <Typography gutterBottom variant="body2" noWrap={true} color="text.primary">
           Looking for: {roommate.gender}
         </Typography>
-        <Typography mb={0} variant="body1" paragraph={true} color="text.primary" sx={{fontSize:12}}>
+        <Typography 
+          mb={0} 
+          variant="body1" 
+          noWrap={false} 
+          paragraph={true} 
+          color="text.primary" 
+          sx={{ 
+            fontSize:12, 
+            height: '35%', 
+            overflowY:'scroll' 
+          }}>
           {bio}
         </Typography>
       </Paper>
