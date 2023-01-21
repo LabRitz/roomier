@@ -58,9 +58,9 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
       exit="exit"
       layout={true}>
       <Card sx={{ maxWidth: 480, m: 1, p:0}}>
-        <CardContent onClick={handleClick}>
+        <CardContent sx={{ pb:0 }} onClick={handleClick}>
           <CardMedia
-            sx={{ height: 180 }}
+            sx={{ height: 180, mb:1 }}
             image={(!images[0]) ? defaultImg : Object.keys(images[0])[0]}
           />
           <Typography gutterBottom variant="h5" noWrap={true} component="div" color="text.darkBlue">
@@ -73,24 +73,19 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
             {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
           </Typography>
         </CardContent>
-       
-        <CardActions sx={{pt:0, display:'flex', justifyContent: 'space-evenly'}}>
-          {(view === 'user') && 
+        {(view === 'user') && 
+          <CardActions sx={{display:'flex', alignItems:'center'}}>
             <UserCardActions 
-            application={application} 
-            handleApply={handleApply}/>}
-          {(view === 'profile') && 
+              application={application} 
+              handleApply={handleApply}/>
+          </CardActions>}
+        {(view === 'profile') && 
+          <CardActions sx={{display:'flex', justifyContent: 'space-evenly'}}>          
             <ProfileCardActions 
-            application={application} 
-            handleUpdate={handleUpdate} 
-            handleDelete={handleDelete}/>}
-          {/* <Tooltip title="Submit contact info">
-            <Button sx={{mr:1}} onClick={() => handleApply()} size="small">Apply</Button>
-          </Tooltip>
-          <Typography variant="body2" noWrap={true} color="text.secondary">
-            {application.length} in review
-          </Typography> */}
-        </CardActions>
+              application={application} 
+              handleUpdate={handleUpdate} 
+              handleDelete={handleDelete}/>
+          </CardActions>}
       </Card>
     </motion.div>
 

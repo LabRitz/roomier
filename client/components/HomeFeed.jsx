@@ -23,7 +23,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
 
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import ContainerFeed from './ContainerFeed.jsx';
 import PostModal from './PostModal.jsx';
@@ -186,9 +186,10 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
 
   return (
     <>
+      <AnimatePresence initial={false}>
       <div className='homeFeed'>
+
         <div className="filter" style={{
-          height:'60px',
           display: 'flex',
           flexDirection: 'row', 
           alignItems: 'center'}}>
@@ -258,106 +259,116 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
         </div>
 
         { showFilter && 
-          <div className="filter" style={{
-            paddingLeft:'4px',
-            height:'120px',
-            display: 'flex',
-            flexDirection: 'row', 
-            alignItems: 'center'}}>
-            <Box sx={{ p:1, width: 190, display: 'flex', flexDirection: 'column'}} size="small">
-              <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
-              <PrettoSlider
-                min={0}
-                step={10}
-                max={10000}
-                value={priceRange}
-                onChange={handlePrice}
-                valueLabelDisplay="auto"
-                disableSwap
-              />
-              <InputLabel id="sqft-range-label" sx={{ fontSize: 12 }}>SqFt:</InputLabel>
-              <PrettoSlider
-                min={200}
-                step={10}
-                max={3000}
-                value={sqftRange}
-                onChange={handleSqft}
-                valueLabelDisplay="auto"
-                disableSwap
-              />
-            </Box>
-            <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
-              <InputLabel id="br-select-label" sx={{ fontSize: 14 }}>BR</InputLabel>
-              <Select
-                sx={{ fontSize: 14 }}
-                labelId="br-select-label"
-                id="br-select"
-                value={br}
-                onChange={handleBR}
-                input={<OutlinedInput id="br-select" label="BR"/>}
-              >
-                {bedrooms.map((opt, i) => (
-                  <MenuItem key={i} value={opt}>{opt}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
-              <InputLabel id="ba-select-label" sx={{ fontSize: 14 }}>BA</InputLabel>
-              <Select
-                sx={{ fontSize: 14 }}
-                labelId="ba-select-label"
-                id="ba-select"
-                value={ba}
-                onChange={handleBA}
-                input={<OutlinedInput id="ba-select" label="BA"/>}
-              >
-                {bathrooms.map((opt, i) => (
-                  <MenuItem key={i} value={opt}>{opt}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
-              <InputLabel id="filter-chip-label">Options</InputLabel>
+          <motion.div 
+            variants={{
+              present: { scale: 1, opacity: 1 },
+              exit: { scale: 0.8, opacity: 0 },
+            }}
+            initial="exit"
+            animate="present"
+            exit="exit"
+            layout={true}>
+            <div className="filter" style={{
+              paddingLeft:'4px',
+              display: 'flex',
+              flexWrap: 'wrap',
+              flexDirection: 'row', 
+              alignItems: 'center'}}>
+              <Box sx={{ p:1, minWidth: 190, display: 'flex', flexDirection: 'column'}} size="small">
+                <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
+                <PrettoSlider
+                  min={0}
+                  step={10}
+                  max={10000}
+                  value={priceRange}
+                  onChange={handlePrice}
+                  valueLabelDisplay="auto"
+                  disableSwap
+                />
+                <InputLabel id="sqft-range-label" sx={{ fontSize: 12 }}>SqFt:</InputLabel>
+                <PrettoSlider
+                  min={200}
+                  step={10}
+                  max={3000}
+                  value={sqftRange}
+                  onChange={handleSqft}
+                  valueLabelDisplay="auto"
+                  disableSwap
+                />
+              </Box>
+              <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
+                <InputLabel id="br-select-label" sx={{ fontSize: 14 }}>BR</InputLabel>
                 <Select
-                  labelId="filter-chip-label"
-                  id="filter-chip"
-                  multiple
-                  value={filterArr}
-                  onChange={handleChip}
-                  input={<OutlinedInput id="select-filter" label="Options" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
+                  sx={{ fontSize: 14 }}
+                  labelId="br-select-label"
+                  id="br-select"
+                  value={br}
+                  onChange={handleBR}
+                  input={<OutlinedInput id="br-select" label="BR"/>}
                 >
-                {filters.map((filter) => (
-                  <MenuItem
-                    key={filter}
-                    value={filter}
-                    style={getStyles(filter, filterArr, theme)}
+                  {bedrooms.map((opt, i) => (
+                    <MenuItem key={i} value={opt}>{opt}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
+                <InputLabel id="ba-select-label" sx={{ fontSize: 14 }}>BA</InputLabel>
+                <Select
+                  sx={{ fontSize: 14 }}
+                  labelId="ba-select-label"
+                  id="ba-select"
+                  value={ba}
+                  onChange={handleBA}
+                  input={<OutlinedInput id="ba-select" label="BA"/>}
+                >
+                  {bathrooms.map((opt, i) => (
+                    <MenuItem key={i} value={opt}>{opt}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
+                <InputLabel id="filter-chip-label">Options</InputLabel>
+                  <Select
+                    labelId="filter-chip-label"
+                    id="filter-chip"
+                    multiple
+                    value={filterArr}
+                    onChange={handleChip}
+                    input={<OutlinedInput id="select-filter" label="Options" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
                   >
-                    <Checkbox checked={filterArr.indexOf(filter) > -1} />
-                    <ListItemText primary={filter} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>  
-            <Button onClick={applyFilter}>Filter</Button>
-          </div>
+                  {filters.map((filter) => (
+                    <MenuItem
+                      key={filter}
+                      value={filter}
+                      style={getStyles(filter, filterArr, theme)}
+                    >
+                      <Checkbox checked={filterArr.indexOf(filter) > -1} />
+                      <ListItemText primary={filter} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>  
+              <Button onClick={applyFilter}>Filter</Button>
+            </div>
+          </motion.div>
         }
 
         <ImageList sx={{ width: '100%', height: '95%', mb:4}} cols={2} rowHeight={350}>
-          <AnimatePresence initial={false}>
+          {/* <AnimatePresence initial={false}> */}
             {displayPosts.map((post, i) => (
               <ImageListItem key={i}>
                 <ContainerFeed key={i} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view={'user'}/>
               </ImageListItem>
             ))}
-          </AnimatePresence>
+          {/* </AnimatePresence> */}
         </ImageList>
         <Pagination 
           count={Math.ceil(posts.length/numPosts)} 
@@ -366,6 +377,8 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
       </div>
 
       <PostModal postInfo={postInfo} open={open} handleClose={handleClose}/>
+      </AnimatePresence>
+
     </>
   )
 
