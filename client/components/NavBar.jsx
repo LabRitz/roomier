@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import "../stylesheets/navbar.scss";
-
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
 
+import "../stylesheets/navbar.scss";
 
 const pages = [
   { title: 'Home', nav: '/' },
@@ -43,16 +42,20 @@ const NavBar = ({ userInfo, setUserInfo }) => {
   }, [phrase]);
 
   const handleSignout = async () => {
-    const res = await fetch("/signout");
-    const data = res.json();
-    if (data) {
-      setUserInfo("");
-      navigate('/')
+    try {
+      const res = await fetch("/signout");
+      const data = res.json();
+      if (data) {
+        setUserInfo("");
+        navigate('/')
+      }
+    } catch (err) {
+      console.log('ERROR: Cannot sign user out')
     }
   };
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

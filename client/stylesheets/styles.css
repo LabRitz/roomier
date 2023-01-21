@@ -7,4 +7,5 @@ body {
   background: linear-gradient(180deg,rgb(214, 214, 214) 85%,rgba(169, 169, 169, 0.903)95%,  rgba(140, 140, 140, 0.937) 98%, rgba(0, 25, 46, 0.585));
   font-family: 'Red Hat Display', sans-serif;
   margin: 0px;
+  height: 90%;
 }

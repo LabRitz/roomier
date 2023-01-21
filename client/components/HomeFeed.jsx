@@ -28,7 +28,7 @@ import { AnimatePresence } from 'framer-motion';
 import ContainerFeed from './ContainerFeed.jsx';
 import PostModal from './PostModal.jsx';
 
-import styles from '../stylesheets/homeFeed.scss';
+import '../stylesheets/homeFeed.scss';
 
 const getStyles = (filter, filterName, theme) => {
   return {
@@ -187,7 +187,11 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
   return (
     <>
       <div className='homeFeed'>
-        <div className="filter">
+        <div className="filter" style={{
+          height:'60px',
+          display: 'flex',
+          flexDirection: 'row', 
+          alignItems: 'center'}}>
           <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
             {(posts.length > 0) ? (
               <TextField
@@ -243,7 +247,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
           </FormControl>
 
           <ToggleButton
-            sx={{mt:1}}
+            sx={{ml:1}}
             size="small"
             value="filter"
             selected={showFilter}
@@ -254,8 +258,13 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
         </div>
 
         { showFilter && 
-          <div className="filter" style={{display: 'flex', flexDirection: 'row', columnGap: '2px', alignItems: 'center'}}>
-            <Box sx={{ p:1, width: 195, display: 'flex', flexDirection: 'column'}} size="small">
+          <div className="filter" style={{
+            paddingLeft:'4px',
+            height:'120px',
+            display: 'flex',
+            flexDirection: 'row', 
+            alignItems: 'center'}}>
+            <Box sx={{ p:1, width: 190, display: 'flex', flexDirection: 'column'}} size="small">
               <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
               <PrettoSlider
                 min={0}
@@ -341,11 +350,11 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
           </div>
         }
 
-        <ImageList sx={{ width: '100%', height: '100%', mb:4}} cols={2} rowHeight={350}>
+        <ImageList sx={{ width: '100%', height: '95%', mb:4}} cols={2} rowHeight={350}>
           <AnimatePresence initial={false}>
             {displayPosts.map((post, i) => (
               <ImageListItem key={i}>
-                <ContainerFeed key={i} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo}/>
+                <ContainerFeed key={i} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view={'user'}/>
               </ImageListItem>
             ))}
           </AnimatePresence>

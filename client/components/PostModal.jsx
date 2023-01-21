@@ -10,6 +10,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: '70%',
+  minWidth: '500px',
   maxHeight: 'auto',
   bgcolor: 'background.paper',
   boxShadow: 24,
@@ -27,7 +28,7 @@ const PostModal = ({postInfo, open, handleClose }) => {
       aria-describedby="keep-mounted-modal-description"
     >
       <Box sx={style}>
-        <DisplayCard postInfo={postInfo}/>
+        <DisplayCard postInfo={postInfo} view={'user'}/>
       </Box>
     </Modal>
   )

@@ -38,11 +38,11 @@ const Card = ({ postInfo }) => {
         <div className="info">
           <p><span className='bold'>{description.BR}BR | {description.BA}BA | {description.sqFt} sqft</span></p>
           <p>Roommate seeking: {roommate.gender}</p>
-          <><label>Pet friendly: </label><input type={'checkbox'} checked={description.pets}></input></>
+          <><label>Pet friendly: </label><input type={'checkbox'} readOnly checked={description.pets}></input></>
           <br/>
-          <><label>Smoker friendly: </label><input type={'checkbox'} checked={description.smoking}></input></>
+          <><label>Smoker friendly: </label><input type={'checkbox'} readOnly checked={description.smoking}></input></>
           <br/>
-          <><label>Parking availability: </label><input type={'checkbox'} checked={description.parking}></input></>
+          <><label>Parking availability: </label><input type={'checkbox'} readOnly checked={description.parking}></input></>
           <p className='bio'>{bio}</p>
         </div>
       </div>
