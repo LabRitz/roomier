@@ -18,12 +18,8 @@ const loadingStyle = {
 };
 
 const mapContainerStyle = {
-  width: "35%",
-  height: "90%",
-  bottom: "2%",
-  top: "8%",
-  left: "2%",
-  position: "absolute",
+  width: "100%",
+  height: "100%",
   borderRadius: "12px",
   boxShadow: "2px 2px 8px gray",
 };
@@ -168,6 +164,7 @@ const Home = ({ userInfo }) => {
       </Box>
     ) : (
       <div className="home">
+        <div id="googleMapDiv"></div>
         <HomeFeed
           posts={filterPosts}
           zipCode={zipCode}
@@ -186,7 +183,6 @@ const Home = ({ userInfo }) => {
           ba={ba}
           setBA={setBA}
         />
-        <div id="googleMapDiv"></div>
       </div>
     )
   );

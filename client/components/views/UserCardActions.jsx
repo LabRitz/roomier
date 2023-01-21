@@ -7,9 +7,9 @@ const UserCardActions = ({ application, handleApply }) => {
   return (
     <>
       <Tooltip title="Submit contact info">
-        <Button sx={{mr:1}} onClick={() => handleApply()} size="small">Apply</Button>
+        <Button mr={1} onClick={() => handleApply()} size="small">Apply</Button>
       </Tooltip>
-      <Typography variant="body2" noWrap={true} color="text.secondary">
+      <Typography pb={0.5} variant="body2" noWrap={true} color="text.secondary">
         {application.length} in review
       </Typography>
     </>
