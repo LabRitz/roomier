@@ -6,6 +6,7 @@ const expressSession = require("express-session");
 const path = require('path')
 const passport = require("passport");
 
+const logger = require("./util/logger");
 const { SERVER_PORT } = require("config");
 const { startSession } = require('./controllers/session')
 
@@ -66,16 +67,20 @@ mongoose
     dbName: "findARoommate",
   })
   .then(() => {
-    console.log("Successfully connected to MongoDB!");
+    console.log("SUCCESS: Connected to MongoDB!")
+    logger.info("SUCCESS: Connected to MongoDB!");
   })
-  .catch((error) => {
-    console.log("Unable to connect to MongoDB!");
-    console.error(error);
+  .catch((err) => {
+    console.log("ERROR: Unable to connect to MongoDB!", err);
+    logger.error("ERROR: Unable to connect to MongoDB!", err);
   });
 
 // --------------------------------------------------------------------------------------------//
 // catch-all route handler for any requests to an unknown route
-app.use((req, res) => res.sendStatus(404));
+app.use((req, res) => {
+  logger.info(`ERROR: Unknown route/path`);
+  res.sendStatus(404)
+});
 
 // global error handler
 app.use((err, req, res, next) => {
@@ -85,11 +90,14 @@ app.use((err, req, res, next) => {
     message: { err: "An error occurred" },
   };
   const errorObj = { ...defaultErr, ...err };
+  logger.error(`${errorObj.log}, STATUS: ${errorObj.status}, MESSAGE: ${errorObj.message.err}`);
   return res.status(errorObj.status).json(errorObj.message);
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
+  console.log(`SUCCESS: Server is running on port: ${port}`);
+  logger.info(`SUCCESS: Server is running on port: ${port}`);
+
 });
 
 module.exports = app;
