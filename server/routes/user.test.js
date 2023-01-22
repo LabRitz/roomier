@@ -9,7 +9,7 @@ describe('API Test', () => {
  test('GET /', (done) => {
     request(app)
       .get('/')
-      .expect(200)
+      .expect(201)
       .expect("Content-Type", /html/)
       .end(function(err, res) {
         if (err) throw err;
