@@ -22,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../dist/')));
 
+// --------------------------------------------------------------------------------------------//
 // Route all requests to MainRouter
 app.use("/", require("./routes/user"));
 
@@ -40,23 +41,7 @@ require("./config/passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get(
-  "/login/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-app.get(
-  "/login/auth/google/callback",
-  passport.authenticate("google", { failureDirect: "/"}),
-  (req, res, next) => {
-    res.cookie('ssid', req.session.passport.user._id);
-    const user = { _id: req.session.passport.user._id }
-    res.locals.user = req.session.passport.user;
-    next();
-  }, 
-  startSession,
-  (req, res) => res.redirect('/')
-);
+app.use("/login/auth/google", require("./routes/oauth"));
 
 // --------------------------------------------------------------------------------------------//
 // catch-all route handler for any requests to an unknown route
