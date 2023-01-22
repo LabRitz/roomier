@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import Typography from '@mui/material/Typography';
 
 const Phrases = () => {
-  const [phrase, setPhrase] = useState('Roommate');
-  const phrases = ['Roommate', 'Future', 'Life', 'Friend', 'Bed']
+  const [phrase, setPhrase] = useState('roommate');
+  const phrases = ['roommate', 'future', 'life', 'friend', 'bed']
 
   setInterval(()=> {
     const index = phrases.indexOf(phrase);
@@ -11,7 +12,9 @@ const Phrases = () => {
   }, 5000)
 
   return (
-    <h2>Find a {phrase}</h2>
+    <Typography sx={{ my: 2, font:'DM Sans', fontSize: 28, fontWeight: '500', color: 'text.darkBlue', display: 'block' }}>
+      find a {phrase}...
+    </Typography>
   )
 
 }

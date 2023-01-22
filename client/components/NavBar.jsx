@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AppBar from '@mui/material/AppBar';
@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
 
+import Phrases from "./Phrases.jsx";
 import "../stylesheets/navbar.scss";
 
 const pages = [
@@ -29,18 +30,28 @@ const settings = [
 const NavBar = ({ userInfo, setUserInfo }) => {
   const navigate = useNavigate();
 
-  const [phrase, setPhrase] = useState("roommate");
-
-  const phrases = ["roommate", "future", "friend", "bed"];
-  useEffect(() => {
-    const index = phrases.indexOf(phrase);
-    const newPhrase =
-      index === phrases.length - 1 ? phrases[0] : phrases[index + 1];
-    setTimeout(() => {
-      setPhrase(newPhrase);
-    }, 5000);
-  }, [phrase]);
-
+  
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  
+  const handleCloseNavMenu = (nav) => {
+    setAnchorElNav(null);
+    navigate(nav)
+  };
+  
+  const handleCloseUserMenu = (nav) => {
+    setAnchorElUser(null);
+    if (nav == '/') handleSignout()
+    else navigate(nav)
+  };
+  
   const handleSignout = async () => {
     try {
       const res = await fetch("/signout");
@@ -52,27 +63,6 @@ const NavBar = ({ userInfo, setUserInfo }) => {
     } catch (err) {
       console.log('ERROR: Cannot sign user out')
     }
-  };
-
-  const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = (nav) => {
-    setAnchorElNav(null);
-    navigate(nav)
-  };
-
-  const handleCloseUserMenu = (nav) => {
-    setAnchorElUser(null);
-    if (nav == '/') handleSignout()
-    else navigate(nav)
   };
 
   return (
@@ -139,9 +129,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
               </Avatar>
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'none', md: 'flex' } }}>
-              <Typography sx={{ my: 2, font:'DM Sans', fontSize: 28, fontWeight: '500', color: 'text.darkBlue', display: 'block' }}>
-                find a {phrase}...
-              </Typography>
+              <Phrases />
             </Box>
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
