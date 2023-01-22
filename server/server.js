@@ -6,11 +6,12 @@ const expressSession = require("express-session");
 const path = require('path')
 const passport = require("passport");
 
+require("dotenv").config();
+
 const logger = require("./util/logger");
 const { SERVER_PORT } = require("config");
 const { startSession } = require('./controllers/session')
-
-require("dotenv").config();
+const db = require('./db/db')
 
 const app = express();
 const port = SERVER_PORT || 3000;
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../dist/')));
 
+// --------------------------------------------------------------------------------------------//
 // Route all requests to MainRouter
 app.use("/", require("./routes/user"));
 
@@ -39,41 +41,7 @@ require("./config/passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get(
-  "/login/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-app.get(
-  "/login/auth/google/callback",
-  passport.authenticate("google", { failureDirect: "/"}),
-  (req, res, next) => {
-    res.cookie('ssid', req.session.passport.user._id);
-    const user = { _id: req.session.passport.user._id }
-    res.locals.user = req.session.passport.user;
-    next();
-  }, 
-  startSession,
-  (req, res) => res.redirect('/')
-);
-
-// --------------------------------------------------------------------------------------------//
-//connect to mongoDB
-const mongoose = require("mongoose");
-mongoose
-  .connect(process.env.ATLAS_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: "findARoommate",
-  })
-  .then(() => {
-    console.log("SUCCESS: Connected to MongoDB!")
-    logger.info("SUCCESS: Connected to MongoDB!");
-  })
-  .catch((err) => {
-    console.log("ERROR: Unable to connect to MongoDB!", err);
-    logger.error("ERROR: Unable to connect to MongoDB!", err);
-  });
+app.use("/login/auth/google", require("./routes/oauth"));
 
 // --------------------------------------------------------------------------------------------//
 // catch-all route handler for any requests to an unknown route
