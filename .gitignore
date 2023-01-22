@@ -5,4 +5,5 @@ coverage
 dist
 .DS_Store
 roomier.zip
+logs
 

@@ -48,7 +48,8 @@
     "react-router": "^5.1.0",
     "react-router-dom": "^6.6.1",
     "sass": "^1.53.0",
-    "sass-loader": "^13.0.2"
+    "sass-loader": "^13.0.2",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
