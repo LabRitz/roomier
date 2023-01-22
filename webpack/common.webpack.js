@@ -16,7 +16,7 @@ module.exports = {
     host: DOMAIN,
     port: PORT,
     static: {
-      directory: path.resolve(__dirname) + '../../dist',
+      directory: path.join(__dirname, '..', 'dist'),
       publicPath: '/'
     },
     client: {
@@ -32,7 +32,7 @@ module.exports = {
 
   output: {
     publicPath: ``,
-    path: path.resolve(__dirname) + '../../dist',
+    path: path.join(__dirname, '..', 'dist'),
     filename: '[name].[contenthash]].js',
     clean: true
   },
