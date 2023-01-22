@@ -29,7 +29,6 @@ const settings = [
 
 const NavBar = ({ userInfo, setUserInfo }) => {
   const navigate = useNavigate();
-
   
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
