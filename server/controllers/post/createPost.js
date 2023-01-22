@@ -1,20 +1,19 @@
 const Post = require('../../db/postModel');
 
 const createPost = async (req, res, next) => {
+  const {  
+    address, roommate, description,
+    moveInDate, utilities, rent, 
+    bio, userData, geoData, images
+  } = req.body;
+
+  if (!address || !roommate || !description ||
+      !moveInDate || !utilities || !rent || 
+      !bio ||!userData ||!geoData ||!images) {
+    return res.sendStatus(400)
+  } 
+
   try {
-    // deconstruct from our post request
-    const {  
-      address, 
-      roommate, 
-      description,
-      moveInDate, 
-      utilities, 
-      rent, 
-      bio,
-      userData,
-      geoData,
-      images
-    } = req.body;
     const newPost = await Post.create({
       address: {
         street1: address.street1,
@@ -57,6 +56,7 @@ const createPost = async (req, res, next) => {
   } catch (err) {
     return next({
       log: `ERROR: createPost, ${err}`,
+      status: 500,
       message: {err: 'an error occurred while attempting to create a post'}
     })
   }

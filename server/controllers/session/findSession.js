@@ -20,6 +20,7 @@ const findSession = async (req, res, next) => {
   } catch (err) {
     return next ({
         log : `ERROR: findSession ${err}`,
+        status: 500, 
         message: {err: `findSession`}
     })
   }

@@ -8,19 +8,19 @@ const createUser = async (req, res, next) => {
     if (!username || !password) {
       return next({
         log: 'ERROR: createUser',
+        status: 422,
         message: {err: 'Username or password missing in userContoller.createUser'}
       })
     }
 
     const results = await User.findOne({username: username})
 
-    if (results) return res.status(200).json(null)
+    if (results) return res.status(409).json(null)
 
     // if username/password is not empty, we will create our user
     const queryResult = await User.create({ firstName, lastName, username, password, zipCode });
 
-    // passing into our res so we can access
-    return res.status(200).json(queryResult);
+    return res.status(201).json(queryResult);
   } 
   catch (err) {
     return next({

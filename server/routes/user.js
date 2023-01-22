@@ -26,7 +26,7 @@ router.get("/signout", cookie.deleteCookie, session.deleteSession);
 //     return res.status(200).json({});
 // });
 router.get("/", (req, res) =>
-  res.status(200).sendFile(path.resolve(__dirname, "../../index.html"))
+  res.status(201).sendFile(path.resolve(__dirname, "../../index.html"))
 );
 
 router.post("/signup", user.createUser);
@@ -47,7 +47,6 @@ router.post("/",
   }
 );
 
-// Update applications in posts
 router.patch("/home/:_id", post.updateApplicationPost);
 
 router.delete("/profile/:_id", post.deletePost);
