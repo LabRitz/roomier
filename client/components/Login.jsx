@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom'
 
+import Phrases from './Phrases.jsx';
 import '../stylesheets/login.scss';
 
 
 const Login = ({ setUserInfo }) => {
-
-  const [phrase, setPhrase] = useState('Roommate');
 
   const handleLogin = async () => {      
     const reqBody = {
@@ -29,15 +28,6 @@ const Login = ({ setUserInfo }) => {
     }
   }
 
-  const phrases = ['Roommate', 'Future', 'Life', 'Friend' ]
-  useEffect(()=> {
-    const index = phrases.indexOf(phrase);
-    const newPhrase = (index === phrases.length - 1) ? phrases[0] : phrases[index+1];
-    setTimeout(() => {
-      setPhrase(newPhrase)
-    }, 5000)
-  }, [phrase])
-
   return (
     <div className='router'>
       <div className="logo">
@@ -46,7 +36,7 @@ const Login = ({ setUserInfo }) => {
         <h6>looking for a Zillow corporate sponsorship</h6>
       </div>
       <div className="login">
-        <h2>Find a {phrase}</h2>
+        <Phrases/>
         <div className='accNotFound'></div>
         <input type={'email'} id="username" placeholder='Enter your email address'></input>
         <input type={'password'} id="password" placeholder='Enter your password'></input>
