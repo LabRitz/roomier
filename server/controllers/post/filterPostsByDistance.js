@@ -29,6 +29,7 @@ const filterPostsByDistance = async (req, res, next) => {
   } catch (err) {
     return next ({
       log: `ERROR: filterPostsByDistance, ${err}`,
+      status: 500,
       message: {err: 'an error occurred while attempting to filter for posts'}
     })
   }

@@ -1,10 +1,8 @@
-// setSSIDCookie - store the user id in a cookie
-const setSSIDCookie = async (req, res, next) => {
-  // store our user._id as SSID, httpOnly
-
+const setSSIDCookie = (req, res, next) => {
   if (res.locals.user !== null) {
-    await res.cookie("ssid ", res.locals.user._id, {
+    res.cookie("ssid ", res.locals.user._id, {
       httpOnly: true,
+      secure: true,
       // maxAge: 30000
     });
   }

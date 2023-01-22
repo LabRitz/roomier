@@ -7,6 +7,7 @@ const findUser = async (req, res, next) => {
     if (!data) {
       return next({
         log: `ERROR: findUser ${err}`,
+        status: 404,
         message: {err: 'Cannot find user based on userId'}
       })
     }
@@ -15,6 +16,7 @@ const findUser = async (req, res, next) => {
   catch (err) {
     return next({
       log: `error caught in userController.findUser : ${err}`,
+      status: 500, 
       message: {err: 'an error occurred while attempting to find a user'}
     })
   }
