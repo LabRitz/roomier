@@ -3,6 +3,10 @@ const Post = require('../../db/postModel');
 const filterPostsByDistance = async (req, res, next) => {
   const { lng, lat , minDistance, maxDistance} = req.body
   const username = req.params.username
+  if (lng === undefined || lat === undefined || 
+    minDistance === undefined || maxDistance === undefined) {
+    res.sendStatus(400)
+  }
 
   try {
     const queryResult = await Post.find({
@@ -12,19 +16,9 @@ const filterPostsByDistance = async (req, res, next) => {
           $minDistance: minDistance,
           $maxDistance: maxDistance
         }
-      }
+      },
+      'userData.username': {$ne: username}
     })
-
-    // const queryResult = await Post.aggregate([
-    //   {
-    //     $geoNear: {
-    //       near: { type: 'Point', coordinates: [lng, lat] } ,
-    //       spherical: true,
-    //       query:{'userData.username': {$ne: username}},
-    //       distanceField: 'calcDistance'
-    //     }
-    //   }
-    // ])
     return res.status(200).json(queryResult);
   } catch (err) {
     return next ({
