@@ -12,19 +12,9 @@ const filterPostsByDistance = async (req, res, next) => {
           $minDistance: minDistance,
           $maxDistance: maxDistance
         }
-      }
+      },
+      'userData.username': {$ne: username}
     })
-
-    // const queryResult = await Post.aggregate([
-    //   {
-    //     $geoNear: {
-    //       near: { type: 'Point', coordinates: [lng, lat] } ,
-    //       spherical: true,
-    //       query:{'userData.username': {$ne: username}},
-    //       distanceField: 'calcDistance'
-    //     }
-    //   }
-    // ])
     return res.status(200).json(queryResult);
   } catch (err) {
     return next ({
