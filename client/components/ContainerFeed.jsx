@@ -1,8 +1,8 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Card from '@mui/material/Card';
-import { CardActions } from '@mui/material';
-import CardMedia from '@mui/material/CardMedia';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 
@@ -10,31 +10,29 @@ const UserCardActions = React.lazy(() => import('./views/UserCardActions.jsx'));
 const ProfileCardActions = React.lazy(() => import('./views/ProfileCardActions.jsx'));
 import '../stylesheets/containerFeed.scss'
 
+const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
+
 const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, handleDelete }) => {
   const {
     address,
     description,
     rent,
-    images
+    images,
+    applicantData,
+    userData
   } = data;
 
-  const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
+  const [application, setApplication] = useState(!applicantData ? [] : applicantData)
+  const [hasApplied, setHasApplied] = useState(false)
 
-  const handleClick = () => {
-    setPostInfo(data)
-    handleOpen()
-  }
-
-  const [application, setApplication] = useState(!data.applicantData ? [] : data.applicantData)
   const handleApply = async (e) => {
     try {
-      const { applicationInfo } = data
       const reqBody = {
-        firstName: applicationInfo.firstName,
-        lastName: applicationInfo.lastName,
-        username: applicationInfo.username
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        username: userData.username
       }
-      const response = await fetch(`/home/${props._id}`, {
+      const response = await fetch(`/home/${data._id}`, {
         method:'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reqBody)
@@ -46,6 +44,18 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
       console.log('Error applying to post: ', err)
     }
   }
+
+  const handleClick = () => {
+    setPostInfo(data)
+    handleOpen()
+  }
+
+  useEffect(() => {
+    for (const applicant of applicantData) {
+      if (applicant.username === userData.username) return setHasApplied(true)
+    }
+    return setHasApplied(true)
+  }, [application])
 
   return (
     <motion.div 
@@ -78,7 +88,8 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
             <CardActions sx={{display:'flex', alignItems:'center'}}>
               <UserCardActions 
                 application={application} 
-                handleApply={handleApply}/>
+                handleApply={handleApply}
+                hasApplied={hasApplied}/>
             </CardActions>}
           {(view === 'profile') && 
             <CardActions sx={{display:'flex', justifyContent: 'space-evenly'}}>          
