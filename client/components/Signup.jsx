@@ -1,54 +1,42 @@
-import React, { Component, useState, useEffect } from 'react';
+import React from 'react';
 
-import styles from '../stylesheets/login.scss'; 
+import Phrases from './Phrases.jsx';
+import '../stylesheets/login.scss'; 
 
-const handleSignUp = (e) => {
+const Signup = () => {
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    // console.log({firstName: document.getElementById('firstName').value, lastName: document.getElementById('lastName').value, username: document.getElementById('username').value, password: document.getElementById('password').value});
-    
-    const reqBody = {
-      firstName: document.getElementById('firstName').value,
-      lastName: document.getElementById('lastName').value,
-      username: document.getElementById('username').value, 
-      password: document.getElementById('password').value,
-      zipCode: document.getElementById('zipCode').value
+    try {
+      const reqBody = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        username: document.getElementById('username').value, 
+        password: document.getElementById('password').value,
+        zipCode: document.getElementById('zipCode').value
+      }
+  
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(reqBody)
+        })
+      const data = await res.json()
+      if (data !== null) {
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('firstName').value = '';
+        document.getElementById('lastName').value = '';
+        document.getElementById('zipCode').value = '';
+        window.open('/', '_self')
+      }
+      else {
+        alert('User already exists in the database')
+      }
+    } catch(err) {
+      console.log('signup error: ', err)
     }
-
-    fetch('/signup', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(reqBody)
-      })
-      .then(data => data.json())
-      .then(formattedData => {
-        if (formattedData !== null) {
-          document.getElementById('username').value = '';
-          document.getElementById('password').value = '';
-          document.getElementById('firstName').value = '';
-          document.getElementById('lastName').value = '';
-          document.getElementById('zipCode').value = '';
-          window.open('/', '_self')
-        }
-        else {
-          alert('User already exists in the database')
-        }
-      })
-      .catch(err => {
-        console.log('signup error: ', err)
-      })
-    ;
-}
-
-const Signup = (props) => {
-  const [phrase, setPhrase] = useState('Roommate');
-  const phrases = ['Roommate', 'Future', 'Life', 'Friend', 'Bed']
-  useEffect(()=> {
-    const index = phrases.indexOf(phrase);
-    const newPhrase = (index === phrases.length - 1) ? phrases[0] : phrases[index+1];
-    setTimeout(() => {
-      setPhrase(newPhrase)
-    }, 5000)
-  }, [phrase])
+  }
 
   return (
     <div className='router'>
@@ -58,7 +46,7 @@ const Signup = (props) => {
         <h6>looking for a Zillow corporate sponsorship</h6>
       </div>
       <div className="login">
-        <h2>Find a {phrase}</h2>
+        <Phrases/>
         <input type={'text'} id='firstName' placeholder='Enter your first name'></input>
         <input type={'text'} id='lastName' placeholder='Enter your last name'></input>
         <input type={'email'} id="username" placeholder='Enter your email address'></input>

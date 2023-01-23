@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Card from '@mui/material/Card';
 import { CardActions } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
@@ -6,9 +6,9 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 
-import styles from '../stylesheets/containerFeed.scss'
-import UserCardActions from './views/UserCardActions.jsx';
-import ProfileCardActions from './views/ProfileCardActions.jsx';
+const UserCardActions = React.lazy(() => import('./views/UserCardActions.jsx'));
+const ProfileCardActions = React.lazy(() => import('./views/ProfileCardActions.jsx'));
+import '../stylesheets/containerFeed.scss'
 
 const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, handleDelete }) => {
   const {
@@ -73,19 +73,21 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
             {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
           </Typography>
         </CardContent>
-        {(view === 'user') && 
-          <CardActions sx={{display:'flex', alignItems:'center'}}>
-            <UserCardActions 
-              application={application} 
-              handleApply={handleApply}/>
-          </CardActions>}
-        {(view === 'profile') && 
-          <CardActions sx={{display:'flex', justifyContent: 'space-evenly'}}>          
-            <ProfileCardActions 
-              application={application} 
-              handleUpdate={handleUpdate} 
-              handleDelete={handleDelete}/>
-          </CardActions>}
+        <Suspense fallback={<div>Loading...</div>}>
+          {(view === 'user') && 
+            <CardActions sx={{display:'flex', alignItems:'center'}}>
+              <UserCardActions 
+                application={application} 
+                handleApply={handleApply}/>
+            </CardActions>}
+          {(view === 'profile') && 
+            <CardActions sx={{display:'flex', justifyContent: 'space-evenly'}}>          
+              <ProfileCardActions 
+                application={application} 
+                handleUpdate={handleUpdate} 
+                handleDelete={handleDelete}/>
+            </CardActions>}
+        </Suspense>
       </Card>
     </motion.div>
 
