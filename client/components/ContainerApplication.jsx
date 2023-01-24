@@ -4,9 +4,10 @@ import ContainerFeed from './ContainerFeed.jsx';
 
 import '../stylesheets/containerApplication.scss'
 
-const ContainerApplications = ({ postInfo, setPostInfo }) => {
+const ContainerApplications = ({ postInfo, setPostInfo, setEditMode }) => {
   const handleUpdate = (e) => {
     setPostInfo(postInfo)
+    setEditMode(true)
   }
 
   const handleDelete = async (e) => {
@@ -77,8 +78,14 @@ const ContainerApplications = ({ postInfo, setPostInfo }) => {
 
   return (
     <div className='applications'>
-      <ContainerFeed data={postInfo} handleOpen={()=>{}} setPostInfo={setPostInfo} view={'profile'} handleDelete={handleDelete} handleUpdate={handleUpdate}/>
-
+      <ContainerFeed 
+        data={postInfo} 
+        handleOpen={()=>{}} 
+        setPostInfo={setPostInfo} 
+        view={'profile'} 
+        handleDelete={handleDelete} 
+        handleUpdate={handleUpdate}
+        setEditMode={setEditMode}/>
     </div>
   )
 }

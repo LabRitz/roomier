@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
-const DisplayCard = ({ postInfo, view }) => {
+const EditCard = ({ postInfo }) => {
   const {
     address,
     applicantData,
@@ -32,25 +32,6 @@ const DisplayCard = ({ postInfo, view }) => {
     if (index + dir < 0) setIndex(images.length - 1)
     else if (index + dir > images.length - 1) setIndex(0)
     else setIndex(index + dir);
-  }
-
-  const handleApply = async () => {
-    try {
-      const reqBody = {
-        firstName: currUser.firstName,
-        lastName: currUser.lastName,
-        username: currUser.username
-      }
-      const response = await fetch(`/home/${props._id}`, {
-        method:'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reqBody)
-      })
-      const data = await response.json();
-    }
-    catch(err) {
-      console.log('Error applying to post: ', err)
-    }
   }
 
   const handleUpload = async () => {
@@ -73,11 +54,8 @@ const DisplayCard = ({ postInfo, view }) => {
           <IconButton color="inherit" onClick={() => handleClick(-1)}>
             <ArrowBackIosNewIcon fontSize='medium'/>
           </IconButton>
-          {(view === 'user') && 
-            <Tooltip title="Submit contact info">
-              <Button onClick={(e) => handleApply(e)} size="small">Apply</Button>
-            </Tooltip>}
-          {(view === 'profile') && <></>}
+          <Button onClick={(e) => handleUpload(e)} size="small">Upload Image</Button>
+          <Button onClick={(e) => handleRemove(e)} size="small">Remove Image</Button>
           <IconButton color="inherit" onClick={() => handleClick(1)}>
             <ArrowForwardIosIcon fontSize='medium'/>
           </IconButton>
@@ -120,4 +98,4 @@ const DisplayCard = ({ postInfo, view }) => {
   )
 }
 
-export default DisplayCard;
+export default EditCard;

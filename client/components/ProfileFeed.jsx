@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import DisplayCard from './DisplayCard.jsx';
 import ContainerApplication from './ContainerApplication.jsx';
+import EditCard from './EditCard.jsx'
 
 import '../stylesheets/profileFeed.scss'
 
@@ -49,11 +49,11 @@ const ProfileFeed = ({ posts }) => {
   return (
     <div style={style}>
       <Paper elevation={0} sx={{display:'flex', alignItems: 'center', height: '50%', p:2}}>
-        <DisplayCard postInfo={postInfo} view={'profile'}/> 
+        {(editMode) ? <EditCard postInfo={postInfo}/> : <DisplayCard postInfo={postInfo} view={'profile'}/>}
       </Paper>
       <div className='profileFeed'>
         {posts.map((post, i) => (
-          <ContainerApplication key={i} postInfo={post} setPostInfo={setPostInfo}/>
+          <ContainerApplication key={i} postInfo={post} setPostInfo={setPostInfo} setEditMode={setEditMode}/>
         ))}
       </div>
     </div>
