@@ -19,7 +19,7 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
     rent,
     images,
     applicantData,
-    userData
+    currUser
   } = data;
 
   const [application, setApplication] = useState(!applicantData ? [] : applicantData)
@@ -28,9 +28,9 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   const handleApply = async (e) => {
     try {
       const reqBody = {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        username: userData.username
+        firstName: currUser.firstName,
+        lastName: currUser.lastName,
+        username: currUser.username
       }
       const response = await fetch(`/home/${data._id}`, {
         method:'PATCH',
@@ -51,10 +51,13 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   }
 
   useEffect(() => {
-    for (const applicant of applicantData) {
-      if (applicant.username === userData.username) return setHasApplied(true)
+    if (currUser) {
+      let applied = false
+      for (const applicant of applicantData) {
+        if (applicant.username === currUser.username) applied = true
+      }
+      setHasApplied(applied)
     }
-    return setHasApplied(true)
   }, [application])
 
   return (

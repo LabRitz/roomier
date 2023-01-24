@@ -28,7 +28,7 @@ const GoogleMapsAPIKey = "AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM";
 Geocode.setApiKey(GoogleMapsAPIKey);
 
 const Home = ({ userInfo }) => {
-  const userData = userInfo;
+  const currUser = userInfo;
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -37,7 +37,7 @@ const Home = ({ userInfo }) => {
   const [filterPosts, setFilterPosts] = useState([])
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
-  const [zipCode, setZipCode] = useState(userData.zipCode);
+  const [zipCode, setZipCode] = useState(currUser.zipCode);
   const [distance, setDistance] = useState(1609.344);
   const [priceRange, setPriceRange] = useState([3000, 8000]);
   const [sqftRange, setSqftRange] = useState([200, 1500]);
@@ -90,7 +90,7 @@ const Home = ({ userInfo }) => {
       // Gracefully handle for non OK requests
       if (geocode.status !== 'OK') return setPosts([]);
   
-      const res = await fetch(`/home/${userData.username}`, {
+      const res = await fetch(`/home/${currUser.username}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -101,7 +101,11 @@ const Home = ({ userInfo }) => {
         }),
       });
       const postsArr = await res.json();
-      const newPosts = Object.assign(postsArr, { userData: userData });
+
+      // Map across each post and append the current user to each post
+      const newPosts = postsArr.map(post => {
+        return Object.assign(post, { currUser: currUser })
+      });
       setPosts(newPosts);
     } catch (err) {
       console.log('ERROR: Cannot get posts at zip code', err)
