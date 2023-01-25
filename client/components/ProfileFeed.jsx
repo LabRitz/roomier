@@ -55,6 +55,7 @@ const ProfileFeed = ({ posts }) => {
           alignItems: 'center', 
           height:'90%',
           width:'50%',
+          minWidth:'750px',
           mt:4,
           p:2 }} >
         {(editMode) ? <EditCard postInfo={postInfo}/> : <DisplayCard postInfo={postInfo} view={'profile'}/>}
