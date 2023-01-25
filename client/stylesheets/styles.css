@@ -4,7 +4,8 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
     Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background: linear-gradient(180deg,rgb(214, 214, 214) 85%,rgba(169, 169, 169, 0.903)95%,  rgba(140, 140, 140, 0.937) 98%, rgba(0, 25, 46, 0.585));
+  background-image: linear-gradient(180deg,rgb(214, 214, 214) 85%,rgba(169, 169, 169, 0.903)95%,  rgba(140, 140, 140, 0.937) 98%, rgba(0, 25, 46, 0.585));
+  background-attachment: fixed;
   font-family: 'Red Hat Display', sans-serif;
   margin: 0px;
   height: 90%;
