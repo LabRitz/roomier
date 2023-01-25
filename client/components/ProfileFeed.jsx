@@ -8,12 +8,13 @@ import '../stylesheets/profileFeed.scss'
 
 const style = { 
   marginTop: '70px', 
-  maxHeight:`${window.screen.height-70}`, 
+  height:`${parseInt(window.innerHeight) - 70}px`, 
   paddingLeft: '12px',
   paddingRight: '12px',
-  display:'inline-grid', 
-  gridTemplateColumns:'2fr 1fr', 
-  columnGap:'24px',
+  display:'grid',
+  gridTemplateColumns: '1fr',
+  gridTemplateRows:'55% 45%', 
+  rowGap:'12px',
   justifyItems:'center',
   alignItems: 'center' 
 };
@@ -48,7 +49,14 @@ const ProfileFeed = ({ posts }) => {
 
   return (
     <div style={style}>
-      <Paper elevation={0} sx={{display:'flex', alignItems: 'center', height: '50%', p:2}}>
+      <Paper elevation={0} 
+        sx={{
+          display:'flex', 
+          alignItems: 'center', 
+          height:'90%',
+          width:'50%',
+          mt:4,
+          p:2 }} >
         {(editMode) ? <EditCard postInfo={postInfo}/> : <DisplayCard postInfo={postInfo} view={'profile'}/>}
       </Paper>
       <div className='profileFeed'>
