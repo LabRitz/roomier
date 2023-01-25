@@ -15,10 +15,14 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
-
+import EditCardActions from './views/EditCardActions.jsx'
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem'
 
 const GoogleMapsAPIKey = "AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM";
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
+
+const genders = ['male', 'female', 'no-preference']
 
 const EditCard = ({ postInfo }) => {
   const {
@@ -33,6 +37,10 @@ const EditCard = ({ postInfo }) => {
   } = postInfo;
 
   const [location, setLocation] = useState(address)
+  const [br, setBR] = useState(description.BR)
+  const [ba, setBA] = useState(description.BA)
+  const [sqft, setSqft] = useState(description.sqFt)
+  const [gender, setGender] = useState(roommate.gender)
   const [index, setIndex] = useState(0) // Index for gallery image
  
   // Need to update the form based on change in post choice
@@ -130,6 +138,21 @@ const EditCard = ({ postInfo }) => {
     }
   };
 
+  const handleGender = (e) => { setGender(e.target.value) }
+
+  // Validate whether input is number
+  const checkNum = (e) => {
+    const regex = /^[0-9\b]+$/;
+    return (e.target.value === "" || regex.test(e.target.value))
+  }
+
+  const handleSave = async () => {
+
+  }
+
+  const handleUndo = async () => {
+    setLocation(address)
+  }
 
   return (
     <div style={{display: 'flex', flexDirection:'row', minWidth:'300px', height:'100%'}}>
@@ -292,7 +315,7 @@ const EditCard = ({ postInfo }) => {
         </FormControl>
       
         <FormControl sx={{ m: 1, width:200 }} size="small">
-          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+          <InputLabel required htmlFor="outlined-adornment-amount">Amount</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
             startAdornment={<InputAdornment sx={{ fontSize:12 }} position="start">$</InputAdornment>}
@@ -301,16 +324,54 @@ const EditCard = ({ postInfo }) => {
             inputProps={{style: {fontSize: 14}}}
             />
         </FormControl>
-        
-        <Typography variant="h6" noWrap={true} color="text.secondary">
-          {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
-        </Typography>
+
+        <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
+          <TextField
+            required
+            label="BR"
+            value={br}
+            sx={{ mr:1, width: 50}}
+            size="small"
+            onChange={(e) => {if (checkNum(e)) setBR(e.target.value) }}
+            inputProps={{ style: {fontSize: 14} }} />
+          <TextField
+            required
+            label="BA"
+            value={ba}
+            sx={{ mr:1, width: 50}}
+            size="small"
+            onChange={(e) => {if (checkNum(e)) setBA(e.target.value) }}
+            inputProps={{ style: {fontSize: 14} }} />
+          <TextField
+            required
+            label="sqft"
+            value={sqft}
+            sx={{ mr:1, width: 70}}
+            size="small"
+            onChange={(e) => {if (checkNum(e)) setSqft(e.target.value) }}
+            inputProps={{ style: {fontSize: 14} }} />
+        </FormControl>
+          
         <Typography gutterBottom variant="subtitle2" noWrap={true} color="text.primary">
           Available: {new Date(moveInDate).toLocaleDateString()}
         </Typography>
-        <Typography gutterBottom variant="body2" noWrap={true} color="text.primary">
-          Looking for: {roommate.gender}
-        </Typography>
+
+        <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+          <InputLabel id="roommate-select-label" sx={{ fontSize: 14 }}>Looking for...</InputLabel>
+          <Select
+            labelId="roommate-select-label"
+            id="roommate-select"
+            sx={{ fontSize: 14, minWidth: 100 }}
+            value={gender}
+            onChange={handleGender}
+            input={<OutlinedInput id="roommate-select" label="Looking for..."/>}
+          >
+            {genders.map((opt, i) => (
+              <MenuItem key={i} value={opt} sx={{ fontSize: 14 }}>{opt}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>          
+
         <TextField
           label="Description"
           defaultValue={bio}
@@ -322,9 +383,12 @@ const EditCard = ({ postInfo }) => {
           sx={{ 
             fontSize: 8, 
             overflowY:'scroll',
-            height: '35%'
+            height: '25%',
+            mb:2
           }}
         />
+        <EditCardActions handleSave={handleSave} handleUndo={handleUndo}/>
+
       </Paper>
     </div>
   )
