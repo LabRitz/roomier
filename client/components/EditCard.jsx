@@ -5,9 +5,13 @@ import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Tooltip from '@mui/material/Tooltip';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
@@ -15,7 +19,6 @@ const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/
 const EditCard = ({ postInfo }) => {
   const {
     address,
-    applicantData,
     roommate,
     description,
     moveInDate,
@@ -23,7 +26,6 @@ const EditCard = ({ postInfo }) => {
     rent,
     bio,
     images,
-    currUser
   } = postInfo;
 
   const [index, setIndex] = useState(0) // Index for gallery image
@@ -62,15 +64,41 @@ const EditCard = ({ postInfo }) => {
         </CardActions>
       </Paper>
       <Paper elevation={0} sx={{p:3, pt:2, pb:1, width:'50%'}}>
-        <Typography variant="h4" noWrap={false} component="div" color="text.darkBlue">
-          {address.street1} {address.street2}
-        </Typography>
-        <Typography gutterBottom variant="h5" noWrap={false} component="div" color="text.darkBlue">
-          {address.city}, {address.state} {address.zipCode}
-        </Typography>
-        <Typography gutterBottom variant="h5" noWrap={true} color="text.darkBlue">
-          ${rent}/mo
-        </Typography>
+        <TextField
+          label="Street address"
+          defaultValue={address.street1}
+          size="small"
+        />
+        <TextField
+          label="Apt, etc"
+          defaultValue={address.street2}
+          size="small"
+        />
+        <TextField
+          label="City"
+          defaultValue={address.city}
+          size="small"
+        />
+        <TextField
+          label="State"
+          defaultValue={address.state}
+          size="small"
+        />
+        <TextField
+          label="Zip code"
+          defaultValue={address.zipCode}
+          size="small"
+        />
+      
+        <FormControl fullWidth sx={{ m: 1 }}>
+          <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-amount"
+            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            label="Amount"
+          />
+        </FormControl>
+        
         <Typography variant="h6" noWrap={true} color="text.secondary">
           {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
         </Typography>
@@ -80,19 +108,19 @@ const EditCard = ({ postInfo }) => {
         <Typography gutterBottom variant="body2" noWrap={true} color="text.primary">
           Looking for: {roommate.gender}
         </Typography>
-        <Typography 
-          mb={0} 
-          variant="body1" 
-          noWrap={false} 
-          paragraph={true} 
-          color="text.primary" 
+        <TextField
+          label="Description"
+          defaultValue={bio}
+          size="small"
+          placeholder="Placeholder"
+          multiline
+          fullWidth
           sx={{ 
-            fontSize:12, 
-            height: '35%', 
-            overflowY:'scroll' 
-          }}>
-          {bio}
-        </Typography>
+            fontSize: 8, 
+            overflowY:'scroll',
+            height: '35%'
+          }}
+        />
       </Paper>
     </div>
   )
