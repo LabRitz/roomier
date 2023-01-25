@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
-const DisplayCard = ({ postInfo, view}) => {
+const DisplayCard = ({ postInfo, view }) => {
   const {
     address,
     applicantData,
@@ -23,7 +23,7 @@ const DisplayCard = ({ postInfo, view}) => {
     rent,
     bio,
     images,
-    userData
+    currUser
   } = postInfo;
 
   const [index, setIndex] = useState(0) // Index for gallery image
@@ -37,9 +37,9 @@ const DisplayCard = ({ postInfo, view}) => {
   const handleApply = async () => {
     try {
       const reqBody = {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        username: userData.username
+        firstName: currUser.firstName,
+        lastName: currUser.lastName,
+        username: currUser.username
       }
       const response = await fetch(`/home/${props._id}`, {
         method:'PATCH',
@@ -77,11 +77,7 @@ const DisplayCard = ({ postInfo, view}) => {
             <Tooltip title="Submit contact info">
               <Button onClick={(e) => handleApply(e)} size="small">Apply</Button>
             </Tooltip>}
-          {(view === 'profile') && 
-            <>
-              <Button onClick={(e) => handleUpload(e)} size="small">Upload Image</Button>
-              <Button onClick={(e) => handleRemove(e)} size="small">Remove Image</Button>
-            </>}
+          {(view === 'profile') && <></>}
           <IconButton color="inherit" onClick={() => handleClick(1)}>
             <ArrowForwardIosIcon fontSize='medium'/>
           </IconButton>

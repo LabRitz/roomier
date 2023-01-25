@@ -1,19 +1,20 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import DisplayCard from './DisplayCard.jsx';
 import ContainerApplication from './ContainerApplication.jsx';
+import EditCard from './EditCard.jsx'
 
 import '../stylesheets/profileFeed.scss'
 
 const style = { 
   marginTop: '70px', 
-  maxHeight:`${window.screen.height-70}`, 
+  height:`${parseInt(window.innerHeight) - 70}px`, 
   paddingLeft: '12px',
   paddingRight: '12px',
-  display:'inline-grid', 
-  gridTemplateColumns:'2fr 1fr', 
-  columnGap:'24px',
+  display:'grid',
+  gridTemplateColumns: '1fr',
+  gridTemplateRows:'55% 45%', 
+  rowGap:'12px',
   justifyItems:'center',
   alignItems: 'center' 
 };
@@ -48,12 +49,19 @@ const ProfileFeed = ({ posts }) => {
 
   return (
     <div style={style}>
-      <Paper elevation={0} sx={{display:'flex', alignItems: 'center', height: '50%', p:2}}>
-        <DisplayCard postInfo={postInfo} view={'profile'}/> 
+      <Paper elevation={0} 
+        sx={{
+          display:'flex', 
+          alignItems: 'center', 
+          height:'90%',
+          width:'50%',
+          mt:4,
+          p:2 }} >
+        {(editMode) ? <EditCard postInfo={postInfo}/> : <DisplayCard postInfo={postInfo} view={'profile'}/>}
       </Paper>
       <div className='profileFeed'>
         {posts.map((post, i) => (
-          <ContainerApplication key={i} postInfo={post} setPostInfo={setPostInfo}/>
+          <ContainerApplication key={i} postInfo={post} setPostInfo={setPostInfo} setEditMode={setEditMode}/>
         ))}
       </div>
     </div>

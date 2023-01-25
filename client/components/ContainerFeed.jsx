@@ -12,7 +12,7 @@ import '../stylesheets/containerFeed.scss'
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
-const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, handleDelete }) => {
+const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, handleDelete, setEditMode }) => {
   const {
     address,
     description,
@@ -47,6 +47,7 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
 
   const handleClick = () => {
     setPostInfo(data)
+    setEditMode(false)
     handleOpen()
   }
 

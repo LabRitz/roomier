@@ -38,7 +38,7 @@ const Home = ({ userInfo }) => {
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(currUser.zipCode);
-  const [distance, setDistance] = useState(1609.344);
+  const [distance, setDistance] = useState(1609.344*5);
   const [priceRange, setPriceRange] = useState([3000, 8000]);
   const [sqftRange, setSqftRange] = useState([200, 1500]);
   const [br, setBR] = useState(0)
