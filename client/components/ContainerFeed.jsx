@@ -46,8 +46,8 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   }
 
   const handleClick = () => {
+    if (view === 'profile') setEditMode(false)
     setPostInfo(data)
-    setEditMode(false)
     handleOpen()
   }
 
