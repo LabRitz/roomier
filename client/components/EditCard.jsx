@@ -19,7 +19,6 @@ import EditCardActions from './views/EditCardActions.jsx'
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem'
 
-const GoogleMapsAPIKey = "AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM";
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
 const genders = ['male', 'female', 'no-preference']
@@ -37,15 +36,17 @@ const EditCard = ({ postInfo }) => {
   } = postInfo;
 
   const [location, setLocation] = useState(address)
+  const [price, setPrice] = useState(rent)
   const [br, setBR] = useState(description.BR)
   const [ba, setBA] = useState(description.BA)
   const [sqft, setSqft] = useState(description.sqFt)
   const [gender, setGender] = useState(roommate.gender)
+  const [desc, setDesc] = useState(bio)
   const [index, setIndex] = useState(0) // Index for gallery image
  
-  // Need to update the form based on change in post choice
+  // Update the form based on change in post choice
   useEffect(() => {
-    setLocation(address)
+    handleUndo()
   }, [postInfo])
 
   const handleClick = (dir) => {
@@ -150,8 +151,14 @@ const EditCard = ({ postInfo }) => {
 
   }
 
-  const handleUndo = async () => {
+  const handleUndo = () => {
     setLocation(address)
+    setPrice(rent)
+    setBR(description.BR)
+    setBA(description.BA)
+    setSqft(description.sqFt)
+    setGender(roommate.gender)
+    setDesc(bio)
   }
 
   return (
@@ -173,7 +180,7 @@ const EditCard = ({ postInfo }) => {
           </IconButton>
         </CardActions>
       </Paper>
-      <Paper elevation={0} sx={{p:3, pt:2, pb:1, width:'50%'}}>
+      <Paper elevation={0} sx={{p:3, pt:2, pb:1, pr:1, width:'50%'}}>
         <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr', columnGap:'8px', m: 1 }} size="small">
           <PlacesAutocomplete
             value={location.street1}
@@ -319,8 +326,9 @@ const EditCard = ({ postInfo }) => {
           <OutlinedInput
             id="outlined-adornment-amount"
             startAdornment={<InputAdornment sx={{ fontSize:12 }} position="start">$</InputAdornment>}
-            defaultValue={rent}
+            value={price}
             label="Amount"
+            onChange={(e) => {if (checkNum(e)) setPrice(e.target.value)}}
             inputProps={{style: {fontSize: 14}}}
             />
         </FormControl>
@@ -371,22 +379,22 @@ const EditCard = ({ postInfo }) => {
             ))}
           </Select>
         </FormControl>          
-
-        <TextField
-          label="Description"
-          defaultValue={bio}
-          size="small"
-          placeholder="Placeholder"
-          multiline
-          fullWidth
-          inputProps={{style: {fontSize: 10}}}
-          sx={{ 
-            fontSize: 8, 
-            overflowY:'scroll',
-            height: '25%',
-            mb:2
-          }}
-        />
+        
+        <FormControl sx={{ display: 'block', m:1, mb:1 }} size="small">
+          <TextField
+            label="Description"
+            value={desc}
+            size="small"
+            multiline
+            fullWidth
+            onChange={(e) => setDesc(e.target.value)}
+            inputProps={{style: {fontSize: 10}}}
+            sx={{ 
+              overflowY:'scroll',
+              height: '25%',
+            }}
+          />
+        </FormControl>
         <EditCardActions handleSave={handleSave} handleUndo={handleUndo}/>
 
       </Paper>
