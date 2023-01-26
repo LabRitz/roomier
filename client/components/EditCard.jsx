@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 
 import CardActions from '@mui/material/CardActions';
 import Paper from '@mui/material/Paper';
@@ -10,7 +10,6 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -18,6 +17,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import EditCardActions from './views/EditCardActions.jsx'
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
@@ -40,6 +42,7 @@ const EditCard = ({ postInfo }) => {
   const [br, setBR] = useState(description.BR)
   const [ba, setBA] = useState(description.BA)
   const [sqft, setSqft] = useState(description.sqFt)
+  const [date, setDate] = useState(moveInDate)
   const [gender, setGender] = useState(roommate.gender)
   const [desc, setDesc] = useState(bio)
   const [index, setIndex] = useState(0) // Index for gallery image
@@ -141,6 +144,8 @@ const EditCard = ({ postInfo }) => {
 
   const handleGender = (e) => { setGender(e.target.value) }
 
+  const handleDate = (val) => {setDate(val)}
+
   // Validate whether input is number
   const checkNum = (e) => {
     const regex = /^[0-9\b]+$/;
@@ -158,6 +163,7 @@ const EditCard = ({ postInfo }) => {
     setBA(description.BA)
     setSqft(description.sqFt)
     setGender(roommate.gender)
+    setDate(moveInDate)
     setDesc(bio)
   }
 
@@ -321,16 +327,29 @@ const EditCard = ({ postInfo }) => {
           />
         </FormControl>
       
-        <FormControl sx={{ m: 1, width:200 }} size="small">
-          <InputLabel required htmlFor="outlined-adornment-amount">Amount</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-amount"
-            startAdornment={<InputAdornment sx={{ fontSize:12 }} position="start">$</InputAdornment>}
-            value={price}
-            label="Amount"
-            onChange={(e) => {if (checkNum(e)) setPrice(e.target.value)}}
-            inputProps={{style: {fontSize: 14}}}
-            />
+        <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
+          <FormControl sx={{ mr: 1, width: 150 }} size="small">
+            <InputLabel required htmlFor="outlined-adornment-amount">Amount</InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-amount"
+              startAdornment={<InputAdornment sx={{ fontSize:12 }} position="start">$</InputAdornment>}
+              value={price}
+              label="Amount"
+              onChange={(e) => {if (checkNum(e)) setPrice(e.target.value)}}
+              inputProps={{style: {fontSize: 14}}}
+              />
+          </FormControl>
+          <FormControl sx={{ width:200 }} size="small">
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DesktopDatePicker
+                label="Available"
+                inputFormat="MM/DD/YYYY"
+                value={date}
+                onChange={handleDate}
+                renderInput={(params) => <TextField size="small" inputProps={{ style: {fontSize: 12} }} {...params} />}
+              />
+            </LocalizationProvider>
+          </FormControl>
         </FormControl>
 
         <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
@@ -358,29 +377,24 @@ const EditCard = ({ postInfo }) => {
             size="small"
             onChange={(e) => {if (checkNum(e)) setSqft(e.target.value) }}
             inputProps={{ style: {fontSize: 14} }} />
+          <FormControl sx={{minWidth: 100 }} size="small">
+            <InputLabel id="roommate-select-label" sx={{ fontSize: 14 }}>Looking for...</InputLabel>
+            <Select
+              labelId="roommate-select-label"
+              id="roommate-select"
+              sx={{ fontSize: 14, minWidth: 100 }}
+              value={gender}
+              onChange={handleGender}
+              input={<OutlinedInput id="roommate-select" label="Looking for..."/>}
+            >
+              {genders.map((opt, i) => (
+                <MenuItem key={i} value={opt} sx={{ fontSize: 14 }}>{opt}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>       
         </FormControl>
-          
-        <Typography gutterBottom variant="subtitle2" noWrap={true} color="text.primary">
-          Available: {new Date(moveInDate).toLocaleDateString()}
-        </Typography>
-
-        <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-          <InputLabel id="roommate-select-label" sx={{ fontSize: 14 }}>Looking for...</InputLabel>
-          <Select
-            labelId="roommate-select-label"
-            id="roommate-select"
-            sx={{ fontSize: 14, minWidth: 100 }}
-            value={gender}
-            onChange={handleGender}
-            input={<OutlinedInput id="roommate-select" label="Looking for..."/>}
-          >
-            {genders.map((opt, i) => (
-              <MenuItem key={i} value={opt} sx={{ fontSize: 14 }}>{opt}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>          
         
-        <FormControl sx={{ display: 'block', m:1, mb:1 }} size="small">
+        <FormControl sx={{ display: 'block', m:1 }} size="small">
           <TextField
             label="Description"
             value={desc}
@@ -391,7 +405,7 @@ const EditCard = ({ postInfo }) => {
             inputProps={{style: {fontSize: 10}}}
             sx={{ 
               overflowY:'scroll',
-              height: '25%',
+              height: '40%',
             }}
           />
         </FormControl>
