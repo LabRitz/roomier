@@ -19,7 +19,7 @@ const style = {
   alignItems: 'center' 
 };
 
-const ProfileFeed = ({ posts }) => {
+const ProfileFeed = ({ posts, getProfilePosts }) => {
 
   const [editMode, setEditMode] = useState(false)
   const [postInfo, setPostInfo] = useState({
@@ -58,7 +58,7 @@ const ProfileFeed = ({ posts }) => {
           minWidth:'750px',
           mt:4,
           p:2 }} >
-        {(editMode) ? <EditCard postInfo={postInfo}/> : <DisplayCard postInfo={postInfo} view={'profile'}/>}
+        {(editMode) ? <EditCard postInfo={postInfo} getProfilePosts={getProfilePosts}/> : <DisplayCard postInfo={postInfo} view={'profile'}/>}
       </Paper>
       <div className='profileFeed'>
         {posts.map((post, i) => (

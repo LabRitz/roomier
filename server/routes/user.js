@@ -47,7 +47,9 @@ router.post("/",
   }
 );
 
+
 router.patch("/home/:_id", post.updateApplicationPost);
+router.patch("/posts/update/:_id", post.updatePost);
 
 router.delete("/profile/:_id", post.deletePost);
 

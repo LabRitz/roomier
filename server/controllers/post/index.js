@@ -4,3 +4,4 @@ exports.filterPostsByDistance = require('./filterPostsByDistance');
 exports.getAllPosts = require('./getAllPosts');
 exports.getProfilePosts = require('./getProfilePosts');
 exports.updateApplicationPost = require('./updateApplicationPost');
+exports.updatePost = require('./updatePost')
