@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
+import PlacesAutocomplete, { getLatLng, geocodeByAddress } from 'react-places-autocomplete';
 
 import CardActions from '@mui/material/CardActions';
 import Paper from '@mui/material/Paper';
@@ -25,7 +25,7 @@ const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/
 
 const genders = ['male', 'female', 'no-preference']
 
-const EditCard = ({ postInfo }) => {
+const EditCard = ({ postInfo, getProfilePosts }) => {
   const {
     address,
     roommate,
@@ -34,6 +34,7 @@ const EditCard = ({ postInfo }) => {
     utilities,
     rent,
     bio,
+    geoData,
     images,
   } = postInfo;
 
@@ -45,6 +46,7 @@ const EditCard = ({ postInfo }) => {
   const [date, setDate] = useState(moveInDate)
   const [gender, setGender] = useState(roommate.gender)
   const [desc, setDesc] = useState(bio)
+  const [geoLoc, setGeoLoc] = useState(geoData)
   const [index, setIndex] = useState(0) // Index for gallery image
  
   // Update the form based on change in post choice
@@ -90,6 +92,9 @@ const EditCard = ({ postInfo }) => {
         i++
       }
       setLocation(newAddress)
+
+      const geo = await getLatLng(results[0])
+      setGeoLoc(geo)
     } catch(error) {
       console.error('Error selecting street', error);
     }
@@ -153,6 +158,32 @@ const EditCard = ({ postInfo }) => {
   }
 
   const handleSave = async () => {
+    const reqBody = {
+      address: location,
+      rent: price,
+      roommate: { gender: gender },
+      description: {
+        BR: br,
+        BA: ba,
+        sqFt: sqft
+      },
+      moveInDate: date,
+      bio: desc,
+      geoData: geoLoc
+    };
+
+    try {  
+      const res = await fetch(`/posts/update/${postInfo._id}`, {
+        method:'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reqBody)
+      })
+      const data = await res.json()
+      if (data) getProfilePosts()
+      else console.log('ERROR: Unable to update post')
+    } catch (err) {
+      console.log('ERROR: Cannot save updated post')
+    }
 
   }
 
@@ -165,6 +196,7 @@ const EditCard = ({ postInfo }) => {
     setGender(roommate.gender)
     setDate(moveInDate)
     setDesc(bio)
+    setGeoLoc(geoData)
   }
 
   return (

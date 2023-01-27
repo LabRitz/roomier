@@ -21,7 +21,7 @@ const Profile = ({ userInfo }) => {
 
   return (posts && 
     <div className="profile">
-      <ProfileFeed posts={posts} />
+      <ProfileFeed posts={posts} getProfilePosts={getProfilePosts}/>
     </div>
   );
 };
