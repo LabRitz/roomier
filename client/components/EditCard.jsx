@@ -67,8 +67,13 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
 
   // Remove picture from image array
   const handleRemove = async () => {
-    const imgArr = Object.entries(images[index])[0]
-    const reqBody = { imgUrl: imgArr[0], imgPath: imgArr[1] }
+    // Handle for old image data structure
+    if (!images[index]['imgUrl']) return alert('Image uploaded on legacy image. Cannot delete. ') 
+
+    const reqBody = { 
+      imgUrl: images[index]['imgUrl'], 
+      imgPath: images[index]['imgPath'] 
+    }
 
     try {  
       const res = await fetch(`/posts/image/remove/${postInfo._id}`, {
@@ -77,11 +82,13 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
         body: JSON.stringify(reqBody)
       })
       const data = await res.json()
-
-      if (data) getProfilePosts()
-      else console.log('ERROR: Unable to update post')
+      if (data.modifiedCount == 1) {
+        alert('Image successfully removed!')
+        getProfilePosts()
+      }
+      else alert('ERROR: Unable to remove image')
     } catch (err) {
-      console.log('ERROR: Cannot save updated post')
+      console.log('ERROR: Cannot remove image', err)
     }
   }
 

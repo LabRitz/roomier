@@ -1,3 +1,4 @@
+const logger = require('../../util/logger')
 const Post = require('../../db/postModel');
 
 const removeImage = async (req,res,next) => {
@@ -5,6 +6,7 @@ const removeImage = async (req,res,next) => {
   const id = req.params._id;
   
   if (!imgUrl || !imgPath || !id) {
+    logger.error(`ERROR: Remove Image, could not resolve input in update application post: ${id}`);
     return next({
       log: `ERROR: removeImage`,
       status: 400,
@@ -12,41 +14,31 @@ const removeImage = async (req,res,next) => {
     })
   }
 
+  /** 
+   * NEED LOGIC TO REMOVE IMAGES FROM FIREBASE
+   */
+
   try {      
-    // const queryResult = await Post.findOneAndUpdate(
     const queryResult = await Post.updateOne(
       { _id : id },
-      // { 'images': { $elemMatch: { $eq: imgUrl } } },
-      { $pull: { 'images': { $in: [imgUrl] } } },
-    //   { _id : id },
-    //   { $pull: {
-    //     images: { [imgUrl]: imgPath }
-    //   }} 
-      { 
-        new: true, 
-        multi: true, 
-        upsert: true 
-      }
+      { $pull: { 'images': { imgUrl: imgUrl } } },
+      { new: true }
     );
 
-    // const found = await Post.findOne({ 
-    //   "images": { 
-    //     "$elemMatch": { 
-    //       'https://firebasestorage.googleapis.com/v0/b/roomier-1cc68.appspot.com/o/images%2Fblee3395%40gmail.com%2F091f3998ad48f79ab23bfd479fdecaa3-uncropped_scaled_within_1536_1152.webp?alt=media&token=ded4c2bd-5631-4a02-8941-77ec9b1c90ed': 'images/blee3395@gmail.com/091f3998ad48f79ab23bfd479fdecaa3-uncropped_scaled_within_1536_1152.webp' 
-    //     } 
-    //   }
-    // })
-    
-    // console.log(found)
-
-    // console.log(queryResult)
-    return res.status(200).send(queryResult);
-    // return res.status(200).send(queryResult.acknowledged);
+    if (queryResult.modifiedCount === 0) {
+      logger.error(`ERROR: Remove image, conflict in database. Unable to modify image array ${id}`);
+      return res.status(409).send(queryResult);
+    }
+    else {
+      logger.info(`SUCCESS: Removed image from ${id}`) 
+      return res.status(200).send(queryResult);
+    }
   } catch (err) {
+    logger.error(`ERROR: Remove image, an error occurred while attempting to remove image from post`);
     return next ({
       log: `ERROR: removeImage, ${err}`,
       status: 500,
-      message: {err: 'an error occurred while attempting to update the posts'}
+      message: {err: 'an error occurred while attempting to remove image from post'}
     })
   }
 };
