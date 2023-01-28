@@ -27,7 +27,7 @@ const Gallery = ({ imgArr }) => {
           </svg>
         </button>
       </div>
-      <img src={(!imgArr[index]) ? defaultImg : Object.keys(imgArr[index])[0]} id="imgPreview" alt='picture of rental property'></img>
+      <img src={(!imgArr[index]) ? defaultImg : (imgArr[index]['imgUrl'] == undefined) ? Object.keys(imgArr[index])[0] : imgArr[index]['imgUrl']} id="imgPreview" alt='picture of rental property'></img>
     </div>
   )
 }
