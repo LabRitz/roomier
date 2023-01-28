@@ -29,7 +29,7 @@ const ContainerApplications = ({ getProfilePosts, postInfo, setPostInfo, setEdit
   }
 
   // Toggle visibility of applicants
-  const viewApplicants = (e) => {
+  const viewApps = (e) => {
     if (applications.length === 0) alert(`Hey dummy nobody wants to live with you! (yet) 🙃`)  
     else {
       const content = e.target.nextSibling
@@ -74,7 +74,6 @@ const ContainerApplications = ({ getProfilePosts, postInfo, setPostInfo, setEdit
     <div className='applications'>
       <ContainerFeed 
         data={postInfo} 
-        handleOpen={()=>{}} 
         setPostInfo={setPostInfo} 
         view={'profile'} 
         handleDelete={handleDelete} 

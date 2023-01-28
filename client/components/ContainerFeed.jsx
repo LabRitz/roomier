@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 
 const UserCardActions = React.lazy(() => import('./views/UserCardActions.jsx'));
 const ProfileCardActions = React.lazy(() => import('./views/ProfileCardActions.jsx'));
+const ApplicationModal = React.lazy(() => import('./ApplicationModal.jsx'));
 import '../stylesheets/containerFeed.scss'
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
@@ -24,6 +25,11 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
 
   const [application, setApplication] = useState(!applicantData ? [] : applicantData)
   const [hasApplied, setHasApplied] = useState(false)
+
+  // Profile view applications
+  const [open, setOpen] = useState(false);
+  const openApps = () => setOpen(true);
+  const closeApps = () => setOpen(false);
 
   const handleApply = async (e) => {
     try {
@@ -100,10 +106,14 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
               <ProfileCardActions 
                 application={application} 
                 handleUpdate={handleUpdate} 
-                handleDelete={handleDelete}/>
+                handleDelete={handleDelete}
+                openApps={openApps}/>
             </CardActions>}
         </Suspense>
       </Card>
+      <Suspense fallback={<div>Loading...</div>}>
+        {(view === 'profile') && <ApplicationModal applications={application} open={open} closeApps={closeApps}/> }
+      </Suspense>
     </motion.div>
 
   )
