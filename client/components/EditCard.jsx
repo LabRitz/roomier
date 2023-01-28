@@ -48,6 +48,7 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
   const [desc, setDesc] = useState(bio)
   const [geoLoc, setGeoLoc] = useState(geoData)
   const [index, setIndex] = useState(0) // Index for gallery image
+  const [imgArr, setImgArr] = useState(images)
  
   // Update the form based on change in post choice
   useEffect(() => {
@@ -55,8 +56,8 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
   }, [postInfo])
 
   const handleClick = (dir) => {
-    if (index + dir < 0) setIndex(images.length - 1)
-    else if (index + dir > images.length - 1) setIndex(0)
+    if (index + dir < 0) setIndex(imgArr.length - 1)
+    else if (index + dir > imgArr.length - 1) setIndex(0)
     else setIndex(index + dir);
   }
 
@@ -64,8 +65,24 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
     // Need to include Firebase logic
   }
 
+  // Remove picture from image array
   const handleRemove = async () => {
-    // Need logic to remove picture from image array
+    const imgArr = Object.entries(images[index])[0]
+    const reqBody = { imgUrl: imgArr[0], imgPath: imgArr[1] }
+
+    try {  
+      const res = await fetch(`/posts/image/remove/${postInfo._id}`, {
+        method:'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reqBody)
+      })
+      const data = await res.json()
+
+      if (data) getProfilePosts()
+      else console.log('ERROR: Unable to update post')
+    } catch (err) {
+      console.log('ERROR: Cannot save updated post')
+    }
   }
 
   const handleStreet1Change = (address) => {
@@ -197,6 +214,7 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
     setDate(moveInDate)
     setDesc(bio)
     setGeoLoc(geoData)
+    setImgArr(images)
   }
 
   return (
