@@ -1,33 +1,27 @@
-import React, { Component, useState, useEffect } from 'react';
+import React from 'react';
 
 import ContainerFeed from './ContainerFeed.jsx';
 
 import '../stylesheets/containerApplication.scss'
 
-const ContainerApplications = ({ postInfo, setPostInfo, setEditMode }) => {
+const ContainerApplications = ({ getProfilePosts, postInfo, setPostInfo, setEditMode }) => {
   const handleUpdate = (e) => {
     setPostInfo(postInfo)
     setEditMode(true)
   }
 
-  const handleDelete = async (e) => {
+  const handleDelete = async () => {
     try {
-      const app = e.target.parentNode.parentNode.parentNode.parentNode
-      const response = await fetch(`/profile/${postInfo._id}`, {
+      const response = await fetch(`/posts/${postInfo._id}`, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
         })
       const data = await response.json()
-      
-      app.style.transform = 'scale(1.2)';
-      setTimeout(() => {
-        app.style.transform = 'scale(0.01) rotate(270deg) translateX(800px)';
-        app.style.opacity = '0.2';
-        app.style.height = '30%'
-      }, 350)
-      setTimeout(() => {
-        app.style.display = 'none'
-      }, 750)
+      if (data.deletedCount === 1) {
+        alert('Post successfully removed!')
+        getProfilePosts()
+      }
+      else alert('Unable to delete posts')
     }
     catch(err) {
       console.log('Error in delete: ', err)

@@ -53,6 +53,6 @@ router.patch("/posts/update/:_id", post.updatePost);
 router.patch("/posts/image/remove/:_id", post.removeImage);
 
 
-router.delete("/profile/:_id", post.deletePost);
+router.delete("/posts/:_id", post.deletePost);
 
 module.exports = router;
