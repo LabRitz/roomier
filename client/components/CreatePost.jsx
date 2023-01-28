@@ -16,19 +16,22 @@ const CreatePost = ({ userInfo }) => {
 
   const firebaseUploadImage = async () => {
     if (imageUpload) {
-      const imgRef = ref(
-        storage,
-        `images/${userData.username}/${imageUpload.name}`
-      );
-      await uploadBytes(imgRef, imageUpload);
-      const imgURL = await getDownloadURL(imgRef);
-      const imgObj = {};
-      imgObj[imgURL] = `images/${userData.username}/${imageUpload.name}`;
-      const newArr = [...imgArr, imgObj];
-      setImgArr(newArr);
-      document.querySelector("#imgPreview").src = imgURL;
+      const imgPath = `images/${userData.username}/${imageUpload.name}`
+      const imgRef = ref(storage, imgPath);
+      try {
+        await uploadBytes(imgRef, imageUpload);
+        const imgUrl = await getDownloadURL(imgRef);
+        const imgObj = {
+          imgUrl: imgUrl,
+          imgPath: `images/${userData.username}/${imageUpload.name}`
+        };
+        setImgArr([...imgArr, imgObj]);
+        document.querySelector("#imgPreview").src = imgURL;
+      } catch (err) {
+        console.log('ERROR: Cannot upload to Firebase')
+      }
     } else {
-      console.log("it failed");
+      alert("No image selected");
     }
   };
 
@@ -57,67 +60,74 @@ const CreatePost = ({ userInfo }) => {
     );
     const moveInDate = document.getElementById("date").value;
 
+    if (
+      address1 === "" ||
+      city === "" ||
+      state === "" ||
+      zipCode === "" ||
+      genderPreference === "" ||
+      sqft === "" ||
+      utilities === "" ||
+      rent === "" ||
+      moveInDate === null
+    ) {
+      alert("Must Require Input Fields");
+    } 
+
+    let geoData
     try {
-      let data = await Geocode.fromAddress(
+      const geo = await Geocode.fromAddress(
         `${address1} ${city} ${state} ${zipCode}`
       );
-      const { lat, lng } = data.results[0].geometry.location;
-      const geoData = { lat: lat, lng: lng };
-      if (
-        address1 === "" ||
-        city === "" ||
-        state === "" ||
-        zipCode === "" ||
-        genderPreference === "" ||
-        sqft === "" ||
-        utilities === "" ||
-        rent === "" ||
-        moveInDate === null
-      ) {
-        alert("Must Require Input Fields");
-      } else {
-        const reqBody = {
-          address: {
-            street1: address1,
-            street2: address2,
-            city: city,
-            state: state,
-            zipCode: zipCode,
-          },
-          roommate: {
-            gender: genderPreference,
-          },
-          description: {
-            BR: bedroom,
-            BA: bathroom,
-            sqFt: sqft,
-            pets: pets,
-            smoking: smoking,
-            parking: parking,
-            condition: condition,
-          },
-          moveInDate: moveInDate,
-          utilities: utilities,
-          rent: rent,
-          bio: bio,
-          userData: userData,
-          applications: [],
-          geoData: geoData,
-          images: imgArr,
-        };
-        fetch("/createPost", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(reqBody),
-        })
-          .then((data) => data.json())
-          .then((formattedData) => {
-            console.log("CreatePost: ", formattedData);
-          })
-          .catch((err) => {
-            console.log("Error thrown in POST request in createPost: ", err);
-          });
+      const { lat, lng } = geo.results[0].geometry.location;
+      geoData = { lat: lat, lng: lng };
+    } catch (err) {
+      console.log(
+        `ERROR: Unable to resolve coordinates of ${address1} ${city} ${state} ${zipCode}:`,
+        err
+      );
+    }
 
+    try {
+      const reqBody = {
+        address: {
+          street1: address1,
+          street2: address2,
+          city: city,
+          state: state,
+          zipCode: zipCode,
+        },
+        roommate: {
+          gender: genderPreference,
+        },
+        description: {
+          BR: bedroom,
+          BA: bathroom,
+          sqFt: sqft,
+          pets: pets,
+          smoking: smoking,
+          parking: parking,
+          condition: condition,
+        },
+        moveInDate: moveInDate,
+        utilities: utilities,
+        rent: rent,
+        bio: bio,
+        userData: userData,
+        applications: [],
+        geoData: geoData,
+        images: imgArr,
+      };
+      const res = await fetch("/createPost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reqBody),
+      })
+      const data = await res.json()
+      if (data) {
+        console.log("SUCCESS: Created post", data);
+
+        // Clear form document
         document.getElementById("street1").value = "";
         document.getElementById("street2").value = "";
         document.getElementById("city").value = "";
@@ -135,11 +145,8 @@ const CreatePost = ({ userInfo }) => {
         setImgArr([]);
       }
     } catch (err) {
-      console.log(
-        `Geocode err in CreatePost: Unable to resolve coordinates of ${address1} ${city} ${state} ${zipCode}:`,
-        err
-      );
-    }
+      console.log("ERROR: POST request in createPost: ", err);
+    }    
   };
 
   return (

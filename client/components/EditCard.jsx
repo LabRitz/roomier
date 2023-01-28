@@ -223,7 +223,8 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
         <CardMedia
           component="img"
           height="300"
-          image={(!images[index]) ? defaultImg : Object.keys(images[index])[0]}
+          image={(!images[index]) ? defaultImg : (images[index]['imgUrl'] == undefined) ? Object.keys(images[index])[0] : images[index]['imgUrl']}
+
         />
         <CardActions sx={{display: 'flex', justifyContent:'space-evenly'}}>
           <IconButton color="inherit" onClick={() => handleClick(-1)}>

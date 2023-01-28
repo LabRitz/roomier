@@ -38,7 +38,7 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
         body: JSON.stringify(reqBody)
       })
       const data = await response.json();
-      if (data) setApplication([].concat(application.slice(),reqBody )); // only update if patch request is true/not error
+      if (data) setApplication(...application, reqBody); // only update if patch request is true/not error
     }
     catch(err) {
       console.log('Error applying to post: ', err)
@@ -75,7 +75,7 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
         <CardContent sx={{ pb:0 }} onClick={handleClick}>
           <CardMedia
             sx={{ height: 180, mb:1 }}
-            image={(!images[0]) ? defaultImg : Object.keys(images[0])[0]}
+            image={(!images[0]) ? defaultImg : (images[0]['imgUrl'] == undefined) ? Object.keys(images[0])[0] : images[0]['imgUrl']}
           />
           <Typography gutterBottom variant="h5" noWrap={true} component="div" color="text.darkBlue">
             ${rent}/mo
