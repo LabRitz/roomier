@@ -21,12 +21,8 @@ const CreatePost = ({ userInfo }) => {
       try {
         await uploadBytes(imgRef, imageUpload);
         const imgUrl = await getDownloadURL(imgRef);
-        const imgObj = {
-          imgUrl: imgUrl,
-          imgPath: `images/${userData.username}/${imageUpload.name}`
-        };
-        setImgArr([...imgArr, imgObj]);
-        document.querySelector("#imgPreview").src = imgURL;
+        setImgArr([...imgArr, { imgUrl: imgUrl, imgPath: imgPath }]);
+        document.querySelector("#imgPreview").src = imgUrl;
       } catch (err) {
         console.log('ERROR: Cannot upload to Firebase')
       }
