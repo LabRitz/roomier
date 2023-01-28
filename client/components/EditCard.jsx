@@ -48,6 +48,7 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
   const [desc, setDesc] = useState(bio)
   const [geoLoc, setGeoLoc] = useState(geoData)
   const [index, setIndex] = useState(0) // Index for gallery image
+  const [imgArr, setImgArr] = useState(images)
  
   // Update the form based on change in post choice
   useEffect(() => {
@@ -55,8 +56,8 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
   }, [postInfo])
 
   const handleClick = (dir) => {
-    if (index + dir < 0) setIndex(images.length - 1)
-    else if (index + dir > images.length - 1) setIndex(0)
+    if (index + dir < 0) setIndex(imgArr.length - 1)
+    else if (index + dir > imgArr.length - 1) setIndex(0)
     else setIndex(index + dir);
   }
 
@@ -64,8 +65,31 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
     // Need to include Firebase logic
   }
 
+  // Remove picture from image array
   const handleRemove = async () => {
-    // Need logic to remove picture from image array
+    // Handle for old image data structure
+    if (!images[index]['imgUrl']) return alert('Image uploaded on legacy image. Cannot delete. ') 
+
+    const reqBody = { 
+      imgUrl: images[index]['imgUrl'], 
+      imgPath: images[index]['imgPath'] 
+    }
+
+    try {  
+      const res = await fetch(`/posts/image/remove/${postInfo._id}`, {
+        method:'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reqBody)
+      })
+      const data = await res.json()
+      if (data.modifiedCount == 1) {
+        alert('Image successfully removed!')
+        getProfilePosts()
+      }
+      else alert('ERROR: Unable to remove image')
+    } catch (err) {
+      console.log('ERROR: Cannot remove image', err)
+    }
   }
 
   const handleStreet1Change = (address) => {
@@ -197,6 +221,7 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
     setDate(moveInDate)
     setDesc(bio)
     setGeoLoc(geoData)
+    setImgArr(images)
   }
 
   return (
@@ -205,7 +230,8 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
         <CardMedia
           component="img"
           height="300"
-          image={(!images[index]) ? defaultImg : Object.keys(images[index])[0]}
+          image={(!images[index]) ? defaultImg : (images[index]['imgUrl'] == undefined) ? Object.keys(images[index])[0] : images[index]['imgUrl']}
+
         />
         <CardActions sx={{display: 'flex', justifyContent:'space-evenly'}}>
           <IconButton color="inherit" onClick={() => handleClick(-1)}>
