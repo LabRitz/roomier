@@ -9,7 +9,7 @@ const ProfileCardActions = ({ application, handleUpdate, handleDelete }) => {
   return (
     <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems: 'center'}}>
       <Tooltip title="Edit post">
-        <Button sx={{mr:1}} color="inherit" onClick={() => handleUpdate()} size="small">
+        <Button sx={{mr:1}} color="inherit" onClick={handleUpdate} size="small">
           <TuneIcon />
         </Button>
       </Tooltip>
@@ -17,7 +17,7 @@ const ProfileCardActions = ({ application, handleUpdate, handleDelete }) => {
         {application.length} in review
       </Typography>
       <Tooltip title="Remove post">
-        <Button sx={{mr:1}} color="inherit" onClick={() => handleDelete()} size="small">
+        <Button sx={{mr:1}} color="inherit" onClick={handleDelete} size="small">
           <DeleteForeverIcon />
         </Button>
       </Tooltip>

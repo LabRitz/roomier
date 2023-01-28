@@ -7,12 +7,12 @@ const UserCardActions = ({ application, handleApply, hasApplied }) => {
   return (
     <>
     { hasApplied ? 
-      <Button mr={1} onClick={() => handleApply()} size="small" disabled={hasApplied}>
+      <Button mr={1} onClick={handleApply} size="small" disabled={hasApplied}>
         Applied
       </Button> 
       :
       <Tooltip title="Submit contact info">
-        <Button mr={1} onClick={() => handleApply()} size="small" disabled={hasApplied}>
+        <Button mr={1} onClick={handleApply} size="small" disabled={hasApplied}>
           Apply
         </Button>
       </Tooltip>
