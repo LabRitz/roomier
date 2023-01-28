@@ -62,7 +62,7 @@ const ProfileFeed = ({ posts, getProfilePosts }) => {
       </Paper>
       <div className='profileFeed'>
         {posts.map((post, i) => (
-          <ContainerApplication key={i} postInfo={post} setPostInfo={setPostInfo} setEditMode={setEditMode}/>
+          <ContainerApplication key={i} getProfilePosts={getProfilePosts} postInfo={post} setPostInfo={setPostInfo} setEditMode={setEditMode}/>
         ))}
       </div>
     </div>
