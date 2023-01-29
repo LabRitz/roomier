@@ -38,18 +38,31 @@ const Home = ({ userInfo }) => {
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(currUser.zipCode);
+  const [center, setCenter] = useState(null)
   const [distance, setDistance] = useState(1609.344*2);
   const [priceRange, setPriceRange] = useState([3000, 8000]);
   const [sqftRange, setSqftRange] = useState([200, 1500]);
   const [br, setBR] = useState(0)
   const [ba, setBA] = useState(1)
-
+  
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GoogleMapsAPIKey,
   });
 
   const [markers, setMarkers] = useState([]);
 
+  const getGeo = async () => {
+    try {
+      const geocode = await Geocode.fromAddress(zipCode);
+      if (geocode.status == 'OK') {
+        const { lng, lat } = geocode.results[0].geometry.location;
+        setCenter({ lat: lat, lng: lng })
+      }
+    } catch (err) {
+      console.log('ERROR: Cannot find zipcode', err)
+    }
+  }
+  
   const getMarkers = () => {
     const tempMarkers = [];
     filterPosts.map((post, i) => {
@@ -64,60 +77,50 @@ const Home = ({ userInfo }) => {
     setMarkers(tempMarkers);
   }
 
-  const getMap = async () => {
+  const getMap = () => {
     if (isLoaded) {
-      try {
-        const geocode = await Geocode.fromAddress(zipCode);
-        const { lng, lat } = geocode.results[0].geometry.location;
-        const center = { lat: lat, lng: lng }
-        render( 
-          <GoogleMap
+      render( 
+        <GoogleMap
+          center={center}
+          clickableIcons={true}
+          mapContainerStyle={mapContainerStyle}
+          zoom={13}
+        >
+          <Circle 
             center={center}
-            clickableIcons={true}
-            mapContainerStyle={mapContainerStyle}
-            zoom={13}
-          >
-            <Circle 
-              center={center}
-              options={{
-                strokeColor: '#3D5A80',
-                strokeOpacity: 1,
-                strokeWeight: 10,
-                fillOpacity: 0.35,
-                radius: .1,
-                zIndex: 1
-              }}/>
-            <Circle 
-              center={center}
-              options={{
-                strokeColor: '#3D5A80',
-                strokeOpacity: 1,
-                strokeWeight: 2,
-                fillColor: '#3D5A80',
-                fillOpacity: 0.35,
-                radius: distance,
-                zIndex: 1
-              }}/>
-            {markers}
-          </GoogleMap>, document.getElementById("googleMapDiv"));
-      } catch (err) {
-        console.log('ERROR: Cannot load Google Maps', err)
-      }
+            options={{
+              strokeColor: '#3D5A80',
+              strokeOpacity: 1,
+              strokeWeight: 10,
+              fillOpacity: 0.35,
+              radius: .1,
+              zIndex: 1
+            }}/>
+          <Circle 
+            center={center}
+            options={{
+              strokeColor: '#3D5A80',
+              strokeOpacity: 1,
+              strokeWeight: 2,
+              fillColor: '#3D5A80',
+              fillOpacity: 0.35,
+              radius: distance,
+              zIndex: 1
+            }}/>
+          {markers}
+        </GoogleMap>, document.getElementById("googleMapDiv"));
+     
     }
   }
 
   const getPosts = async () => {
-    try {
-      const geocode = await Geocode.fromAddress(zipCode);
-      // Gracefully handle for non OK requests
-      if (geocode.status !== 'OK') return setPosts([]);
-  
+    try {  
       const res = await fetch(`/home/${currUser.username}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          lng: geocode.results[0].geometry.location.lng,
-          lat: geocode.results[0].geometry.location.lat,
+          lng: center.lng,
+          lat: center.lat,
           minDistance: 0,
           maxDistance: distance,
         }),
@@ -167,8 +170,12 @@ const Home = ({ userInfo }) => {
   },[])
   
   useEffect(() => {
+    getGeo();
+  }, [zipCode]);
+
+  useEffect(() => {
     getPosts();
-  }, [zipCode, distance]);
+  }, [center, distance]);
 
   useEffect(() => {
     applyFilter();
