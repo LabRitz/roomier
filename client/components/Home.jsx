@@ -4,7 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
 import HomeFeed from "./HomeFeed.jsx";
-import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
+import { Circle, GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import Geocode from "react-geocode";
 
 const loadingStyle = {
@@ -38,7 +38,7 @@ const Home = ({ userInfo }) => {
 
   // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(currUser.zipCode);
-  const [distance, setDistance] = useState(1609.344*5);
+  const [distance, setDistance] = useState(1609.344*2);
   const [priceRange, setPriceRange] = useState([3000, 8000]);
   const [sqftRange, setSqftRange] = useState([200, 1500]);
   const [br, setBR] = useState(0)
@@ -69,15 +69,37 @@ const Home = ({ userInfo }) => {
       try {
         const geocode = await Geocode.fromAddress(zipCode);
         const { lng, lat } = geocode.results[0].geometry.location;
-        
+        const center = { lat: lat, lng: lng }
         render( 
           <GoogleMap
-            center={{ lat: lat, lng: lng }}
-            zoom={13}
+            center={center}
+            clickableIcons={true}
             mapContainerStyle={mapContainerStyle}
+            zoom={13}
           >
+            <Circle 
+              center={center}
+              options={{
+                strokeColor: '#3D5A80',
+                strokeOpacity: 1,
+                strokeWeight: 10,
+                fillOpacity: 0.35,
+                radius: .1,
+                zIndex: 1
+              }}/>
+            <Circle 
+              center={center}
+              options={{
+                strokeColor: '#3D5A80',
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                fillColor: '#3D5A80',
+                fillOpacity: 0.35,
+                radius: distance,
+                zIndex: 1
+              }}/>
             {markers}
-          </GoogleMap> , document.getElementById("googleMapDiv"));
+          </GoogleMap>, document.getElementById("googleMapDiv"));
       } catch (err) {
         console.log('ERROR: Cannot load Google Maps', err)
       }
