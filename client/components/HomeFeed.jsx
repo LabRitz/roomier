@@ -184,7 +184,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
 
   return (
     <AnimatePresence initial={false}>
-      <div className='homeFeed'>
+      <div key='homeFeed' className='homeFeed'>
         <div className="filter" style={{
           display: 'flex',
           flexDirection: 'row', 
@@ -369,7 +369,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
           defaultPage={1} boundaryCount={2} 
           onChange={handlePages}/>
       </div>
-      <PostModal postInfo={postInfo} open={open} handleClose={handleClose}/>
+      <PostModal key='postModal' postInfo={postInfo} open={open} handleClose={handleClose}/>
     </AnimatePresence>
   )
 
