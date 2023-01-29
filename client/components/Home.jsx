@@ -4,7 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
 import HomeFeed from "./HomeFeed.jsx";
-import { Circle, GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { Circle, GoogleMap, Marker } from "@react-google-maps/api";
 import Geocode from "react-geocode";
 
 const loadingStyle = {
@@ -44,10 +44,16 @@ const Home = ({ userInfo }) => {
   const [sqftRange, setSqftRange] = useState([200, 1500]);
   const [br, setBR] = useState(0)
   const [ba, setBA] = useState(1)
-  
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: GoogleMapsAPIKey,
-  });
+
+  // Google Maps 
+  const [mapref, setMapRef] = useState(null);
+  const handleOnLoad = (map) => { setMapRef(map) };
+  const handleCenterChanged = () => {
+    if (mapref) {
+      const newCenter = mapref.getCenter();
+      setCenter({lat: newCenter.lat(), lng: newCenter.lng()});
+    }
+  };
 
   const [markers, setMarkers] = useState([]);
 
@@ -77,43 +83,8 @@ const Home = ({ userInfo }) => {
     setMarkers(tempMarkers);
   }
 
-  const getMap = () => {
-    if (isLoaded) {
-      render( 
-        <GoogleMap
-          center={center}
-          clickableIcons={true}
-          mapContainerStyle={mapContainerStyle}
-          zoom={13}
-        >
-          <Circle 
-            center={center}
-            options={{
-              strokeColor: '#3D5A80',
-              strokeOpacity: 1,
-              strokeWeight: 10,
-              fillOpacity: 0.35,
-              radius: .1,
-              zIndex: 1
-            }}/>
-          <Circle 
-            center={center}
-            options={{
-              strokeColor: '#3D5A80',
-              strokeOpacity: 1,
-              strokeWeight: 2,
-              fillColor: '#3D5A80',
-              fillOpacity: 0.35,
-              radius: distance,
-              zIndex: 1
-            }}/>
-          {markers}
-        </GoogleMap>, document.getElementById("googleMapDiv"));
-     
-    }
-  }
-
   const getPosts = async () => {
+    if (!center) return setPosts([])
     try {  
       const res = await fetch(`/home/${currUser.username}`, {
         method: "POST",
@@ -164,7 +135,6 @@ const Home = ({ userInfo }) => {
   // 1. Get Posts based on ZipCode and Distance
   // 2. Filter posts by user filter
   // 3. Configure markers based on posts
-  // 4. Render map based on markers and posts
   useEffect(() => {
     setIsLoading(true)
   },[])
@@ -183,12 +153,8 @@ const Home = ({ userInfo }) => {
 
   useEffect(() => {
     getMarkers();
-  }, [filterPosts]);
-
-  useEffect(() => {
-    getMap();
     setIsLoading(false);
-  }, [markers]);
+  }, [filterPosts]);
 
   return (
     (isLoading) ? (
@@ -197,7 +163,40 @@ const Home = ({ userInfo }) => {
       </Box>
     ) : (
       <div className="home">
-        <div id="googleMapDiv"></div>
+        <div id="googleMapDiv">
+          <GoogleMap
+            center={center}
+            clickableIcons={true}
+            mapContainerStyle={mapContainerStyle}
+            onLoad={handleOnLoad}
+            onDragEnd={handleCenterChanged}
+            zoom={13}
+          >
+            <Circle 
+              center={center}
+              options={{
+                strokeColor: '#3D5A80',
+                strokeOpacity: 1,
+                strokeWeight: 10,
+                fillColor: '#3D5A80',
+                fillOpacity: 0.8,
+                radius: .1,
+                zIndex: 1
+              }}/>
+            <Circle 
+              center={center}
+              options={{
+                strokeColor: '#3D5A80',
+                strokeOpacity: 1,
+                strokeWeight: 2,
+                fillColor: '#3D5A80',
+                fillOpacity: 0.35,
+                radius: distance,
+                zIndex: -1
+              }}/>
+            {markers}
+          </GoogleMap>
+        </div>
         <HomeFeed
           posts={filterPosts}
           zipCode={zipCode}
