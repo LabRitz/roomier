@@ -52,9 +52,9 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   }
 
   const handleClick = () => {
-    if (view === 'profile') setEditMode(false)
     setPostInfo(data)
-    handleOpen()
+    if (view == 'profile') setEditMode(false)
+    else if (view == 'user') handleOpen()
   }
 
   useEffect(() => {
