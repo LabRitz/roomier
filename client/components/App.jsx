@@ -1,12 +1,12 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Login from "./Login.jsx";
-import Signup from "./Signup.jsx";
-import Home from "./Home.jsx";
-import CreatePost from "./CreatePost.jsx";
-import Profile from "./Profile.jsx";
-import NavBar from "./NavBar.jsx";
+const Signup = lazy(() => import("./Signup.jsx"));
+const Home = lazy(() => import("./Home.jsx"));
+const CreatePost = lazy(() => import("./CreatePost.jsx"));
+const Profile = lazy(() => import("./Profile.jsx"));
+const NavBar = lazy(() => import("./NavBar.jsx"));
 
 const App = () => {
   const [userInfo, setUserInfo] = useState("");
@@ -24,7 +24,7 @@ const App = () => {
   }, []);
 
   return userInfo == "" ? (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <Router>
         <Routes>
           <Route exact path="/" element={<Login setUserInfo={setUserInfo} />} />
@@ -34,9 +34,9 @@ const App = () => {
           />
         </Routes>
       </Router>
-    </>
+    </Suspense>
   ) : (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <Router>
         <NavBar userInfo={userInfo} setUserInfo={setUserInfo} />
         <Routes>
@@ -48,7 +48,7 @@ const App = () => {
           <Route path="/profile" element={<Profile userInfo={userInfo} />} />
         </Routes>
       </Router>
-    </>
+    </Suspense>
   );
 };
 
