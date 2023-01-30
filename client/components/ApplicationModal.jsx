@@ -1,13 +1,14 @@
-import React from 'react';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
+import React, { lazy } from 'react';
+
+const Modal = lazy(() => import('@mui/material/Modal'));
+const Box = lazy(() => import('@mui/material/Box'));
+const List = lazy(() => import('@mui/material/List'));
+const ListItem = lazy(() => import('@mui/material/ListItem'));
+const Divider = lazy(() => import('@mui/material/Divider'));
+const ListItemText = lazy(() => import('@mui/material/ListItemText'));
+const ListItemAvatar = lazy(() => import('@mui/material/ListItemAvatar'));
+const Avatar = lazy(() => import('@mui/material/Avatar'));
+const Typography = lazy(() => import('@mui/material/Typography'));
 
 const style = {
   position: 'absolute',

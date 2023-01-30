@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy } from "react";
+
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
-import HomeFeed from "./HomeFeed.jsx";
 import { Circle, GoogleMap, Marker } from "@react-google-maps/api";
 import Geocode from "react-geocode";
+
+const HomeFeed = lazy(() => import("./HomeFeed.jsx"));
 
 const loadingStyle = {
   position: 'fixed',
@@ -35,7 +37,6 @@ const Home = ({ userInfo }) => {
   const [posts, setPosts] = useState([]);
   const [filterPosts, setFilterPosts] = useState([])
 
-  // TODO: Make single request to convert zipcode to geospatial coordinate on every change
   const [zipCode, setZipCode] = useState(currUser.zipCode);
   const [center, setCenter] = useState(null)
   const [distance, setDistance] = useState(1609.344*2);

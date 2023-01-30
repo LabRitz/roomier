@@ -40,15 +40,15 @@ const NavBar = ({ userInfo, setUserInfo }) => {
     setAnchorElUser(event.currentTarget);
   };
   
-  const handleCloseNavMenu = (nav) => {
+  const handleCloseNavMenu = (page) => {
     setAnchorElNav(null);
-    navigate(nav)
+    navigate(page.nav)
   };
   
-  const handleCloseUserMenu = (nav) => {
+  const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
-    if (nav == '/') handleSignout()
-    else navigate(nav)
+    if (setting.nav == '/') handleSignout()
+    else navigate(setting.nav)
   };
   
   const handleSignout = async () => {
@@ -110,7 +110,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page.title} onClick={() => handleCloseNavMenu(page.nav)}>
+                  <MenuItem key={page.title} onClick={() => handleCloseNavMenu(page)}>
                     <Typography textAlign="center">{page.title}</Typography>
                   </MenuItem>
                 ))}
@@ -147,7 +147,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting.title} onClick={() => handleCloseUserMenu(setting.nav)}>
+                  <MenuItem key={setting.title} onClick={() => handleCloseUserMenu(setting)}>
                     <Typography textAlign="center">{setting.title}</Typography>
                   </MenuItem>
                 ))}

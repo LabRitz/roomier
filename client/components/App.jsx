@@ -6,7 +6,7 @@ const Signup = lazy(() => import("./Signup.jsx"));
 const Home = lazy(() => import("./Home.jsx"));
 const CreatePost = lazy(() => import("./CreatePost.jsx"));
 const Profile = lazy(() => import("./Profile.jsx"));
-const NavBar = lazy(() => import("./NavBar.jsx"));
+import NavBar from "./NavBar.jsx";
 
 const App = () => {
   const [userInfo, setUserInfo] = useState("");
