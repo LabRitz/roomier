@@ -33,7 +33,7 @@ module.exports = {
   output: {
     publicPath: ``,
     path: path.join(__dirname, '..', 'dist'),
-    filename: '[name].[contenthash]].js',
+    filename: '[name].[contenthash:5]].js',
     clean: true
   },
 

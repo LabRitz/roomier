@@ -3,9 +3,21 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 const production = {
   mode: 'production',
-  plugins: [
-    new BundleAnalyzerPlugin()
-  ]
+  devtool: 'source-map',
+  optimization: {
+    moduleIds: "deterministic",
+    runtimeChunk: "single",
+    minimize: true,
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+            name: "node_vendors",
+            test: /[\\/]node_modules[\\/]/,
+            chunks: "all",
+        }
+      }
+    }
+  },
 };
 
 module.exports = { ...commonConfig, ...production };
