@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { Component, useState, useEffect } from 'react';
+import React from 'react';
 
-import styles from '../stylesheets/card.scss';
+import '../stylesheets/card.scss';
 import Gallery from './Gallery.jsx';
 
 const Card = ({ postInfo }) => {
