@@ -1,55 +1,4 @@
-name: Dev Deploy to EB
-
-on:
-  pull_request:
-    branches:
-      - dev
-
-jobs:
-  dev_deploy:
-    name: Deploy
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-        # Zip file package to deploy to S3 bucket
-      - name: Create ZIP
-        # run: git archive -v -o roomier-deploy.zip --format=zip HEAD
-        run: zip -r roomier-deploy.zip ./
-
-        # Access AWS using GitHub mounted secrets
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-          aws-region: "us-east-1"
-
-        # Copy zip file contents to S3 bucket
-      - name: Upload package to S3 bucket
-        run: aws s3 cp roomier-deploy.zip s3://roomier-s3-deploy/
-
-        # Deploy to Prod
-      - name: Create new ElasticBeanstalk Application Version
-        run: |
-          aws elasticbeanstalk create-application-version \
-          --application-name roomier \
-          --source-bundle S3Bucket="roomier-s3-deploy",S3Key="roomier-deploy.zip" \
-          --version-label "ver-${{ github.sha }}" \
-          --description "commit-sha-${{ github.sha }}"
-
-      - name: Deploy new ElasticBeanstalk Application Version
-        run: aws elasticbeanstalk update-environment --environment-name roomier-dev --version-label "ver-${{ github.sha }}"
-# name: Deploy Roomier on AWS Elastic Beanstalk
-
-# env:
-#   APP_NAME: roomier
-#   S3_BUCKET: roomier-dev-s3-deploy
-#   AWS_REGION: us-east-1
-#   AWS_PLATFORM: Docker
-#   PIPELINE_ID: ${GITHUB_RUN_ID}-${GITHUB_RUN_NUMBER}
+# name: Dev Deploy to EB
 
 # on:
 #   pull_request:
@@ -57,31 +6,82 @@ jobs:
 #       - dev
 
 # jobs:
-#   create_eb_version:
+#   dev_deploy:
+#     name: Deploy
+
 #     runs-on: ubuntu-latest
+
 #     steps:
 #       - uses: actions/checkout@v2
-#       - name: Configure AWS credentials
+
+#         # Zip file package to deploy to S3 bucket
+#       - name: Create ZIP
+#         # run: git archive -v -o roomier-deploy.zip --format=zip HEAD
+#         run: zip -r roomier-deploy.zip ./
+
+#         # Access AWS using GitHub mounted secrets
+#       - name: Configure AWS Credentials
 #         uses: aws-actions/configure-aws-credentials@v1
 #         with:
 #           aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
 #           aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-#           aws-region: ${{ env.AWS_REGION }}
-#       - run: |
-#           AWS_VERSION_LABEL=${{env.APP_NAME}}-${{env.PIPELINE_ID}}
+#           aws-region: "us-east-1"
 
-#           echo "Creating Source Bundle"
-#           zip -r ${{env.APP_NAME}}.zip ./
-#           S3_KEY="$AWS_VERSION_LABEL.zip"
+#         # Copy zip file contents to S3 bucket
+#       - name: Upload package to S3 bucket
+#         run: aws s3 cp roomier-deploy.zip s3://roomier-s3-deploy/
 
-#           echo "Uploading Source Bundle to S3"
-#           aws s3 cp ${{env.APP_NAME}}.zip s3://${{env.S3_BUCKET}}/${S3_KEY} --region ${{env.AWS_REGION}}
+#         # Deploy to Prod
+#       - name: Create new ElasticBeanstalk Application Version
+#         run: |
+#           aws elasticbeanstalk create-application-version \
+#           --application-name roomier \
+#           --source-bundle S3Bucket="roomier-s3-deploy",S3Key="roomier-deploy.zip" \
+#           --version-label "ver-${{ github.sha }}" \
+#           --description "commit-sha-${{ github.sha }}"
 
-#           echo "Creating Elastic Beanstalk version"
-#           aws elasticbeanstalk create-application-version --application-name ${{env.APP_NAME}} --version-label $AWS_VERSION_LABEL --region ${{env.AWS_REGION}} --source-bundle S3Bucket=${{env.S3_BUCKET}},S3Key=${S3_KEY} --auto-create-application
+#       - name: Deploy new ElasticBeanstalk Application Version
+#         run: aws elasticbeanstalk update-environment --environment-name roomier-dev --version-label "ver-${{ github.sha }}"
+name: Deploy Roomier on AWS Elastic Beanstalk
 
-#           echo "Deploy new ElasticBeanstalk Application Version"
-#           aws elasticbeanstalk update-environment --environment-name roomier-dev --version-label $AWS_VERSION_LABEL
+env:
+  APP_NAME: roomier
+  S3_BUCKET: roomier-dev-s3-deploy
+  AWS_REGION: us-east-1
+  AWS_PLATFORM: Docker
+  PIPELINE_ID: ${GITHUB_RUN_ID}-${GITHUB_RUN_NUMBER}
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  create_eb_version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - run: |
+          AWS_VERSION_LABEL=${{env.APP_NAME}}-${{env.PIPELINE_ID}}
+
+          echo "Creating Source Bundle"
+          zip -r ${{env.APP_NAME}}.zip ./
+          S3_KEY="$AWS_VERSION_LABEL.zip"
+
+          echo "Uploading Source Bundle to S3"
+          aws s3 cp ${{env.APP_NAME}}.zip s3://${{env.S3_BUCKET}}/${S3_KEY} --region ${{env.AWS_REGION}}
+
+          echo "Creating Elastic Beanstalk version"
+          aws elasticbeanstalk create-application-version --application-name ${{env.APP_NAME}} --version-label $AWS_VERSION_LABEL --region ${{env.AWS_REGION}} --source-bundle S3Bucket=${{env.S3_BUCKET}},S3Key=${S3_KEY} --auto-create-application
+
+          echo "Deploy new ElasticBeanstalk Application Version"
+          aws elasticbeanstalk update-environment --environment-name roomier-dev --version-label $AWS_VERSION_LABEL
 
 # deploy_aws:
 #   needs: [create_eb_version]
