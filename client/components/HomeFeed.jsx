@@ -1,30 +1,28 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, Suspense } from 'react';
-
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import Pagination from '@mui/material/Pagination';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useTheme, styled } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
-import ToggleButton from '@mui/material/ToggleButton';
-import FilterListIcon from '@mui/icons-material/FilterList';
-const Box = React.lazy(() => import('@mui/material/Box'));
-const Chip = React.lazy(() => import('@mui/material/Chip'));
-const ListItemText = React.lazy(() => import('@mui/material/ListItemText'));
-const Checkbox = React.lazy(() => import('@mui/material/Checkbox'));
-const Slider  = React.lazy(() => import('@mui/material/Slider'));
-
-
 import { AnimatePresence, motion } from 'framer-motion';
 
-import ContainerFeed from './ContainerFeed.jsx';
-import PostModal from './PostModal.jsx';
+const ImageList = lazy(() => import('@mui/material/ImageList'));
+const ImageListItem = lazy(() => import('@mui/material/ImageListItem'));
+const Pagination = lazy(() => import('@mui/material/Pagination'));
+const TextField = lazy(() => import('@mui/material/TextField'));
+const OutlinedInput = lazy(() => import('@mui/material/OutlinedInput'));
+const InputLabel = lazy(() => import('@mui/material/InputLabel'));
+const MenuItem = lazy(() => import('@mui/material/MenuItem'));
+const FormControl = lazy(() => import('@mui/material/FormControl'));
+const Select = lazy(() => import('@mui/material/Select'));
+const Button = lazy(() => import('@mui/material/Button'));
+const ToggleButton = lazy(() => import('@mui/material/ToggleButton'));
+const FilterListIcon = lazy(() => import('@mui/icons-material/FilterList'));
+const Box = lazy(() => import('@mui/material/Box'));
+const Chip = lazy(() => import('@mui/material/Chip'));
+const ListItemText = lazy(() => import('@mui/material/ListItemText'));
+const Checkbox = lazy(() => import('@mui/material/Checkbox'));
+const Slider  = lazy(() => import('@mui/material/Slider'));
+
+const ContainerFeed = lazy(() => import('./ContainerFeed.jsx'));
+const PostModal = lazy(() => import('./PostModal.jsx'));
 
 import '../stylesheets/homeFeed.scss';
 
