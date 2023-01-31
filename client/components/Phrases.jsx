@@ -14,7 +14,7 @@ const Phrases = () => {
   }, [phrase])
 
   return (
-    <Typography sx={{ my: 2, font:'DM Sans', fontSize: 28, fontWeight: '500', color: 'text.darkBlue', display: 'block' }}>
+    <Typography sx={{ m: 2, font:'DM Sans', fontSize: 28, fontWeight: '500', color: 'text.darkBlue', display: 'block' }}>
       find a {phrase}...
     </Typography>
   )
