@@ -11,8 +11,7 @@ const session = require("../controllers/session");
 // Serve index.html to client
 router.get("/health", (req, res) => res.sendStatus(200))
 router.get("/home/:username", post.getAllPosts);
-router.get(
-  "/currentSession",
+router.get("/currentSession",
   cookie.getCookie,
   session.findSession,
   user.findUser

@@ -7,7 +7,7 @@ const config = {
     // Ignore the below files
     '!**/supertest.test.js',
   ],
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   testMatch:['**.test.js'],
   testPathIgnorePatterns: [
     './__tests__/',
