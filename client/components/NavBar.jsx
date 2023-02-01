@@ -70,6 +70,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Avatar 
+              data-testid='menuHomeBtn'
               onClick={() => navigate('/')} 
               alt={userInfo.firstName} 
               sx={{ width: 112, 
@@ -117,7 +118,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
               </Menu>
             </Box>
             <Box sx={{ mr: 2, flexGrow: 1, display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
-              <Avatar onClick={() => navigate('/')} alt={userInfo.firstName} sx={{ width: 112, bgcolor: 'transparent' }} variant='rounded'>
+              <Avatar data-testid='homeBtn' onClick={() => navigate('/')} alt={userInfo.firstName} sx={{ width: 112, bgcolor: 'transparent' }} variant='rounded'>
                 <img className='navBarLogo' src="https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg" />
               </Avatar>
             </Box>
@@ -156,7 +157,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Fab sx={{position:'fixed', bottom: 24, right: 24}} color="primary" aria-label="edit" onClick={() => navigate('/createPost')}>
+      <Fab data-testid='createPostBtn' sx={{position:'fixed', bottom: 24, right: 24}} color="primary" aria-label="edit" onClick={() => navigate('/createPost')}>
         <EditIcon/>
       </Fab>
     </>
