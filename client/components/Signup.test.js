@@ -8,9 +8,6 @@ jest.mock('./Phrases.jsx', () => {
 });
 
 describe("Signup.jsx", () => {
-
-  const setUsername = jest.fn()
-
   let originalFetch;
 
   beforeEach(() => {
