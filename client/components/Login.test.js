@@ -53,6 +53,10 @@ describe("Login.jsx", () => {
     expect(await screen.getByTestId("Signup")).toBeTruthy();
   });
 
+  /**
+   * FIRST SHOULD CHANGE LOGIN WINDOW ALERT TO TOAST ALERT
+   * THEN TEST SHOULD LISTEN FOR TOAST
+   */
   xit("Attempt to login with bad credentials", async () => {
     render(
       <Router>
