@@ -70,7 +70,7 @@ const DisplayCard = ({ postInfo, view }) => {
           image={(!images[index]) ? defaultImg : (images[index]['imgUrl'] == undefined) ? Object.keys(images[index])[0] : images[index]['imgUrl']}
         />
         <CardActions sx={{display: 'flex', justifyContent:'space-evenly'}}>
-          <IconButton color="inherit" onClick={() => handleClick(-1)}>
+          <IconButton data-testid='leftImg' color="inherit" onClick={() => handleClick(-1)}>
             <ArrowBackIosNewIcon fontSize='medium'/>
           </IconButton>
           {(view === 'user') && 
@@ -78,7 +78,7 @@ const DisplayCard = ({ postInfo, view }) => {
               <Button onClick={(e) => handleApply(e)} size="small">Apply</Button>
             </Tooltip>}
           {(view === 'profile') && <></>}
-          <IconButton color="inherit" onClick={() => handleClick(1)}>
+          <IconButton data-testid='rightImg' color="inherit" onClick={() => handleClick(1)}>
             <ArrowForwardIosIcon fontSize='medium'/>
           </IconButton>
         </CardActions>
