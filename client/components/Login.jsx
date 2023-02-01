@@ -41,8 +41,6 @@ const Login = ({ setUserInfo }) => {
         <input type={'email'} id="username" placeholder='Enter your email address'></input>
         <input type={'password'} id="password" placeholder='Enter your password'></input>
         <button type='submit' id='submit' onClick={handleLogin}>Login</button>
-        <div className='homeLink'>
-        </div>
         <a href='/login/auth/google'>
           Google Login 
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-google" viewBox="0 0 16 16">
