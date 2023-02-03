@@ -7,7 +7,6 @@ const Post = require('../../db/postModel');
 
 jest.mock('../../db/postModel');
 
-const sendStatus = jest.fn()
 const next = jest.fn();
 
 describe('getAllPosts', () => {
