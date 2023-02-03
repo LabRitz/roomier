@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import Profile from "./Profile.jsx";
+import Profile from "../Profile.jsx";
 
-jest.mock('./ProfileFeed.jsx', () => {
+jest.mock('../ProfileFeed.jsx', () => {
   return () => <div data-testid="ProfileFeed" /> 
 });
 

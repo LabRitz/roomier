@@ -1,28 +1,28 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import App from "./App.jsx";
+import App from "../App.jsx";
 
-jest.mock("./Login.jsx", () => {
+jest.mock("../Login.jsx", () => {
   return () => <div data-testid="Login">Login</div>;
 });
 
-jest.mock("./Signup.jsx", () => {
+jest.mock("../Signup.jsx", () => {
   return () => <div data-testid="Signup">Signup</div>;
 });
 
-jest.mock("./Home.jsx", () => {
+jest.mock("../Home.jsx", () => {
   return () => <div data-testid="Home">Home</div>;
 });
 
-jest.mock("./CreatePost.jsx", () => {
+jest.mock("../CreatePost.jsx", () => {
   return () => <div data-testid="CreatePost">CreatePost</div>;
 });
 
-jest.mock("./Profile.jsx", () => {
+jest.mock("../Profile.jsx", () => {
   return () => <div data-testid="Profile">Profile</div>;
 });
 
-jest.mock("./NavBar.jsx", () => {
+jest.mock("../NavBar.jsx", () => {
   return () => <div data-testid="NavBar">NavBar</div>;
 });
 

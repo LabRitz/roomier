@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import EditCardActions from "./EditCardActions.jsx";
+import EditCardActions from "../views/EditCardActions.jsx";
 
 describe("EditCardActions.jsx", () => {
 

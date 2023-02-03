@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import PostModal from "./PostModal.jsx";
+import PostModal from "../PostModal.jsx";
 
-jest.mock('./DisplayCard.jsx', () => {
+jest.mock('../DisplayCard.jsx', () => {
   return () => <div data-testid="DisplayCard" /> 
 });
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import Phrases from "./Phrases.jsx";
+import Phrases from "../Phrases.jsx";
 
 describe("Phrases.jsx", () => {
 

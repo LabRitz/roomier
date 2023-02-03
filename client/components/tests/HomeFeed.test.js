@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import HomeFeed from "./HomeFeed.jsx";
+import HomeFeed from "../HomeFeed.jsx";
 
-jest.mock('./ContainerFeed.jsx', () => {
+jest.mock('../ContainerFeed.jsx', () => {
   return () => <div data-testid="ContainerFeed" /> 
 });
 

@@ -5,7 +5,7 @@ const deleteCookie = (req, res, next) => {
     next();
   } else {
     return next({
-      log: `ERROR: deleteCookie ${err}`,
+      log: `ERROR: deleteCookie`,
       status: 500,
       message: { err: "an error occurred while attempting to delete cookie"}
     });

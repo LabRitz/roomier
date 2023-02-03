@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import UserCardActions from "./UserCardActions.jsx";
+import UserCardActions from "../views/UserCardActions.jsx";
 
 const application = []
 
