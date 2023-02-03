@@ -5,7 +5,8 @@ const config = {
     '**/client/**',
     '**/server/**',
     // Ignore the below files
-    '!**/supertest.test.js',
+    '!**/index.js',
+    '!**/passport.js'
   ],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':

@@ -33,10 +33,10 @@ const ApplicationModal = ({ applications, closeApps, open }) => {
       aria-describedby="keep-mounted-modal-description"
     >
       <Box sx={style}>
-        <List component='nav' sx={{ width: '100%', bgcolor: 'background.paper' }}>
+        <List key='appModal' component='nav' sx={{ width: '100%', bgcolor: 'background.paper' }}>
           {applications.map((app, i) => (
             <>
-            <ListItem alignItems="flex-start">
+            <ListItem key={i} alignItems="flex-start" data-testid='listItemModal'>
               <ListItemAvatar>
                 <Avatar alt={app.firstName} src={app?.profilePicture} />
               </ListItemAvatar>
@@ -54,7 +54,7 @@ const ApplicationModal = ({ applications, closeApps, open }) => {
                 }
               />
             </ListItem>
-            <Divider variant="inset" component="li" />
+            <Divider variant="inset" component="li" data-testid='dividerModal'/>
             </>
           ))}
         </List>
