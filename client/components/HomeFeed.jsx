@@ -184,7 +184,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
 
   return (
     <AnimatePresence initial={false}>
-      <div key='homeFeed' className='homeFeed'>
+      <div key='homeFeed' className='homeFeed' data-testid='homeFeed'>
         <div className="filter" style={{
           display: 'flex',
           flexDirection: 'row', 
@@ -249,11 +249,12 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
             value="filter"
             selected={showFilter}
             onChange={() => setShowFilter(!showFilter)}
+            data-testid='toggleFilter'
           >
             <FilterListIcon/>
           </ToggleButton>
         </div>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div data-testid='loadingFilter'>Loading...</div>}>
           { showFilter && 
             <motion.div 
               variants={{
@@ -264,7 +265,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
               animate="present"
               exit="exit"
               layout={true}>
-              <div className="filter" style={{
+              <div className="filter" data-testid='showFilter' style={{
                 paddingLeft:'4px',
                 display: 'flex',
                 flexWrap: 'wrap',
