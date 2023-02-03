@@ -5,6 +5,9 @@ const config = {
     '**/client/**',
     '**/server/**',
     // Ignore the below files
+    '!**/controllers/metaData/**.js',
+    '!**/db/**.js',
+    '!**/__tests__/**.js',
     '!**/firebase.js',
     '!**/index.js',
     '!**/passport.js'
