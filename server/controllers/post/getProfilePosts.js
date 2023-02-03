@@ -3,7 +3,7 @@ const Post = require('../../db/postModel');
 const getProfilePosts = async (req, res, next) => {
   const username = req.params.username;
   if (!username) return next ({
-      log: `ERROR: getProfilePosts, ${err}`,
+      log: `ERROR: getProfilePosts`,
       status: 400, 
       message: {err: 'Username not supplied'}
     })
