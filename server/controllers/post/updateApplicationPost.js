@@ -6,7 +6,7 @@ const updateApplicationPost = async (req,res,next) => {
   
   if (!firstName || !lastName || !username || !id) {
     return next({
-      log: `ERROR: updateApplicationPost, ${err}`,
+      log: `ERROR: updateApplicationPost`,
       status: 400,
       message: {err: 'Could not resolve input in update application post'}
     })
