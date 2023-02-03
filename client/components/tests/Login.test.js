@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
-import Login from "./Login.jsx";
+import Login from "../Login.jsx";
 
-jest.mock('./Phrases.jsx', () => {
+jest.mock('../Phrases.jsx', () => {
   return () => <div data-testid="phrases" /> 
 });
 

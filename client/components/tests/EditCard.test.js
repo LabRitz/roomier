@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-
-import EditCard from "./EditCard.jsx";
+import EditCard from "../EditCard.jsx";
 
 const postInfo = {
   address: {

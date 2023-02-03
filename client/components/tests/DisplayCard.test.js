@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import DisplayCard from "./DisplayCard.jsx";
+import DisplayCard from "../DisplayCard.jsx";
 
 const postInfo = {
   address: {

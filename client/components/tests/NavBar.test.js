@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
-import NavBar from "./NavBar.jsx";
+import NavBar from "../NavBar.jsx";
 
-jest.mock('./Phrases.jsx', () => {
+jest.mock('../Phrases.jsx', () => {
   return () => <div data-testid="phrases" /> 
 });
 

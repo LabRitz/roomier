@@ -1,13 +1,12 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import { act } from 'react-dom/test-utils';
-import ContainerFeed from "./ContainerFeed.jsx";
+import ContainerFeed from "../ContainerFeed.jsx";
 
-jest.mock('./views/UserCardActions.jsx', () => {
+jest.mock('../views/UserCardActions.jsx', () => {
   return () => <div data-testid="UserCardActions" /> 
 });
 
-jest.mock('./views/ProfileCardActions.jsx', () => {
+jest.mock('../views/ProfileCardActions.jsx', () => {
   return () => <div data-testid="ProfileCardActions" /> 
 });
 
