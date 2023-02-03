@@ -295,6 +295,7 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
 
         <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
           <PlacesAutocomplete
+            data-testid='cityInput'
             value={location.city}
             onChange={handleCityChange}
             onSelect={handleCity}
