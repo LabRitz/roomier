@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import { act } from 'react-dom/test-utils';
 import ContainerFeed from "./ContainerFeed.jsx";
 
 jest.mock('./views/UserCardActions.jsx', () => {
@@ -44,19 +45,23 @@ const postInfo = {
 
 describe("ContainerFeed.jsx", () => {
 
-  it("Renders ContainerFeed component", async () => {    
+  it("Renders ContainerFeed component", () => {    
     render(<ContainerFeed data={postInfo} view={'user'}/>);
 
-    expect(await screen.getByText('$100/mo')).toBeTruthy();
-    expect(await screen.getByText('Street 1 Street 2')).toBeTruthy();
-    expect(await screen.getByText('1BR | 1BA | 100 sqft')).toBeTruthy();    
-    expect(await screen.getByText('Loading...')).toBeTruthy();
+    expect(screen.getByText('$100/mo')).toBeTruthy();
+    expect(screen.getByText('Street 1 Street 2')).toBeTruthy();
+    expect(screen.getByText('1BR | 1BA | 100 sqft')).toBeTruthy();    
+    expect(screen.getByText('Loading...')).toBeTruthy();
   });
 
-  // it("Renders ContainerFeed component in profile view", async () => {    
-  //   render(<ContainerFeed data={postInfo} view={'profile'}/>);
+  it("Renders ContainerFeed component in profile view", async () => {    
+    render(<ContainerFeed data={postInfo} view={'profile'}/>);
+    await waitFor(() => expect(screen.getByTestId('ProfileCardActions')).toBeTruthy())
+  });
 
-  //   expect(await screen.getByTestId('ProfileCardActions')).toBeTruthy();
-  // });
+  it("Renders ContainerFeed component in user view", async () => {    
+    render(<ContainerFeed data={postInfo} view={'user'}/>);
+    await waitFor(() => expect(screen.getByTestId('UserCardActions')).toBeTruthy())
+  });
  
 });
