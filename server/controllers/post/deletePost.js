@@ -6,7 +6,7 @@ const deletePost = async (req, res, next) => {
   if (!id) {
     logger.error(`ERROR: Delete Post, could not resolve post id`);
     return next({
-      log: `ERROR: deletePost, ${err}`,
+      log: `ERROR: deletePost`,
       status: 400,
       message: {err: 'Cannot resolve id from params'}
     })

@@ -3,7 +3,7 @@ const Post = require('../../db/postModel');
 const filterPostsByDistance = async (req, res, next) => {
   const { lng, lat , minDistance, maxDistance} = req.body
   const username = req.params.username
-  if (lng === undefined || lat === undefined || 
+  if (username === undefined || lng === undefined || lat === undefined || 
     minDistance === undefined || maxDistance === undefined) {
     res.sendStatus(400)
   }
