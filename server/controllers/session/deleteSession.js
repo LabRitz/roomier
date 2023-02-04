@@ -7,7 +7,7 @@ const deleteSession = async (req, res, next) => {
     return res.status(204).send(true);
   } catch (err) {
     return next({
-      log: `ERROR: deleteSession ${err}`,
+      log: `ERROR: deleteSession, ${err}`,
       status: 500,
       message: {err: "An error occurred while attempting to delete session in signout"},
     });
