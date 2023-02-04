@@ -4,11 +4,13 @@ const User = require('../../db/userModel');
 
 const verifyUser = async (req, res, next) => {
   const { username, password } = req.body;
-  if (!username || !password) return next({
-      log: `ERROR: verifyUser ${err}`,
+  if (!username || !password) {
+    return next({
+      log: `ERROR: verifyUser`,
       status: 400,
       message: {err: 'Could not resolve username or password'}
     })
+  }
 
   try {
     const queryResult = await User.findOne({ username: username });
@@ -23,9 +25,9 @@ const verifyUser = async (req, res, next) => {
     return next();
   } 
   catch (err) {
-    console.log('err in verifyUser: ', err);
+    console.log('ERROR: verifyUser', err);
     return next({
-      log: `error caught in userController.verifyUser : ${err}`,
+      log: `ERROR: verifyUser, ${err}`,
       status: 500,
       message: {err: 'an error occurred while attempting to verify a user'}
     })
