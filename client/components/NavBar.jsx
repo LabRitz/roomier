@@ -79,7 +79,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
                 mr: 1 }} 
               variant='rounded'
             >
-              <img className='navBarLogo' src="https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg" />
+              <img className='navBarLogo' src='roomier.svg' />
             </Avatar>
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'flex', md: 'none' } }}>
               <IconButton
@@ -119,7 +119,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
             </Box>
             <Box sx={{ mr: 2, flexGrow: 1, display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
               <Avatar data-testid='homeBtn' onClick={() => navigate('/')} alt={userInfo.firstName} sx={{ width: 112, bgcolor: 'transparent' }} variant='rounded'>
-                <img className='navBarLogo' src="https://raw.githubusercontent.com/gist/blee3395/a44a462bef347d7096753a1a0057db2f/raw/28f52dcd17eb53e9b0d415826a43bd2480c34f6a/roomier_logo.svg" />
+                <img className='navBarLogo' src='roomier.svg' />
               </Avatar>
             </Box>
             <Box sx={{ ml: 1, flexGrow: 1, display: { xs: 'none', sm: 'none', md: 'flex' } }}>
