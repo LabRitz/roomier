@@ -38,7 +38,7 @@ NOTE: Proper environment variables are necessary to run the application properly
 
 # Future Work
 
-The `production` deployment of this repo is hosted [here](roomier.render.com) and `development` can be accessed [here](roomier-dev.render.com).
+The `production` deployment of this repo is hosted [here](https://roomier.onrender.com) and `development` can be accessed [here](https://roomier-dev.onrender.com).
 
 Currently, the team is hard at work on updating the user interface and including a search functionality for existing posts. We're doing research on connecting different user social profiles like Instagram, Facebook, etc. for a more open social experience.
 
