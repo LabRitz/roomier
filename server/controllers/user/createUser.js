@@ -25,6 +25,7 @@ const createUser = async (req, res, next) => {
   catch (err) {
     return next({
       log: `ERROR: createUser, ${err}`,
+      status: 500,
       message: {err: 'an error occurred when attempting to create a user'}
     })
   }
