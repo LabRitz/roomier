@@ -5,6 +5,8 @@ const config = {
     '**/client/**',
     '**/server/**',
     // Ignore the below files
+    '!**/server.js',
+    '!**/server.test.js',
     '!**/controllers/metaData/**.js',
     '!**/db/**.js',
     '!**/__tests__/**.js',
@@ -20,6 +22,7 @@ const config = {
   testEnvironment: 'jsdom',
   testMatch:['**.test.js'],
   testPathIgnorePatterns: [
+    './server/server.test.js',
     './__tests__/',
     './config/',
     './node_modules/'
