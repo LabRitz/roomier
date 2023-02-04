@@ -41,7 +41,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '/index.html'),
       filename: 'index.html',
-      // favicon: "favicon.ico"
+      favicon: path.join(__dirname, '..', 'client/assets/roomier.svg')
     }),
     new Dotenv(),
   ],
