@@ -22,7 +22,7 @@ let tooltipTimeout;
 export default withTooltip(
   ({ posts, width, height, showControls = true, hideTooltip, showTooltip, tooltipOpen, tooltipData, tooltipLeft, tooltipTop }) => {        
     if (width < 10) return null;
-    // const [showVoronoi, setShowVoronoi] = useState(showControls);
+    const [showVoronoi, setShowVoronoi] = useState(showControls);
     const svgRef = useRef(null);
 
     const maxPrice = useMemo(() => {
@@ -44,35 +44,35 @@ export default withTooltip(
       clamp: true,
     })
 
-    // const voronoiLayout = useMemo(() =>
-    //   voronoi({
-    //     x: (d) => xScale(x(d)) ?? 0,
-    //     y: (d) => yScale(y(d)) ?? 0,
-    //     width,
-    //     height,
-    //   })(points), [width, height, xScale, yScale]);
+    const voronoiLayout = useMemo(() =>
+      voronoi({
+        x: (d) => xScale(x(d)) ?? 0,
+        y: (d) => yScale(y(d)) ?? 0,
+        width,
+        height,
+      })(posts), [width, height, xScale, yScale]);
 
     // event handlers
-    // const handleMouseMove = useCallback(
-    //   (event) => {
-    //     if (tooltipTimeout) clearTimeout(tooltipTimeout);
-    //     if (!svgRef.current) return;
+    const handleMouseMove = useCallback(
+      (event) => {
+        if (tooltipTimeout) clearTimeout(tooltipTimeout);
+        if (!svgRef.current) return;
 
-    //     // find the nearest polygon to the current mouse position
-    //     const point = localPoint(svgRef.current, event);
-    //     if (!point) return;
-    //     const neighborRadius = 100;
-    //     const closest = voronoiLayout.find(point.x, point.y, neighborRadius);
-    //     if (closest) {
-    //       showTooltip({
-    //         tooltipLeft: xScale(x(closest.data)),
-    //         tooltipTop: yScale(y(closest.data)),
-    //         tooltipData: closest.data,
-    //       });
-    //     }
-    //   },
-    //   [xScale, yScale, showTooltip, voronoiLayout],
-    // );
+        // find the nearest polygon to the current mouse position
+        const point = localPoint(svgRef.current, event);
+        if (!point) return;
+        const neighborRadius = 100;
+        const closest = voronoiLayout.find(point.x, point.y, neighborRadius);
+        if (closest) {
+          showTooltip({
+            tooltipLeft: xScale(x(closest.data)),
+            tooltipTop: yScale(y(closest.data)),
+            tooltipData: closest.data,
+          });
+        }
+      },
+      [xScale, yScale, showTooltip, voronoiLayout],
+    );
 
     const handleMouseLeave = useCallback(() => {
       tooltipTimeout = window.setTimeout(() => {
@@ -90,23 +90,23 @@ export default withTooltip(
             height={'100%'}
             rx={14}
             fill="url(#radial-gradiant)"
-            // onMouseMove={handleMouseMove}
+            onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            // onTouchMove={handleMouseMove}
+            onTouchMove={handleMouseMove}
             onTouchEnd={handleMouseLeave}
           />
           <Group pointerEvents="none">
-            {posts.map((post, i) => (
+            {posts.map((post) => (
               <Circle
-                key={`post-${i}`}
+                key={post._id}
                 className="dot"
                 cx={xScale(x(post))}
                 cy={yScale(y(post))}
-                r={i % 3 === 0 ? 2 : 3}
+                r={10}
                 fill={tooltipData === post ? 'white' : '#f6c431'}
               />
             ))}
-            {/* {showVoronoi &&
+            {showVoronoi &&
               voronoiLayout
                 .polygons()
                 .map((polygon, i) => (
@@ -119,20 +119,20 @@ export default withTooltip(
                     strokeOpacity={0.2}
                     fillOpacity={tooltipData === polygon.data ? 0.5 : 0}
                   />
-                ))} */}
+                ))}
           </Group>
         </svg>
         {tooltipOpen && tooltipData && tooltipLeft != null && tooltipTop != null && (
-          <Tooltip left={tooltipLeft + 10} top={tooltipTop + 10}>
+          <Tooltip left={tooltipLeft - 100} top={tooltipTop + 10}>
             <div>
-              <strong>x:</strong> {x(tooltipData)}
+              ${y(tooltipData)}/mo
             </div>
             <div>
-              <strong>y:</strong> {y(tooltipData)}
+              {x(tooltipData)} sqft
             </div>
           </Tooltip>
         )}
-        {/* {showControls && (
+        {showControls && (
           <div>
             <label style={{ fontSize: 12 }}>
               <input
@@ -143,7 +143,7 @@ export default withTooltip(
               &nbsp;Show voronoi point map
             </label>
           </div>
-        )} */}
+        )}
       </div>
     );
   },
