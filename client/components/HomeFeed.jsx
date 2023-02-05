@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -27,6 +27,7 @@ import ContainerFeed from './ContainerFeed.jsx';
 import PostModal from './PostModal.jsx';
 
 import '../stylesheets/homeFeed.scss';
+import Scatter from './charts/Scatter.jsx';
 
 const getStyles = (filter, filterName, theme) => {
   return {
@@ -181,6 +182,23 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
   useEffect(() => {
     setDisplayPosts(posts.slice(0, numPosts))
   }, [posts, numPosts])
+
+  const divRef = useRef(null);
+  const [width, setWidth] = useState(0)
+  const [height, setHeight] = useState(0)
+
+  useEffect(() => {
+    setWidth(divRef.current.offsetWidth);
+    setHeight(divRef.current.offsetHeight)
+    const handleResize = () => {
+      setWidth(divRef.current.offsetWidth);
+      setHeight(divRef.current.offsetHeight)
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [width]);
 
   return (
     <AnimatePresence initial={false}>
@@ -357,18 +375,21 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
               </div>
             </motion.div>
           }
-        </Suspense>        
-        <ImageList sx={{ width: '100%', height: '95%', mb:4}} cols={2} rowHeight={350}>
+        </Suspense> 
+        <div style={{ width: '100%', height: '100%' }} ref={divRef}> 
+          <Scatter width={width} height={height} posts={posts}/>   
+        </div>   
+        {/* <ImageList sx={{ width: '100%', height: '95%', mb:4}} cols={2} rowHeight={350}>
             {displayPosts.map((post, i) => (
               <ImageListItem key={i}>
                 <ContainerFeed key={i} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view={'user'}/>
               </ImageListItem>
             ))}
-        </ImageList>
-        <Pagination 
+        </ImageList> */}
+        {/* <Pagination 
           count={Math.ceil(posts.length/numPosts)} 
           defaultPage={1} boundaryCount={2} 
-          onChange={handlePages}/>
+          onChange={handlePages}/> */}
       </div>
       <PostModal key='postModal' postInfo={postInfo} open={open} handleClose={handleClose}/>
     </AnimatePresence>
