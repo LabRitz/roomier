@@ -347,20 +347,22 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                   </Select>
                 </FormControl>
 
-                <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
-                  <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
-                  <Select
-                    labelId="ppp-select-label"
-                    id="ppp-select"
-                    value={numPosts}
-                    onChange={handlePostsPerPage}
-                    input={<OutlinedInput id="ppp-select" label="# of Posts"/>}
-                  >
-                    {postsPerPage.map((opt, i) => (
-                      <MenuItem key={i} value={opt}>{opt}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                {!showMetrics && 
+                  <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
+                    <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
+                    <Select
+                      labelId="ppp-select-label"
+                      id="ppp-select"
+                      value={numPosts}
+                      onChange={handlePostsPerPage}
+                      input={<OutlinedInput id="ppp-select" label="# of Posts"/>}
+                    >
+                      {postsPerPage.map((opt, i) => (
+                        <MenuItem key={i} value={opt}>{opt}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                }
 
                 <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
                   <InputLabel id="filter-chip-label">Options</InputLabel>
