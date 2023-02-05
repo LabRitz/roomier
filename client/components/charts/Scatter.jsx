@@ -20,7 +20,7 @@ const y = (d) => {
 let tooltipTimeout;
 
 export default withTooltip(
-  ({ posts, width, height, showControls = true, hideTooltip, showTooltip, tooltipOpen, tooltipData, tooltipLeft, tooltipTop }) => {        
+  ({ posts, width, height, showControls = false, hideTooltip, showTooltip, tooltipOpen, tooltipData, tooltipLeft, tooltipTop }) => {        
     if (width < 10) return null;
     const [showVoronoi, setShowVoronoi] = useState(showControls);
     const svgRef = useRef(null);
