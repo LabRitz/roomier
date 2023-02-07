@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 
-import PlacesAutocomplete, { getLatLng, geocodeByAddress } from 'react-places-autocomplete';
-
+import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
+import { useTheme } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import Paper from '@mui/material/Paper';
 import CardMedia from '@mui/material/CardMedia';
@@ -22,9 +22,11 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CheckIcon from '@mui/icons-material/Check';
 import Box from "@mui/system/Box";
-import Fab from "@mui/material/Fab";
 import CircularProgress from '@mui/material/CircularProgress';
 import CollectionsIcon from '@mui/icons-material/Collections';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import Chip from '@mui/material/Chip';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -35,11 +37,22 @@ import Geocode from "react-geocode";
 
 import "../stylesheets/createPost.scss";
 
+const getStyles = (filter, filterName, theme) => {
+  return {
+    fontWeight:
+      filterName.indexOf(filter) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 const genders = ['male', 'female', 'no-preference']
 const filters = ['pets', 'smoking', 'parking'];
 
 const CreatePost = ({ userInfo }) => {
+  const theme = useTheme();
+
   // Initialize states for
   const [imageUpload, setImageUpload] = useState(null);
   const [index, setIndex] = useState(0) // Index for gallery image
@@ -48,8 +61,13 @@ const CreatePost = ({ userInfo }) => {
   const [imgLoad, setImgLoad] = useState(false)
   const timer = useRef()
 
-  const [location, setLocation] = useState({})
-  const [geoLoc, setGeoLoc] = useState({})
+  const [location, setLocation] = useState({
+    street1: '',
+    street2: '',
+    city: '',
+    state: '',
+    zipCode: '',
+  })
   const [price, setPrice] = useState(0)
   const [utilities, setUtilities] = useState(0)
   const [br, setBR] = useState(0)
@@ -58,9 +76,7 @@ const CreatePost = ({ userInfo }) => {
   const [date, setDate] = useState(Date.now())
   const [gender, setGender] = useState('')
   const [desc, setDesc] = useState('')
-  const [pets, setPets] = useState(false)
-  const [smoking, setSmoking] = useState(false)
-  const [parking, setParking] = useState(false)
+  const [filterArr, setFilterArr] = useState([])
   const [condition, setCondition] = useState('')
 
   const firebaseUploadImage = async () => {
@@ -119,9 +135,6 @@ const CreatePost = ({ userInfo }) => {
         i++
       }
       setLocation(newAddress)
-
-      const geo = await getLatLng(results[0])
-      setGeoLoc(geo)
     } catch(error) {
       console.error('Error selecting street', error);
     }
@@ -191,30 +204,15 @@ const CreatePost = ({ userInfo }) => {
   }
 
   // Set filter array in Home state with each change
-  // const handleChip = (event) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   let isPets = false
-  //   let isSmoking = false 
-  //   let isParking = false
-  //   value.split(',').forEach(el => {
-  //     switch (el) {
-  //       case 'pets':
-  //         isPets = true
-  //       case 'smoking':
-  //         isSmoking = true
-  //       case 'parking':
-  //         isParking = true 
-  //       default:
-  //         return
-  //     }
-  //   })
-
-  //   setPets(isPets)
-  //   setSmoking(isSmoking)
-  //   setParking(isParking)
-  // };
+  const handleChip = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setFilterArr(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value
+    );
+  };
 
   const createPostSubmissions = async (e) => {
     e.preventDefault();
@@ -259,9 +257,9 @@ const CreatePost = ({ userInfo }) => {
           BR: br,
           BA: ba,
           sqFt: sqft,
-          pets: pets,
-          smoking: smoking,
-          parking: parking,
+          pets: (filterArr.indexOf('pets') > -1),
+          smoking: (filterArr.indexOf('smoking') > -1),
+          parking: (filterArr.indexOf('parking') > -1),
           condition: condition,
         },
         moveInDate: date,
@@ -291,7 +289,6 @@ const CreatePost = ({ userInfo }) => {
   // Clear form document
   const handleClear = () => {
     setLocation({})
-    setGeoLoc({})
     setPrice(0)
     setUtilities(0)
     setBR(0)
@@ -358,40 +355,13 @@ const CreatePost = ({ userInfo }) => {
                   />
                 )}
               </Box>
-
-              {/* <Box size="small" sx={{ m: 1, position: 'relative' }}>
-                <Fab
-                  aria-label="save"
-                  color="primary"
-                  onClick={firebaseUploadImage}
-                >
-                  {success ? <CheckIcon /> : <FileUploadIcon />}
-                </Fab>
-                {imgLoad && (
-                  <CircularProgress
-                    size={68}
-                    sx={{
-                      position: 'absolute',
-                      top: -6,
-                      left: -6,
-                      zIndex: 1,
-                    }}
-                  />
-                )}
-              </Box> */}
-
-              {/* <Tooltip title="Upload image">
-                <Button color="inherit" onClick={firebaseUploadImage} size="small">
-                  <FileUploadIcon />
-                </Button>
-              </Tooltip> */}
             </div>
             <IconButton color="inherit" onClick={() => handleClick(1)}>
               <ArrowForwardIosIcon fontSize='medium'/>
             </IconButton>
           </CardActions>
         </Paper>
-        <Paper elevation={0} sx={{p:2, pb:1, pr:1, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
+        <Paper elevation={0} sx={{p:2, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
           <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr', columnGap:'8px', m: 1 }} size="small">
             <PlacesAutocomplete
               value={location.street1}
@@ -402,7 +372,7 @@ const CreatePost = ({ userInfo }) => {
               }}
               >
               {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                <div>
+                <div style={{position:'relative'}}>
                   <TextField
                     required
                     label="Street Address"
@@ -416,12 +386,12 @@ const CreatePost = ({ userInfo }) => {
                       }),
                       style: {fontSize: 14}
                     }} />
-                  <div className="autocomplete-dropdown-container">
+                  <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
                     {loading && <div>Loading...</div>}
                     {suggestions.map((suggestion) => {
                       const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                      const style = suggestion.active ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                      const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
                       return (
                         <div {...getSuggestionItemProps(suggestion, { className, style })} >
                           <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
@@ -440,7 +410,7 @@ const CreatePost = ({ userInfo }) => {
             />
           </FormControl>
 
-          <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
+          <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr 1fr', columnGap:'8px', m: 1}} size="small">
             <PlacesAutocomplete
               data-testid='cityInput'
               value={location.city}
@@ -450,14 +420,15 @@ const CreatePost = ({ userInfo }) => {
                 componentRestrictions: { country: ['us'] },
                 types: ['locality']
               }}
+
               >
               {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                <div>
+                <div style={{position:'relative'}}>
                   <TextField
                     required
                     label="City"
                     value={location.city}
-                    sx={{ mr:1 }}
+                    sx={{ mr:1, width: '100%' }}
                     size="small"
                     inputProps={{
                       ...getInputProps({
@@ -466,12 +437,12 @@ const CreatePost = ({ userInfo }) => {
                       }),
                       style: {fontSize: 14}
                     }} />
-                  <div className="autocomplete-dropdown-container">
+                  <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
                     {loading && <div>Loading...</div>}
                     {suggestions.map((suggestion) => {
                       const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                      const style = suggestion.active ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                      const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
                       return (
                         <div {...getSuggestionItemProps(suggestion, { className, style })} >
                           <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
@@ -493,12 +464,12 @@ const CreatePost = ({ userInfo }) => {
               }}
               >
               {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                <div>
+                <div style={{position:'relative'}}>
                   <TextField
                     required
                     label="State"
                     value={location.state}
-                    sx={{ mr:1, width:60 }}
+                    sx={{ mr:1, width: '100%'}}
                     size="small"
                     inputProps={{
                       ...getInputProps({
@@ -507,12 +478,12 @@ const CreatePost = ({ userInfo }) => {
                       }),
                       style: {fontSize: 14}
                     }} />
-                  <div className="autocomplete-dropdown-container">
+                  <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
                     {loading && <div>Loading...</div>}
                     {suggestions.map((suggestion) => {
                       const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                      const style = suggestion.active ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                      const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
                       return (
                         <div {...getSuggestionItemProps(suggestion, { className, style })} >
                           <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
@@ -527,14 +498,14 @@ const CreatePost = ({ userInfo }) => {
               required
               label="Zip code"
               value={location.zipCode}
-              sx={{ width:100 }}
+              sx={{ width: '100%' }}
               inputProps={{style: {fontSize: 14}}}
               size="small"
             />
           </FormControl>
         
           <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
-            <FormControl sx={{ mr: 1, width: 150 }} size="small">
+            <FormControl sx={{ mr: 1, width: '30%' }} size="small">
               <InputLabel required htmlFor="outlined-adornment-amount">Amount</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-amount"
@@ -545,7 +516,18 @@ const CreatePost = ({ userInfo }) => {
                 inputProps={{style: {fontSize: 14}}}
                 />
             </FormControl>
-            <FormControl sx={{ width:200 }} size="small">
+            <FormControl sx={{ mr: 1, width: '30%' }} size="small">
+              <InputLabel required htmlFor="outlined-adornment-amount">Utilities</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                startAdornment={<InputAdornment sx={{ fontSize:12 }} position="start">$</InputAdornment>}
+                value={utilities}
+                label="Utilities"
+                onChange={(e) => {if (checkNum(e)) setUtilities(e.target.value)}}
+                inputProps={{style: {fontSize: 14}}}
+                />
+            </FormControl>
+            <FormControl sx={{ width: '40%' }} size="small">
               <LocalizationProvider dateAdapter={AdapterMoment}>
                 <DesktopDatePicker
                   label="Available"
@@ -582,13 +564,16 @@ const CreatePost = ({ userInfo }) => {
               sx={{ mr:1, width: 70}}
               size="small"
               onChange={(e) => {if (checkNum(e)) setSqft(e.target.value) }}
-              inputProps={{ style: {fontSize: 14} }} />
-            <FormControl sx={{minWidth: 200 }} size="small">
+              inputProps={{ style: {fontSize: 14} }} /> 
+          </FormControl>
+
+          <FormControl sx={{ m:1, display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap:'8px' }} size="small">
+            <FormControl sx={{ width:'100%' }} size="small">
               <InputLabel id="roommate-select-label" sx={{ fontSize: 14 }}>Looking for...</InputLabel>
               <Select
                 labelId="roommate-select-label"
                 id="roommate-select"
-                sx={{ fontSize: 14, minWidth: 200 }}
+                sx={{ fontSize: 14 }}
                 value={gender}
                 onChange={handleGender}
                 input={<OutlinedInput id="roommate-select" label="Looking for..."/>}
@@ -597,9 +582,8 @@ const CreatePost = ({ userInfo }) => {
                   <MenuItem key={i} value={opt} sx={{ fontSize: 14 }}>{opt}</MenuItem>
                 ))}
               </Select>
-            </FormControl> 
-
-            {/* <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
+            </FormControl>
+            <FormControl sx={{ width:'100%' }} size="small">
               <InputLabel id="filter-chip-label">Options</InputLabel>
                 <Select
                   labelId="filter-chip-label"
@@ -607,6 +591,7 @@ const CreatePost = ({ userInfo }) => {
                   multiple
                   value={filterArr}
                   onChange={handleChip}
+                  sx={{ fontSize: 14, width:'100%' }}
                   input={<OutlinedInput id="select-filter" label="Options" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
@@ -627,8 +612,9 @@ const CreatePost = ({ userInfo }) => {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>       */}
+            </FormControl>    
           </FormControl>
+
           
           <FormControl sx={{ display: 'block', m:1 }} size="small">
             <TextField
@@ -651,8 +637,8 @@ const CreatePost = ({ userInfo }) => {
               value={desc}
               size="small"
               multiline
-              minRows={8}
-              maxRows={12}
+              minRows={3}
+              maxRows={5}
               fullWidth
               onChange={(e) => setDesc(e.target.value)}
               inputProps={{style: {fontSize: 10}}}
