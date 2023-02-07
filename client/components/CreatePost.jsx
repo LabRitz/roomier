@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import PlacesAutocomplete, { getLatLng, geocodeByAddress } from 'react-places-autocomplete';
 
@@ -20,6 +20,11 @@ import Tooltip from '@mui/material/Tooltip';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import CheckIcon from '@mui/icons-material/Check';
+import Box from "@mui/system/Box";
+import Fab from "@mui/material/Fab";
+import CircularProgress from '@mui/material/CircularProgress';
+import CollectionsIcon from '@mui/icons-material/Collections';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -39,7 +44,9 @@ const CreatePost = ({ userInfo }) => {
   const [imageUpload, setImageUpload] = useState(null);
   const [index, setIndex] = useState(0) // Index for gallery image
   const [imgArr, setImgArr] = useState([]);
+  const [success, setSuccess] = useState(false);
   const [imgLoad, setImgLoad] = useState(false)
+  const timer = useRef()
 
   const [location, setLocation] = useState({})
   const [geoLoc, setGeoLoc] = useState({})
@@ -58,13 +65,21 @@ const CreatePost = ({ userInfo }) => {
 
   const firebaseUploadImage = async () => {
     if (imageUpload) {
+      setSuccess(false)
+      setImgLoad(true)
       const imgPath = `images/${userInfo.username}/${imageUpload.name}`
       const imgRef = ref(storage, imgPath);
       try {
         await uploadBytes(imgRef, imageUpload);
         const imgUrl = await getDownloadURL(imgRef);
         setImgArr([...imgArr, { imgUrl: imgUrl, imgPath: imgPath }]);
-        document.querySelector("#imgPreview").src = imgUrl;
+        setIndex(imgArr.length)
+        setImgLoad(false)
+        setSuccess(true);
+        timer.current = window.setTimeout(() => {
+          setSuccess(false);
+          setImageUpload(null)
+        }, 1250);
       } catch (err) {
         console.log('ERROR: Cannot upload to Firebase')
       }
@@ -72,6 +87,12 @@ const CreatePost = ({ userInfo }) => {
       alert("No image selected");
     }
   };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
 
 
   const handleStreet1Change = (address) => {
@@ -300,23 +321,77 @@ const CreatePost = ({ userInfo }) => {
               <ArrowBackIosNewIcon fontSize='medium'/>
             </IconButton>
             <div className="imageUpload">
-              <input
-                type="file"
-                multiple
-                onChange={(e) => setImageUpload(e.target.files[0])}
-              ></input>
-              <Tooltip title="Upload image">
+              <Box sx={{ m: 1 }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                >
+                  <CollectionsIcon />
+                  <input
+                    type="file"
+                    multiple
+                    hidden
+                    onChange={(e) => setImageUpload(e.target.files[0])}
+                  />
+                </Button>
+              </Box>
+              <Box sx={{ m: 1, position: 'relative' }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  disabled={imgLoad}
+                  onClick={firebaseUploadImage}
+                  sx={{"&:hover": {transform: "scale(1.0)"}}}
+                >
+                  {success ? <CheckIcon /> : <FileUploadIcon />}
+                </Button>
+                {imgLoad && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-12px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
+              </Box>
+
+              {/* <Box size="small" sx={{ m: 1, position: 'relative' }}>
+                <Fab
+                  aria-label="save"
+                  color="primary"
+                  onClick={firebaseUploadImage}
+                >
+                  {success ? <CheckIcon /> : <FileUploadIcon />}
+                </Fab>
+                {imgLoad && (
+                  <CircularProgress
+                    size={68}
+                    sx={{
+                      position: 'absolute',
+                      top: -6,
+                      left: -6,
+                      zIndex: 1,
+                    }}
+                  />
+                )}
+              </Box> */}
+
+              {/* <Tooltip title="Upload image">
                 <Button color="inherit" onClick={firebaseUploadImage} size="small">
                   <FileUploadIcon />
                 </Button>
-              </Tooltip>
+              </Tooltip> */}
             </div>
             <IconButton color="inherit" onClick={() => handleClick(1)}>
               <ArrowForwardIosIcon fontSize='medium'/>
             </IconButton>
           </CardActions>
         </Paper>
-        <Paper elevation={0} sx={{p:3, pt:2, pb:1, pr:1, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
+        <Paper elevation={0} sx={{p:2, pb:1, pr:1, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
           <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr', columnGap:'8px', m: 1 }} size="small">
             <PlacesAutocomplete
               value={location.street1}
