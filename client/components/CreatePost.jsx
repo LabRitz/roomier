@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import { useTheme } from '@mui/material/styles';
