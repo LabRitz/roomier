@@ -1,28 +1,101 @@
-import React, { Component, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+
+import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
+import { useTheme } from '@mui/material/styles';
+import CardActions from '@mui/material/CardActions';
+import Paper from '@mui/material/Paper';
+import CardMedia from '@mui/material/CardMedia';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem'
+import Tooltip from '@mui/material/Tooltip';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import CheckIcon from '@mui/icons-material/Check';
+import Box from "@mui/system/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import Chip from '@mui/material/Chip';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+
 import { storage } from "./firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
 
-import Gallery from "./Gallery.jsx";
-
 import "../stylesheets/createPost.scss";
 
+const getStyles = (filter, filterName, theme) => {
+  return {
+    fontWeight:
+      filterName.indexOf(filter) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
+const genders = ['male', 'female', 'no-preference']
+const filters = ['pets', 'smoking', 'parking'];
+
 const CreatePost = ({ userInfo }) => {
-  const userData = userInfo;
+  const theme = useTheme();
 
   // Initialize states for
   const [imageUpload, setImageUpload] = useState(null);
+  const [index, setIndex] = useState(0) // Index for gallery image
   const [imgArr, setImgArr] = useState([]);
+  const [success, setSuccess] = useState(false);
+  const [imgLoad, setImgLoad] = useState(false)
+  const timer = useRef()
+
+  const [location, setLocation] = useState({
+    street1: '',
+    street2: '',
+    city: '',
+    state: '',
+    zipCode: '',
+  })
+  const [price, setPrice] = useState(0)
+  const [utilities, setUtilities] = useState(0)
+  const [br, setBR] = useState(0)
+  const [ba, setBA] = useState(0)
+  const [sqft, setSqft] = useState(0)
+  const [date, setDate] = useState(Date.now())
+  const [gender, setGender] = useState('')
+  const [desc, setDesc] = useState('')
+  const [filterArr, setFilterArr] = useState([])
+  const [condition, setCondition] = useState('')
 
   const firebaseUploadImage = async () => {
     if (imageUpload) {
-      const imgPath = `images/${userData.username}/${imageUpload.name}`
+      setSuccess(false)
+      setImgLoad(true)
+      const imgPath = `images/${userInfo.username}/${imageUpload.name}`
       const imgRef = ref(storage, imgPath);
       try {
         await uploadBytes(imgRef, imageUpload);
         const imgUrl = await getDownloadURL(imgRef);
         setImgArr([...imgArr, { imgUrl: imgUrl, imgPath: imgPath }]);
-        document.querySelector("#imgPreview").src = imgUrl;
+        setIndex(imgArr.length)
+        setImgLoad(false)
+        setSuccess(true);
+        timer.current = window.setTimeout(() => {
+          setSuccess(false);
+          setImageUpload(null)
+        }, 1250);
       } catch (err) {
         console.log('ERROR: Cannot upload to Firebase')
       }
@@ -31,41 +104,127 @@ const CreatePost = ({ userInfo }) => {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+
+
+  const handleStreet1Change = (address) => {
+    const newAddress = {...location}
+    newAddress.street1 = address
+    setLocation(newAddress)
+  };
+
+  const handleStreet1 = async (address) => {
+    const newAddress = {...location}
+    try {
+      const results = await geocodeByAddress(address)
+      let i = 0
+      while (i < results[0].address_components.length) {
+        const res = results[0].address_components[i]
+        if (res.types.indexOf('street_number') != -1) {
+          newAddress.street1 = `${res.short_name} ${results[0].address_components[i+1].short_name}`
+          newAddress.street2= ''
+          i++
+        }
+        else if (res.types.indexOf('locality') != -1) newAddress.city = res.short_name
+        else if (res.types.indexOf('administrative_area_level_1') != -1) newAddress.state = res.short_name
+        else if (res.types.indexOf('postal_code') != -1) newAddress.zipCode = res.short_name
+        i++
+      }
+      setLocation(newAddress)
+    } catch(error) {
+      console.error('Error selecting street', error);
+    }
+  };
+
+  const handleCityChange = (city) => {
+    const newAddress = {...location}
+    newAddress.city = city
+    setLocation(newAddress)
+  };
+
+  const handleCity = async (address) => {
+    const newAddress = {...location}
+    try {
+      const results = await geocodeByAddress(address)
+      let i = 0
+      while (i < results[0].address_components.length) {
+        const res = results[0].address_components[i]
+        if (res.types.indexOf('locality') != -1) newAddress.city = res.short_name
+        else if (res.types.indexOf('administrative_area_level_1') != -1) newAddress.state = res.short_name
+        i++
+      }
+      newAddress.zipCode = ''
+      setLocation(newAddress)
+    } catch(error) {
+      console.error('Error selecting city', error);
+    }
+  };
+
+  const handleStateChange = (state) => {
+    const newAddress = {...location}
+    newAddress.state = state
+    setLocation(newAddress)
+  };
+
+  const handleState = async (address) => {
+    const newAddress = {...location}
+    try {
+      const results = await geocodeByAddress(address)
+      let i = 0
+      while (i < results[0].address_components.length) {
+        const res = results[0].address_components[i]
+        if (res.types.indexOf('administrative_area_level_1') != -1) newAddress.state = res.short_name
+        i++
+      }
+      newAddress.zipCode = ''
+      setLocation(newAddress)
+    } catch(error) {
+      console.error('Error selecting city', error);
+    }
+  };
+
+  const handleGender = (e) => { setGender(e.target.value) }
+
+  const handleDate = (val) => {setDate(val)}
+
+  // Validate whether input is number
+  const checkNum = (e) => {
+    const regex = /^[0-9\b]+$/;
+    return (e.target.value === "" || regex.test(e.target.value))
+  }
+
+  const handleClick = (dir) => {
+    if (index + dir < 0) setIndex(imgArr.length - 1)
+    else if (index + dir > imgArr.length - 1) setIndex(0)
+    else setIndex(index + dir);
+  }
+
+  // Set filter array in Home state with each change
+  const handleChip = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setFilterArr(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value
+    );
+  };
+
   const createPostSubmissions = async (e) => {
     e.preventDefault();
 
-    const address1 = document.getElementById("street1").value;
-    const address2 = document.getElementById("street2").value;
-    const city = document.getElementById("city").value;
-    const state = document.getElementById("state").value;
-    const zipCode = document.getElementById("zipCode").value;
-    const genderPreference = document.getElementById("dropDownMenu").value;
-    const bedroom = document.getElementById("bedroom").value;
-    const bathroom = document.getElementById("bathroom").value;
-    const sqft = document.getElementById("sqft").value;
-    const condition = document.getElementById("condition").value;
-    const utilities = document.getElementById("utilities").value;
-    const rent = document.getElementById("rent").value;
-    const bio = document.getElementById("bio").value;
-    const pets = JSON.parse(document.getElementById("dropDownMenuPets").value);
-    const smoking = JSON.parse(
-      document.getElementById("dropDownMenuSmoking").value
-    );
-    const parking = JSON.parse(
-      document.getElementById("dropDownMenuParking").value
-    );
-    const moveInDate = document.getElementById("date").value;
-
     if (
-      address1 === "" ||
-      city === "" ||
-      state === "" ||
-      zipCode === "" ||
-      genderPreference === "" ||
-      sqft === "" ||
-      utilities === "" ||
-      rent === "" ||
-      moveInDate === null
+      location.street1 === "" ||
+      location.city === "" ||
+      location.state === "" ||
+      location.zipCode === "" ||
+      gender === "" ||
+      sqft === 0 ||
+      price === 0 
     ) {
       alert("Must Require Input Fields");
     } 
@@ -73,13 +232,13 @@ const CreatePost = ({ userInfo }) => {
     let geoData
     try {
       const geo = await Geocode.fromAddress(
-        `${address1} ${city} ${state} ${zipCode}`
+        `${location.street1} ${location.city} ${location.state} ${location.zipCode}`
       );
       const { lat, lng } = geo.results[0].geometry.location;
       geoData = { lat: lat, lng: lng };
     } catch (err) {
       console.log(
-        `ERROR: Unable to resolve coordinates of ${address1} ${city} ${state} ${zipCode}:`,
+        `ERROR: Unable to resolve coordinates of ${location.street1} ${location.city} ${location.state} ${location.zipCode}:`,
         err
       );
     }
@@ -87,29 +246,27 @@ const CreatePost = ({ userInfo }) => {
     try {
       const reqBody = {
         address: {
-          street1: address1,
-          street2: address2,
-          city: city,
-          state: state,
-          zipCode: zipCode,
+          street1: location.street1,
+          street2: location.street2,
+          city: location.city,
+          state: location.state,
+          zipCode: location.zipCode,
         },
-        roommate: {
-          gender: genderPreference,
-        },
+        roommate: { gender: gender },
         description: {
-          BR: bedroom,
-          BA: bathroom,
+          BR: br,
+          BA: ba,
           sqFt: sqft,
-          pets: pets,
-          smoking: smoking,
-          parking: parking,
+          pets: (filterArr.indexOf('pets') > -1),
+          smoking: (filterArr.indexOf('smoking') > -1),
+          parking: (filterArr.indexOf('parking') > -1),
           condition: condition,
         },
-        moveInDate: moveInDate,
+        moveInDate: date,
         utilities: utilities,
-        rent: rent,
-        bio: bio,
-        userData: userData,
+        rent: price,
+        bio: desc,
+        userData: userInfo,
         applications: [],
         geoData: geoData,
         images: imgArr,
@@ -122,145 +279,387 @@ const CreatePost = ({ userInfo }) => {
       const data = await res.json()
       if (data) {
         console.log("SUCCESS: Created post", data);
-
-        // Clear form document
-        document.getElementById("street1").value = "";
-        document.getElementById("street2").value = "";
-        document.getElementById("city").value = "";
-        document.getElementById("state").value = "";
-        document.getElementById("zipCode").value = "";
-        document.getElementById("dropDownMenu").value = "";
-        document.getElementById("bedroom").value = "";
-        document.getElementById("bathroom").value = "";
-        document.getElementById("sqft").value = "";
-        document.getElementById("condition").value = "";
-        document.getElementById("utilities").value = "";
-        document.getElementById("rent").value = "";
-        document.getElementById("bio").value = "";
-        document.getElementById("date").value === null;
-        setImgArr([]);
+        handleClear()
       }
     } catch (err) {
       console.log("ERROR: POST request in createPost: ", err);
     }    
   };
 
+  // Clear form document
+  const handleClear = () => {
+    setLocation({})
+    setPrice(0)
+    setUtilities(0)
+    setBR(0)
+    setBA(0)
+    setSqft(0)
+    setDate(Date.now())
+    setGender('')
+    setDesc('')
+    setPets(false)
+    setSmoking(false)
+    setParking(false)
+    setCondition('')
+    setImgArr([]);
+  }
+
   return (
     <div className="createPost">
-      <Gallery imgArr={imgArr} />
-      <div className="createPostRoute">
-        <div className="price">
-          <div className="imageUpload">
-            <input
-              type={"file"}
-              multiple
-              onChange={(e) => setImageUpload(e.target.files[0])}
-            ></input>
-            <button type="submit" onClick={firebaseUploadImage}>
-              Upload Image
-            </button>
-          </div>
-          <h2>Move In Date *</h2>
-          <input type={"date"} id="date"></input>
-          <h2>List Price *</h2>
-          <div className="cost">
-            <h3 id="rentTag">Rent *</h3>
-            <input type={"number"} id="rent"></input>
-            <h3 id="utilitiesTag">Utilities *</h3>
-            <input type={"number"} id="utilities"></input>
-          </div>
-          <div className="preference">
-            <h3 id="genderTag">Gender Preference *</h3>
-            <select name="genders" id="dropDownMenu">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="no-preference">No-preference</option>
-            </select>
-          </div>
-        </div>
-        <div className="house">
-          <h2>Listing Address</h2>
-
-          <h3 id="addressTag">Address *</h3>
-          <div className="address">
-            <input
-              type={"text"}
-              id="street1"
-              placeholder="Street address or P.O. Box"
-            ></input>
-            <input
-              type={"text"}
-              id="street2"
-              placeholder="Apt, suite, unit, building, floor, etc"
-            ></input>
-          </div>
-
-          <h5 id="cityTag">City *</h5>
-          <input type={"text"} id="city"></input>
-
-          <h5 id="stateTag">State *</h5>
-          <input type={"text"} id="state"></input>
-
-          <h5 id="zipTag">Zip Code *</h5>
-          <input type={"text"} id="zipCode"></input>
-        </div>
-
-        <div className="description">
-          <h3 id="DescriptionTag">Description </h3>
-          <div className="basic">
-            <div>
-              <h5 id="bedroomTag">Bedrooms *</h5>
-              <input type={"number"} id="bedroom"></input>
+      <div className='postForm'>
+        <Paper elevation={0} sx={{p: 2, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
+          <CardMedia
+            component="img"
+            height="300"
+            image={(!imgArr[index]) ? defaultImg : imgArr[index]['imgUrl']}
+          />
+          <CardActions sx={{display: 'flex', justifyContent:'space-around'}}>
+            <IconButton color="inherit" onClick={() => handleClick(-1)}>
+              <ArrowBackIosNewIcon fontSize='medium'/>
+            </IconButton>
+            <div className="imageUpload">
+              <Box sx={{ m: 1 }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                >
+                  <CollectionsIcon />
+                  <input
+                    type="file"
+                    multiple
+                    hidden
+                    onChange={(e) => setImageUpload(e.target.files[0])}
+                  />
+                </Button>
+              </Box>
+              <Box sx={{ m: 1, position: 'relative' }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  disabled={imgLoad}
+                  onClick={firebaseUploadImage}
+                  sx={{"&:hover": {transform: "scale(1.0)"}}}
+                >
+                  {success ? <CheckIcon /> : <FileUploadIcon />}
+                </Button>
+                {imgLoad && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-12px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
+              </Box>
             </div>
-            <div>
-              <h5 id="bathroomTag">Bathrooms *</h5>
-              <input type={"number"} id="bathroom"></input>
-            </div>
-            <div>
-              <h5 id="sqftTag">Sqft *</h5>
-              <input type={"number"} id="sqft"></input>
-            </div>
+            <IconButton color="inherit" onClick={() => handleClick(1)}>
+              <ArrowForwardIosIcon fontSize='medium'/>
+            </IconButton>
+          </CardActions>
+        </Paper>
+        <Paper elevation={0} sx={{p:2, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
+          <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr', columnGap:'8px', m: 1 }} size="small">
+            <PlacesAutocomplete
+              value={location.street1}
+              onChange={handleStreet1Change}
+              onSelect={handleStreet1}
+              searchOptions={{
+                componentRestrictions: { country: ['us'] }
+              }}
+              >
+              {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                <div style={{position:'relative'}}>
+                  <TextField
+                    required
+                    label="Street Address"
+                    value={location.street1}
+                    sx={{ mr:1, width: '100%' }}
+                    size="small"
+                    inputProps={{
+                      ...getInputProps({
+                        placeholder: 'Search Places ...',
+                        className: 'location-search-input',
+                      }),
+                      style: {fontSize: 14}
+                    }} />
+                  <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
+                    {loading && <div>Loading...</div>}
+                    {suggestions.map((suggestion) => {
+                      const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
+                      const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
+                      return (
+                        <div {...getSuggestionItemProps(suggestion, { className, style })} >
+                          <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </PlacesAutocomplete>
+            <TextField
+              label="Apt, Suite, Unit, etc."
+              value={location.street2}
+              inputProps={{ style: {fontSize: 14} }}
+              size="small"
+            />
+          </FormControl>
+
+          <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr 1fr', columnGap:'8px', m: 1}} size="small">
+            <PlacesAutocomplete
+              data-testid='cityInput'
+              value={location.city}
+              onChange={handleCityChange}
+              onSelect={handleCity}
+              searchOptions={{
+                componentRestrictions: { country: ['us'] },
+                types: ['locality']
+              }}
+
+              >
+              {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                <div style={{position:'relative'}}>
+                  <TextField
+                    required
+                    label="City"
+                    value={location.city}
+                    sx={{ mr:1, width: '100%' }}
+                    size="small"
+                    inputProps={{
+                      ...getInputProps({
+                        placeholder: 'Search Places ...',
+                        className: 'location-search-input',
+                      }),
+                      style: {fontSize: 14}
+                    }} />
+                  <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
+                    {loading && <div>Loading...</div>}
+                    {suggestions.map((suggestion) => {
+                      const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
+                      const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
+                      return (
+                        <div {...getSuggestionItemProps(suggestion, { className, style })} >
+                          <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </PlacesAutocomplete>
+
+            <PlacesAutocomplete
+              value={location.state}
+              onChange={handleStateChange}
+              onSelect={handleState}
+              searchOptions={{
+                componentRestrictions: { country: ['us'] },
+                types: ['administrative_area_level_1']
+              }}
+              >
+              {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                <div style={{position:'relative'}}>
+                  <TextField
+                    required
+                    label="State"
+                    value={location.state}
+                    sx={{ mr:1, width: '100%'}}
+                    size="small"
+                    inputProps={{
+                      ...getInputProps({
+                        placeholder: 'Search Places ...',
+                        className: 'location-search-input',
+                      }),
+                      style: {fontSize: 14}
+                    }} />
+                  <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
+                    {loading && <div>Loading...</div>}
+                    {suggestions.map((suggestion) => {
+                      const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
+                      const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
+                      return (
+                        <div {...getSuggestionItemProps(suggestion, { className, style })} >
+                          <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </PlacesAutocomplete>
+            <TextField
+              required
+              label="Zip code"
+              value={location.zipCode}
+              sx={{ width: '100%' }}
+              inputProps={{style: {fontSize: 14}}}
+              size="small"
+            />
+          </FormControl>
+        
+          <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
+            <FormControl sx={{ mr: 1, width: '30%' }} size="small">
+              <InputLabel required htmlFor="outlined-adornment-amount">Amount</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                startAdornment={<InputAdornment sx={{ fontSize:12 }} position="start">$</InputAdornment>}
+                value={price}
+                label="Amount"
+                onChange={(e) => {if (checkNum(e)) setPrice(e.target.value)}}
+                inputProps={{style: {fontSize: 14}}}
+                />
+            </FormControl>
+            <FormControl sx={{ mr: 1, width: '30%' }} size="small">
+              <InputLabel required htmlFor="outlined-adornment-amount">Utilities</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-amount"
+                startAdornment={<InputAdornment sx={{ fontSize:12 }} position="start">$</InputAdornment>}
+                value={utilities}
+                label="Utilities"
+                onChange={(e) => {if (checkNum(e)) setUtilities(e.target.value)}}
+                inputProps={{style: {fontSize: 14}}}
+                />
+            </FormControl>
+            <FormControl sx={{ width: '40%' }} size="small">
+              <LocalizationProvider dateAdapter={AdapterMoment}>
+                <DesktopDatePicker
+                  label="Available"
+                  inputFormat="MM/DD/YYYY"
+                  value={date}
+                  onChange={handleDate}
+                  renderInput={(params) => <TextField size="small" inputProps={{ style: {fontSize: 12} }} {...params} />}
+                />
+              </LocalizationProvider>
+            </FormControl>
+          </FormControl>
+
+          <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
+            <TextField
+              required
+              label="BR"
+              value={br}
+              sx={{ mr:1, width: 50}}
+              size="small"
+              onChange={(e) => {if (checkNum(e)) setBR(e.target.value) }}
+              inputProps={{ style: {fontSize: 14} }} />
+            <TextField
+              required
+              label="BA"
+              value={ba}
+              sx={{ mr:1, width: 50}}
+              size="small"
+              onChange={(e) => {if (checkNum(e)) setBA(e.target.value) }}
+              inputProps={{ style: {fontSize: 14} }} />
+            <TextField
+              required
+              label="sqft"
+              value={sqft}
+              sx={{ mr:1, width: 70}}
+              size="small"
+              onChange={(e) => {if (checkNum(e)) setSqft(e.target.value) }}
+              inputProps={{ style: {fontSize: 14} }} /> 
+          </FormControl>
+
+          <FormControl sx={{ m:1, display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap:'8px' }} size="small">
+            <FormControl sx={{ width:'100%' }} size="small">
+              <InputLabel id="roommate-select-label" sx={{ fontSize: 14 }}>Looking for...</InputLabel>
+              <Select
+                labelId="roommate-select-label"
+                id="roommate-select"
+                sx={{ fontSize: 14 }}
+                value={gender}
+                onChange={handleGender}
+                input={<OutlinedInput id="roommate-select" label="Looking for..."/>}
+              >
+                {genders.map((opt, i) => (
+                  <MenuItem key={i} value={opt} sx={{ fontSize: 14 }}>{opt}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl sx={{ width:'100%' }} size="small">
+              <InputLabel id="filter-chip-label">Options</InputLabel>
+                <Select
+                  labelId="filter-chip-label"
+                  id="filter-chip"
+                  multiple
+                  value={filterArr}
+                  onChange={handleChip}
+                  sx={{ fontSize: 14, width:'100%' }}
+                  input={<OutlinedInput id="select-filter" label="Options" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                >
+                {filters.map((filter) => (
+                  <MenuItem
+                    key={filter}
+                    value={filter}
+                    style={getStyles(filter, filterArr, theme)}
+                  >
+                    <Checkbox checked={filterArr.indexOf(filter) > -1} />
+                    <ListItemText primary={filter} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>    
+          </FormControl>
+
+          
+          <FormControl sx={{ display: 'block', m:1 }} size="small">
+            <TextField
+              label="Condition"
+              value={condition}
+              size="small"
+              multiline
+              minRows={1}
+              maxRows={2}
+              fullWidth
+              onChange={(e) => setCondition(e.target.value)}
+              inputProps={{style: {fontSize: 10}}}
+              sx={{ overflowY:'scroll' }}
+            />
+          </FormControl>
+
+          <FormControl sx={{ display: 'block', m:1 }} size="small">
+            <TextField
+              label="Description"
+              value={desc}
+              size="small"
+              multiline
+              minRows={3}
+              maxRows={5}
+              fullWidth
+              onChange={(e) => setDesc(e.target.value)}
+              inputProps={{style: {fontSize: 10}}}
+              sx={{ overflowY:'scroll', height: '100%' }}
+            />
+          </FormControl>
+
+          <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around', alignItems: 'center'}}>
+            <Tooltip title="Clear form">
+              <Button color="inherit" onClick={handleClear} size="small">
+                <PlaylistRemoveIcon />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Upload post">
+              <Button color="inherit" onClick={createPostSubmissions} size="small">
+                <CloudUploadIcon />
+              </Button>
+            </Tooltip>
           </div>
 
-          <h5 id="petsTag">Pets</h5>
-
-          <select name="pets" id="dropDownMenuPets">
-            <option value={true}>Allowed</option>
-            <option value={false}>Not Allowed</option>
-          </select>
-
-          <h5 id="smokingTag">Smoking</h5>
-          <select name="smoking" id="dropDownMenuSmoking">
-            <option value={true}>Allowed</option>
-            <option value={false}>Not Allowed</option>
-          </select>
-
-          <h5 id="parkingTag">Parking</h5>
-          <select name="parking" id="dropDownMenuParking">
-            <option value={true}>Allowed</option>
-            <option value={false}>Not Allowed</option>
-          </select>
-
-          <h5 id="conditionTag">Condition</h5>
-          <input type={"text"} id="condition"></input>
-        </div>
-        <div className="bio">
-          <h3 id="bioTag">Bio</h3>
-          <input type={"text"} id="bio"></input>
-          <button type="submit" id="submitPost" onClick={createPostSubmissions}>
-            <h2>Post</h2>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="36"
-              height="36"
-              fill="currentColor"
-              className="bi bi-send-fill"
-              viewBox="0 0 16 16"
-            >
-              <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-            </svg>
-          </button>
-        </div>
+        </Paper>
       </div>
     </div>
   );
