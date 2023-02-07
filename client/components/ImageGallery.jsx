@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { storage } from './firebase'
+import { storage } from './utils/firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 import CardActions from '@mui/material/CardActions';
