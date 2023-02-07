@@ -2,14 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import PlacesAutocomplete, { getLatLng, geocodeByAddress } from 'react-places-autocomplete';
 
-import CardActions from '@mui/material/CardActions';
 import Paper from '@mui/material/Paper';
-import CardMedia from '@mui/material/CardMedia';
-import IconButton from '@mui/material/IconButton';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -21,12 +15,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
+import ImageGallery from './ImageGallery.jsx';
 
 const genders = ['male', 'female', 'no-preference']
 
-const EditCard = ({ postInfo, getProfilePosts }) => {
+const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
   const {
+    _id,
     address,
     roommate,
     description,
@@ -47,50 +42,7 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
   const [gender, setGender] = useState(roommate.gender)
   const [desc, setDesc] = useState(bio)
   const [geoLoc, setGeoLoc] = useState(geoData)
-  const [index, setIndex] = useState(0) // Index for gallery image
   const [imgArr, setImgArr] = useState(images)
- 
-  // Update the form based on change in post choice
-  useEffect(() => {
-    handleUndo()
-  }, [postInfo])
-
-  const handleClick = (dir) => {
-    if (index + dir < 0) setIndex(imgArr.length - 1)
-    else if (index + dir > imgArr.length - 1) setIndex(0)
-    else setIndex(index + dir);
-  }
-
-  const handleUpload = async () => {
-    // Need to include Firebase logic
-  }
-
-  // Remove picture from image array
-  const handleRemove = async () => {
-    // Handle for old image data structure
-    if (!images[index]['imgUrl']) return alert('Image uploaded on legacy image. Cannot delete. ') 
-
-    const reqBody = { 
-      imgUrl: images[index]['imgUrl'], 
-      imgPath: images[index]['imgPath'] 
-    }
-
-    try {  
-      const res = await fetch(`/posts/image/remove/${postInfo._id}`, {
-        method:'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reqBody)
-      })
-      const data = await res.json()
-      if (data.modifiedCount == 1) {
-        alert('Image successfully removed!')
-        getProfilePosts()
-      }
-      else alert('ERROR: Unable to remove image')
-    } catch (err) {
-      console.log('ERROR: Cannot remove image', err)
-    }
-  }
 
   const handleStreet1Change = (address) => {
     const newAddress = {...location}
@@ -224,27 +176,15 @@ const EditCard = ({ postInfo, getProfilePosts }) => {
     setImgArr(images)
   }
 
+  // Update the form based on change in post choice
+  useEffect(() => {
+    handleUndo()
+  }, [postInfo]) 
+
   return (
     <div style={{display: 'flex', flexDirection:'row', minWidth:'300px', height:'100%'}}>
-      <Paper elevation={0} sx={{display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
-        <CardMedia
-          component="img"
-          height="300"
-          image={(!images[index]) ? defaultImg : (images[index]['imgUrl'] == undefined) ? Object.keys(images[index])[0] : images[index]['imgUrl']}
-
-        />
-        <CardActions sx={{display: 'flex', justifyContent:'space-evenly'}}>
-          <IconButton color="inherit" onClick={() => handleClick(-1)}>
-            <ArrowBackIosNewIcon fontSize='medium'/>
-          </IconButton>
-          <Button onClick={(e) => handleUpload(e)} size="small">Upload Image</Button>
-          <Button onClick={(e) => handleRemove(e)} size="small">Remove Image</Button>
-          <IconButton color="inherit" onClick={() => handleClick(1)}>
-            <ArrowForwardIosIcon fontSize='medium'/>
-          </IconButton>
-        </CardActions>
-      </Paper>
-      <Paper elevation={0} sx={{p:3, pt:2, pb:1, pr:1, width:'50%'}}>
+      <ImageGallery images={imgArr} setImages={setImgArr} view={'edit'} userInfo={userInfo} postId={_id}/>
+      <Paper elevation={0} sx={{p:1, width:'50%'}}>
         <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr', columnGap:'8px', m: 1 }} size="small">
           <PlacesAutocomplete
             value={location.street1}
