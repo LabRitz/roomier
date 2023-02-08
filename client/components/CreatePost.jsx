@@ -1,13 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import { useTheme } from '@mui/material/styles';
-import CardActions from '@mui/material/CardActions';
 import Paper from '@mui/material/Paper';
-import CardMedia from '@mui/material/CardMedia';
-import IconButton from '@mui/material/IconButton';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
@@ -19,11 +14,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import CheckIcon from '@mui/icons-material/Check';
 import Box from "@mui/system/Box";
-import CircularProgress from '@mui/material/CircularProgress';
-import CollectionsIcon from '@mui/icons-material/Collections';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import Chip from '@mui/material/Chip';
@@ -31,9 +22,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
-import { storage } from "./firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Geocode from "react-geocode";
+
+import ImageGallery from "./ImageGallery.jsx";
 
 import "../stylesheets/createPost.scss";
 
@@ -46,20 +37,11 @@ const getStyles = (filter, filterName, theme) => {
   };
 }
 
-const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 const genders = ['male', 'female', 'no-preference']
 const filters = ['pets', 'smoking', 'parking'];
 
 const CreatePost = ({ userInfo }) => {
   const theme = useTheme();
-
-  // Initialize states for
-  const [imageUpload, setImageUpload] = useState(null);
-  const [index, setIndex] = useState(0) // Index for gallery image
-  const [imgArr, setImgArr] = useState([]);
-  const [success, setSuccess] = useState(false);
-  const [imgLoad, setImgLoad] = useState(false)
-  const timer = useRef()
 
   const [location, setLocation] = useState({
     street1: '',
@@ -78,38 +60,7 @@ const CreatePost = ({ userInfo }) => {
   const [desc, setDesc] = useState('')
   const [filterArr, setFilterArr] = useState([])
   const [condition, setCondition] = useState('')
-
-  const firebaseUploadImage = async () => {
-    if (imageUpload) {
-      setSuccess(false)
-      setImgLoad(true)
-      const imgPath = `images/${userInfo.username}/${imageUpload.name}`
-      const imgRef = ref(storage, imgPath);
-      try {
-        await uploadBytes(imgRef, imageUpload);
-        const imgUrl = await getDownloadURL(imgRef);
-        setImgArr([...imgArr, { imgUrl: imgUrl, imgPath: imgPath }]);
-        setIndex(imgArr.length)
-        setImgLoad(false)
-        setSuccess(true);
-        timer.current = window.setTimeout(() => {
-          setSuccess(false);
-          setImageUpload(null)
-        }, 1250);
-      } catch (err) {
-        console.log('ERROR: Cannot upload to Firebase')
-      }
-    } else {
-      alert("No image selected");
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(timer.current);
-    };
-  }, []);
-
+  const [images, setImages] = useState([]);
 
   const handleStreet1Change = (address) => {
     const newAddress = {...location}
@@ -197,12 +148,6 @@ const CreatePost = ({ userInfo }) => {
     return (e.target.value === "" || regex.test(e.target.value))
   }
 
-  const handleClick = (dir) => {
-    if (index + dir < 0) setIndex(imgArr.length - 1)
-    else if (index + dir > imgArr.length - 1) setIndex(0)
-    else setIndex(index + dir);
-  }
-
   // Set filter array in Home state with each change
   const handleChip = (event) => {
     const {
@@ -269,7 +214,7 @@ const CreatePost = ({ userInfo }) => {
         userData: userInfo,
         applications: [],
         geoData: geoData,
-        images: imgArr,
+        images: images,
       };
       const res = await fetch("/createPost", {
         method: "POST",
@@ -301,66 +246,13 @@ const CreatePost = ({ userInfo }) => {
     setSmoking(false)
     setParking(false)
     setCondition('')
-    setImgArr([]);
+    setImages([]);
   }
 
   return (
     <div className="createPost">
       <div className='postForm'>
-        <Paper elevation={0} sx={{p: 2, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
-          <CardMedia
-            component="img"
-            height="300"
-            image={(!imgArr[index]) ? defaultImg : imgArr[index]['imgUrl']}
-          />
-          <CardActions sx={{display: 'flex', justifyContent:'space-around'}}>
-            <IconButton color="inherit" onClick={() => handleClick(-1)}>
-              <ArrowBackIosNewIcon fontSize='medium'/>
-            </IconButton>
-            <div className="imageUpload">
-              <Box sx={{ m: 1 }}>
-                <Button
-                  variant="contained"
-                  component="label"
-                >
-                  <CollectionsIcon />
-                  <input
-                    type="file"
-                    multiple
-                    hidden
-                    onChange={(e) => setImageUpload(e.target.files[0])}
-                  />
-                </Button>
-              </Box>
-              <Box sx={{ m: 1, position: 'relative' }}>
-                <Button
-                  variant="contained"
-                  component="label"
-                  disabled={imgLoad}
-                  onClick={firebaseUploadImage}
-                  sx={{"&:hover": {transform: "scale(1.0)"}}}
-                >
-                  {success ? <CheckIcon /> : <FileUploadIcon />}
-                </Button>
-                {imgLoad && (
-                  <CircularProgress
-                    size={24}
-                    sx={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      marginTop: '-12px',
-                      marginLeft: '-12px',
-                    }}
-                  />
-                )}
-              </Box>
-            </div>
-            <IconButton color="inherit" onClick={() => handleClick(1)}>
-              <ArrowForwardIosIcon fontSize='medium'/>
-            </IconButton>
-          </CardActions>
-        </Paper>
+        <ImageGallery images={images} setImages={setImages} view={'create'} userInfo={userInfo}/>
         <Paper elevation={0} sx={{p:2, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
           <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr', columnGap:'8px', m: 1 }} size="small">
             <PlacesAutocomplete

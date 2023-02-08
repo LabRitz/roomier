@@ -2,6 +2,10 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import EditCard from "../EditCard.jsx";
 
+jest.mock('../ImageGallery.jsx', () => {
+  return () => <div data-testid="ImageGallery" /> 
+});
+
 const postInfo = {
   address: {
     street1: 'Street 1',
