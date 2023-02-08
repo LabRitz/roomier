@@ -6,6 +6,10 @@ jest.mock('../ContainerApplication.jsx', () => {
   return () => <div data-testid="ContainerApplication" /> 
 });
 
+jest.mock('../ImageGallery.jsx', () => {
+  return () => <div data-testid="ImageGallery" /> 
+});
+
 const posts = [{
   address: {
     street1: 'Street 1',
