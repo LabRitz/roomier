@@ -33,6 +33,7 @@
     "@visx/gradient": "^3.0.0",
     "@visx/group": "^3.0.0",
     "@visx/mock-data": "^3.0.0",
+    "@visx/react-spring": "^3.0.0",
     "@visx/responsive": "^3.0.0",
     "@visx/scale": "^3.0.0",
     "@visx/shape": "^3.0.0",
