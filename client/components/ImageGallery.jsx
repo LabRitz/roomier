@@ -16,7 +16,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CircularProgress from '@mui/material/CircularProgress';
 import HideImageIcon from '@mui/icons-material/HideImage';
 
-import '../stylesheets/ImageGallery.scss';
+import '../stylesheets/imageGallery.scss';
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
