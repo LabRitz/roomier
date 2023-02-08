@@ -246,7 +246,13 @@ const CreatePost = ({ userInfo }) => {
 
   // Clear form document
   const handleClear = () => {
-    setLocation({})
+    setLocation({
+      street1: '',
+      street2: '',
+      city: '',
+      state: '',
+      zipCode: '',
+    })
     setPrice(0)
     setUtilities(0)
     setBR(0)
@@ -255,10 +261,8 @@ const CreatePost = ({ userInfo }) => {
     setDate(Date.now())
     setGender('')
     setDesc('')
-    setPets(false)
-    setSmoking(false)
-    setParking(false)
     setCondition('')
+    setFilterArr([])
     setImages([]);
   }
 
