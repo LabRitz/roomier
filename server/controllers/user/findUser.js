@@ -11,7 +11,7 @@ const findUser = async (req, res, next) => {
         message: {err: 'Cannot find user based on userId'}
       })
     }
-    else res.status(200).json(data);
+    else return res.status(200).json(data);
   } 
   catch (err) {
     return next({
