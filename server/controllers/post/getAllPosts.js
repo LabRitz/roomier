@@ -22,10 +22,11 @@ const getAllPosts = async (req, res, next) => {
   } catch (err) {
     logger.error(`ERROR: getAllPosts, user: ${username}, ${err}`);
     return next({
-    log: `ERROR: getAllPosts, ${err}`,
-    status: 500,
-    message: {err: 'an error occurred while attempting to get a post'}
-  })}
+      log: `ERROR: getAllPosts, ${err}`,
+      status: 500,
+      message: {err: 'an error occurred while attempting to get a post'}
+    })
+  }
 };
 
 module.exports = getAllPosts;

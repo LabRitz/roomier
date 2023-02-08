@@ -5,7 +5,7 @@ const filterPostsByDistance = async (req, res, next) => {
   const username = req.params.username
   if (username === undefined || lng === undefined || lat === undefined || 
     minDistance === undefined || maxDistance === undefined) {
-    res.sendStatus(400)
+    return res.sendStatus(400)
   }
 
   try {
