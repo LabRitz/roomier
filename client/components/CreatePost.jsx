@@ -91,6 +91,12 @@ const CreatePost = ({ userInfo }) => {
     }
   };
 
+  const handleStreet2 = async (e) => {
+    const newAddress = {...location}
+    newAddress.street2 = e.target.value
+    setLocation(newAddress)
+  };
+
   const handleCityChange = (city) => {
     const newAddress = {...location}
     newAddress.city = city
@@ -136,6 +142,13 @@ const CreatePost = ({ userInfo }) => {
     } catch(error) {
       console.error('Error selecting city', error);
     }
+  };
+
+  const handleZip = async (e) => {
+    if (!checkNum(e) || e.target.value.length > 5) return 
+    const newAddress = {...location}
+    newAddress.zipCode = e.target.value
+    setLocation(newAddress)
   };
 
   const handleGender = (e) => { setGender(e.target.value) }
@@ -297,6 +310,7 @@ const CreatePost = ({ userInfo }) => {
             <TextField
               label="Apt, Suite, Unit, etc."
               value={location.street2}
+              onChange={handleStreet2}
               inputProps={{ style: {fontSize: 14} }}
               size="small"
             />
@@ -389,6 +403,7 @@ const CreatePost = ({ userInfo }) => {
             <TextField
               required
               label="Zip code"
+              onChange={handleZip}
               value={location.zipCode}
               sx={{ width: '100%' }}
               inputProps={{style: {fontSize: 14}}}
@@ -432,12 +447,12 @@ const CreatePost = ({ userInfo }) => {
             </FormControl>
           </FormControl>
 
-          <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
+          <FormControl sx={{ display: 'grid', gridTemplateColumns:'1fr 1fr 1fr 3fr', columnGap: '8px', m: 1 }} size="small">
             <TextField
               required
               label="BR"
               value={br}
-              sx={{ mr:1, width: 50}}
+              sx={{ mr:1, width:'100%' }}
               size="small"
               onChange={(e) => {if (checkNum(e)) setBR(e.target.value) }}
               inputProps={{ style: {fontSize: 14} }} />
@@ -445,7 +460,7 @@ const CreatePost = ({ userInfo }) => {
               required
               label="BA"
               value={ba}
-              sx={{ mr:1, width: 50}}
+              sx={{ mr:1, width:'100%' }}
               size="small"
               onChange={(e) => {if (checkNum(e)) setBA(e.target.value) }}
               inputProps={{ style: {fontSize: 14} }} />
@@ -453,7 +468,7 @@ const CreatePost = ({ userInfo }) => {
               required
               label="sqft"
               value={sqft}
-              sx={{ mr:1, width: 70}}
+              sx={{ mr:1, width:'100%' }}
               size="small"
               onChange={(e) => {if (checkNum(e)) setSqft(e.target.value) }}
               inputProps={{ style: {fontSize: 14} }} /> 
