@@ -31,15 +31,18 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
     bio,
     geoData,
     images,
+    condition
   } = postInfo;
 
   const [location, setLocation] = useState(address)
   const [price, setPrice] = useState(rent)
+  const [util, setUtil] = useState(utilities)
   const [br, setBR] = useState(description.BR)
   const [ba, setBA] = useState(description.BA)
   const [sqft, setSqft] = useState(description.sqFt)
   const [date, setDate] = useState(moveInDate)
   const [gender, setGender] = useState(roommate.gender)
+  const [cond, setCond] = useState(condition)
   const [desc, setDesc] = useState(bio)
   const [geoLoc, setGeoLoc] = useState(geoData)
   const [imgArr, setImgArr] = useState(images)
@@ -195,7 +198,7 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
             }}
             >
             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-              <div>
+              <div style={{position:'relative'}}>
                 <TextField
                   required
                   label="Street Address"
@@ -209,12 +212,12 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
                     }),
                     style: {fontSize: 14}
                   }} />
-                <div className="autocomplete-dropdown-container">
+                <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
                   {loading && <div>Loading...</div>}
                   {suggestions.map((suggestion) => {
                     const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                    const style = suggestion.active ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                      : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                    const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                     : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
                     return (
                       <div {...getSuggestionItemProps(suggestion, { className, style })} >
                         <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
@@ -233,7 +236,7 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
           />
         </FormControl>
 
-        <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
+        <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr 1fr', columnGap:'8px', m: 1}} size="small">
           <PlacesAutocomplete
             data-testid='cityInput'
             value={location.city}
@@ -245,12 +248,12 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
             }}
             >
             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-              <div>
+              <div style={{position:'relative'}}>
                 <TextField
                   required
                   label="City"
                   value={location.city}
-                  sx={{ mr:1 }}
+                  sx={{ mr:1, width: '100%' }}
                   size="small"
                   inputProps={{
                     ...getInputProps({
@@ -259,12 +262,12 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
                     }),
                     style: {fontSize: 14}
                   }} />
-                <div className="autocomplete-dropdown-container">
+                <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
                   {loading && <div>Loading...</div>}
                   {suggestions.map((suggestion) => {
                     const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                    const style = suggestion.active ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                      : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                    const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                    : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
                     return (
                       <div {...getSuggestionItemProps(suggestion, { className, style })} >
                         <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
@@ -286,12 +289,12 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
             }}
             >
             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-              <div>
+              <div style={{position:'relative'}}>
                 <TextField
                   required
                   label="State"
                   value={location.state}
-                  sx={{ mr:1, width:60 }}
+                  sx={{ mr:1, width: '100%' }}
                   size="small"
                   inputProps={{
                     ...getInputProps({
@@ -300,12 +303,12 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
                     }),
                     style: {fontSize: 14}
                   }} />
-                <div className="autocomplete-dropdown-container">
+                <div className="autocomplete-dropdown-container" style={{width: '100%', position:'absolute', zIndex: 5}}>
                   {loading && <div>Loading...</div>}
                   {suggestions.map((suggestion) => {
                     const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                    const style = suggestion.active ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                      : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                    const style = suggestion.active ? { width: '100%', backgroundColor: '#e1e4e6', color:'#293241', fontWeight:'500', cursor: 'pointer' }
+                    : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
                     return (
                       <div {...getSuggestionItemProps(suggestion, { className, style })} >
                         <span style={{fontSize:'12px', overflowX:'hidden'}}>{suggestion.description}</span>
@@ -327,7 +330,7 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
         </FormControl>
       
         <FormControl sx={{ display: 'flex', flexDirection: 'row', m: 1 }} size="small">
-          <FormControl sx={{ mr: 1, width: 150 }} size="small">
+          <FormControl sx={{ mr: 1, width: '30%' }} size="small">
             <InputLabel required htmlFor="outlined-adornment-amount">Amount</InputLabel>
             <OutlinedInput
               id="outlined-adornment-amount"
@@ -338,7 +341,18 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
               inputProps={{style: {fontSize: 14}}}
               />
           </FormControl>
-          <FormControl sx={{ width:200 }} size="small">
+          <FormControl sx={{ mr: 1, width: '30%' }} size="small">
+            <InputLabel required htmlFor="outlined-adornment-amount">Utilities</InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-amount"
+              startAdornment={<InputAdornment sx={{ fontSize:12 }} position="start">$</InputAdornment>}
+              value={util}
+              label="Utilities"
+              onChange={(e) => {if (checkNum(e)) setUtil(e.target.value)}}
+              inputProps={{style: {fontSize: 14}}}
+              />
+          </FormControl>
+          <FormControl sx={{ width: '40%' }} size="small">
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DesktopDatePicker
                 label="Available"
@@ -392,6 +406,21 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
             </Select>
           </FormControl>       
         </FormControl>
+
+        <FormControl sx={{ display: 'block', m:1 }} size="small">
+          <TextField
+            label="Condition"
+            value={cond}
+            size="small"
+            multiline
+            minRows={1}
+            maxRows={2}
+            fullWidth
+            onChange={(e) => setCond(e.target.value)}
+            inputProps={{style: {fontSize: 10}}}
+            sx={{ overflowY:'scroll' }}
+          />
+        </FormControl>
         
         <FormControl sx={{ display: 'block', m:1 }} size="small">
           <TextField
@@ -399,15 +428,15 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
             value={desc}
             size="small"
             multiline
+            minRows={3}
+            maxRows={5}
             fullWidth
             onChange={(e) => setDesc(e.target.value)}
-            inputProps={{style: {fontSize: 10}}}
-            sx={{ 
-              overflowY:'scroll',
-              height: '40%',
-            }}
+            inputProps={{ style: {fontSize: 10} }}
+            sx={{ overflowY:'scroll', height: '100%' }}
           />
         </FormControl>
+        
         <EditCardActions handleSave={handleSave} handleUndo={handleUndo}/>
 
       </Paper>
