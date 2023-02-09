@@ -58,6 +58,7 @@
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@testing-library/react": "^13.4.0",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.1",
