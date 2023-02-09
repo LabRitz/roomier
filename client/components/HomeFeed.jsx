@@ -11,7 +11,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
 import FilterListIcon from '@mui/icons-material/FilterList';
 const Box = React.lazy(() => import('@mui/material/Box'));
@@ -19,7 +18,6 @@ const Chip = React.lazy(() => import('@mui/material/Chip'));
 const ListItemText = React.lazy(() => import('@mui/material/ListItemText'));
 const Checkbox = React.lazy(() => import('@mui/material/Checkbox'));
 const Slider  = React.lazy(() => import('@mui/material/Slider'));
-
 
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -83,7 +81,7 @@ const bathrooms = [1, 2, 3, 4]
 const priceGap = 100;
 const sqftGap = 50;
 
-const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, sqftRange, setSqftRange, applyFilter, br, setBR, ba, setBA }) => {  
+const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, sqftRange, setSqftRange, br, setBR, ba, setBA }) => {  
   const theme = useTheme();
 
   // Handlers for post modal open and close
@@ -353,7 +351,6 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                     ))}
                   </Select>
                 </FormControl>  
-                <Button onClick={applyFilter}>Filter</Button>
               </div>
             </motion.div>
           }
