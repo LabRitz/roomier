@@ -1,30 +1,27 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, Suspense } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Pagination from '@mui/material/Pagination';
-import { useTheme, styled } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
 import FilterListIcon from '@mui/icons-material/FilterList';
 const Box = React.lazy(() => import('@mui/material/Box'));
 const Chip = React.lazy(() => import('@mui/material/Chip'));
 const ListItemText = React.lazy(() => import('@mui/material/ListItemText'));
 const Checkbox = React.lazy(() => import('@mui/material/Checkbox'));
-const Slider  = React.lazy(() => import('@mui/material/Slider'));
-
-
-import { AnimatePresence, motion } from 'framer-motion';
 
 import ContainerFeed from './ContainerFeed.jsx';
 import PostModal from './PostModal.jsx';
+const Slider = React.lazy(() => import('./Slider.jsx'));
 
 import '../stylesheets/homeFeed.scss';
 
@@ -37,44 +34,6 @@ const getStyles = (filter, filterName, theme) => {
   };
 }
 
-const PrettoSlider = styled(Slider)({
-  height: 6,
-  '& .MuiSlider-track': {
-    border: 'none',
-  },
-  '& .MuiSlider-thumb': {
-    height: 18,
-    width: 18,
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
-    '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
-      boxShadow: 'inherit',
-    },
-    '&:before': {
-      display: 'none',
-    },
-  },
-  '& .MuiSlider-valueLabel': {
-    lineHeight: 1.2,
-    fontSize: 12,
-    background: 'unset',
-    padding: 0,
-    width: 32,
-    height: 32,
-    borderRadius: '50% 50% 50% 0',
-    backgroundColor: '#3D5A80',
-    transformOrigin: 'bottom left',
-    transform: 'translate(50%, -80%) rotate(-45deg) scale(0)',
-    '&:before': { display: 'none' },
-    '&.MuiSlider-valueLabelOpen': {
-      transform: 'translate(50%, -80%) rotate(-45deg) scale(1)',
-    },
-    '& > *': {
-      transform: 'rotate(45deg)',
-    },
-  },
-});
-
 const filters = ['Pets', 'Smoking', 'Parking'];
 const distances = [1, 2, 5, 10, 25, 50];
 const postsPerPage = [2, 4, 6, 12, 24];
@@ -83,7 +42,7 @@ const bathrooms = [1, 2, 3, 4]
 const priceGap = 100;
 const sqftGap = 50;
 
-const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, sqftRange, setSqftRange, applyFilter, br, setBR, ba, setBA }) => {  
+const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, sqftRange, setSqftRange, br, setBR, ba, setBA }) => {  
   const theme = useTheme();
 
   // Handlers for post modal open and close
@@ -273,7 +232,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                 alignItems: 'center'}}>
                 <Box sx={{ p:1, minWidth: 190, display: 'flex', flexDirection: 'column'}} size="small">
                   <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
-                  <PrettoSlider
+                  <Slider
                     min={0}
                     step={10}
                     max={10000}
@@ -283,7 +242,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                     disableSwap
                   />
                   <InputLabel id="sqft-range-label" sx={{ fontSize: 12 }}>SqFt:</InputLabel>
-                  <PrettoSlider
+                  <Slider
                     min={200}
                     step={10}
                     max={3000}
@@ -353,7 +312,6 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                     ))}
                   </Select>
                 </FormControl>  
-                <Button onClick={applyFilter}>Filter</Button>
               </div>
             </motion.div>
           }
