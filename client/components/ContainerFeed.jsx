@@ -58,6 +58,10 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   }
 
   useEffect(() => {
+    setApplication(applicantData)
+  }, [applicantData])
+
+  useEffect(() => {
     if (currUser) {
       let applied = false
       for (const applicant of applicantData) {
@@ -115,7 +119,6 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
         {(view === 'profile') && <ApplicationModal applications={application} open={open} closeApps={closeApps}/> }
       </Suspense>
     </motion.div>
-
   )
 }
 
