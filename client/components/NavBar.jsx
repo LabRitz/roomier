@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from '@mui/material/styles';
 
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import NightlightIcon from '@mui/icons-material/Nightlight';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,6 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
 
+import ColorModeContext from "./context/ColorModeContext.js";
 import Phrases from "./Phrases.jsx";
 import "../stylesheets/navbar.scss";
 
@@ -29,6 +33,9 @@ const settings = [
 
 const NavBar = ({ userInfo, setUserInfo }) => {
   const navigate = useNavigate();
+
+  const theme = useTheme();
+  const colorMode = React.useContext(ColorModeContext);
   
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -40,15 +47,17 @@ const NavBar = ({ userInfo, setUserInfo }) => {
     setAnchorElUser(event.currentTarget);
   };
   
-  const handleCloseNavMenu = (nav) => {
+  const handleCloseNavMenu = (page) => {
     setAnchorElNav(null);
-    navigate(nav)
+    if (page.nav) navigate(page.nav)
   };
   
-  const handleCloseUserMenu = (nav) => {
+  const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
-    if (nav == '/') handleSignout()
-    else navigate(nav)
+    if (!setting.nav) return 
+    else {
+      (setting.nav == '/') ? handleSignout() : navigate(setting.nav)
+    }
   };
   
   const handleSignout = async () => {
@@ -111,7 +120,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page.title} onClick={() => handleCloseNavMenu(page.nav)}>
+                  <MenuItem key={page.title} onClick={() => handleCloseNavMenu(page)}>
                     <Typography textAlign="center">{page.title}</Typography>
                   </MenuItem>
                 ))}
@@ -147,8 +156,14 @@ const NavBar = ({ userInfo, setUserInfo }) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <MenuItem >
+                  <Box onClick={() => {colorMode.toggleColorMode(); setAnchorElNav(null)}} sx={{display:'flex'}}>
+                    <Typography sx={{mr: 1}}textAlign="center">{theme.palette.mode.charAt(0).toUpperCase() + theme.palette.mode.slice(1)} mode</Typography>
+                    {theme.palette.mode === 'dark' ? <NightlightIcon /> : <Brightness4Icon />}
+                  </Box>
+                </MenuItem>
                 {settings.map((setting) => (
-                  <MenuItem key={setting.title} onClick={() => handleCloseUserMenu(setting.nav)}>
+                  <MenuItem key={setting.title} onClick={() => handleCloseUserMenu(setting)}>
                     <Typography textAlign="center">{setting.title}</Typography>
                   </MenuItem>
                 ))}

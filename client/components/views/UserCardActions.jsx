@@ -5,22 +5,26 @@ import Typography from '@mui/material/Typography';
 
 const UserCardActions = ({ application, handleApply, hasApplied }) => {
   return (
-    <>
+    <div style={{display: 'flex', alignItems: 'center'}}>
     { hasApplied ? 
-      <Button mr={1} onClick={handleApply} size="small" disabled={hasApplied}>
-        Applied
+      <Button sx={{mr:1}} onClick={handleApply} size="small" disabled={hasApplied}>
+        <Typography variant="body2">
+          Applied
+        </Typography>
       </Button> 
       :
       <Tooltip title="Submit contact info">
-        <Button mr={1} onClick={handleApply} size="small" disabled={hasApplied}>
-          Apply
+        <Button mr={1} onClick={handleApply} size="small" disabled={hasApplied} >
+          <Typography variant="body2" color="text.secondary">
+            Apply
+          </Typography>
         </Button>
       </Tooltip>
     }
-      <Typography pb={0.5} variant="body2" noWrap={true} color="text.secondary">
+      <Typography pb={0} variant="body2" noWrap={true} color="text.ternary">
         {application.length} in review
       </Typography>
-    </>
+    </div>
   );
 }
 
