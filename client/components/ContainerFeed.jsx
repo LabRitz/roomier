@@ -58,6 +58,10 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   }
 
   useEffect(() => {
+    setApplication(applicantData)
+  }, [applicantData])
+
+  useEffect(() => {
     if (currUser) {
       let applied = false
       for (const applicant of applicantData) {
@@ -83,13 +87,13 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
             sx={{ height: 180, mb:1 }}
             image={(!images[0]) ? defaultImg : (images[0]['imgUrl'] == undefined) ? Object.keys(images[0])[0] : images[0]['imgUrl']}
           />
-          <Typography gutterBottom variant="h5" noWrap={true} component="div" color="text.darkBlue">
+          <Typography gutterBottom variant="h5" noWrap={true} component="div" color="text.primary">
             ${rent}/mo
           </Typography>
-          <Typography variant="subtitle2" noWrap={true} color="text.darkBlue">
+          <Typography variant="subtitle2" noWrap={true} color="text.primary">
             {address.street1} {address.street2}
           </Typography>
-          <Typography variant="body2" noWrap={true} color="text.secondary">
+          <Typography variant="body2" noWrap={true} color="text.ternary">
             {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
           </Typography>
         </CardContent>
@@ -115,7 +119,6 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
         {(view === 'profile') && <ApplicationModal applications={application} open={open} closeApps={closeApps}/> }
       </Suspense>
     </motion.div>
-
   )
 }
 

@@ -79,6 +79,12 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
     }
   };
 
+  const handleStreet2 = async (e) => {
+    const newAddress = {...location}
+    newAddress.street2 = e.target.value
+    setLocation(newAddress)
+  };
+
   const handleCityChange = (city) => {
     const newAddress = {...location}
     newAddress.city = city
@@ -124,6 +130,13 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
     } catch(error) {
       console.error('Error selecting city', error);
     }
+  };
+
+  const handleZip = async (e) => {
+    if (!checkNum(e) || e.target.value.length > 5) return 
+    const newAddress = {...location}
+    newAddress.zipCode = e.target.value
+    setLocation(newAddress)
   };
 
   const handleGender = (e) => { setGender(e.target.value) }
@@ -231,6 +244,7 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
           <TextField
             label="Apt, Suite, Unit, etc."
             value={location.street2}
+            onChange={handleStreet2}
             inputProps={{ style: {fontSize: 14} }}
             size="small"
           />
@@ -322,6 +336,7 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
           <TextField
             required
             label="Zip code"
+            onChange={handleZip}
             value={location.zipCode}
             sx={{ width:100 }}
             inputProps={{style: {fontSize: 14}}}
@@ -433,7 +448,7 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
             fullWidth
             onChange={(e) => setDesc(e.target.value)}
             inputProps={{ style: {fontSize: 10} }}
-            sx={{ overflowY:'scroll', height: '100%' }}
+            sx={{ overflowY:'scroll', height: '35%' }}
           />
         </FormControl>
         
