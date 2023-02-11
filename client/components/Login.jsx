@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom'
 
+import AlertContext from './context/AlertContext.js';
 import Phrases from './Phrases.jsx';
 import '../stylesheets/login.scss';
 
-
 const Login = ({ setUserInfo }) => {
+  const { setAlert } = useContext(AlertContext);
 
   const handleLogin = async () => {      
     const reqBody = {
@@ -18,13 +19,21 @@ const Login = ({ setUserInfo }) => {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(reqBody)
       });
-      const data = await res.json();
-      if (data == null || data.err) alert("Credentials incorrect. Please try again or create account");
-      else setUserInfo(data);
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
+
+      if (res.status == 400) return setAlert(alerts => [...alerts, { severity: 'warning', message: 'Enter a correct username and/or password'}])
+      else if (res.status == 500) return setAlert(alerts => [...alerts, { severity: 'error', message: 'Uh oh... the server is currently down :(' }])
+      else if (res.status == 200) {
+        const data = await res.json();
+        if (data == null || data.err) return setAlert(alerts => [...alerts, { severity: 'warning', message: 'Cannot find user with that username and password' }])
+        else {
+          setUserInfo(data);
+          document.getElementById('username').value = '';
+          document.getElementById('password').value = '';
+          return setAlert(alerts => [...alerts, { severity: 'success', message: 'Good job! Welcome to Roomier :)' }])
+        }
+      }
     } catch (err) {
-      console.log('CAUGHT ERROR', err)
+      setAlert(alerts => [...alerts, { severity: 'error' }])
     }
   }
 

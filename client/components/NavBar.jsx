@@ -63,8 +63,7 @@ const NavBar = ({ userInfo, setUserInfo }) => {
   const handleSignout = async () => {
     try {
       const res = await fetch("/signout");
-      const data = res.json();
-      if (data) {
+      if (res.status == 204) {
         setUserInfo("");
         navigate('/')
       }
