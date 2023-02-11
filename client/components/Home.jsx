@@ -131,7 +131,7 @@ const Home = ({ userInfo }) => {
           zoom={13}
         >
           <Circle center={center} options={dotStyle}/>
-          <Circle center={center} options={Object.assign(boundaryStyle, {radius: distance})}/>
+          <Circle center={center} options={{...boundaryStyle, ...{radius: distance}}}/>
           {markers}
         </GoogleMap>
       </div>
