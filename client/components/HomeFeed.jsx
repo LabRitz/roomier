@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import ImageList from '@mui/material/ImageList';
