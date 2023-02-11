@@ -61,7 +61,16 @@ const App = () => {
       )}
       <Stack sx={{ position: 'fixed', bottom: '12px', left: '12px', zIndex: 1200, width: 'auto', maxWidth: '400px' }} spacing={1}>
         {alert.map((element, i) => (
-          <Alert key={i} severity={element.severity} onClose={() => handleDismiss(i)}>
+          <Alert 
+            key={i} 
+            severity={element.severity} 
+            onClose={() => handleDismiss(i)}
+            sx={{ 
+              position: 'fixed', 
+              bottom: `${12 + 12*i}px`, 
+              left: `${24 + 12 * Math.random() * Math.pow(-1, i)}px`, 
+              zIndex: i,
+              boxShadow: '0px 4px 12px rgba(115, 115, 115, 0.5)'}}>
             <AlertTitle>{element.severity.charAt(0).toUpperCase() + element.severity.slice(1)}</AlertTitle>
             {element.message}
           </Alert>
