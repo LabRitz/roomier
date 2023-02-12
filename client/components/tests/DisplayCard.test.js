@@ -1,6 +1,6 @@
 import React from "react";
 
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 
 import mockContext from "./__mocks__/mockContext.js";
 import DisplayCard from "../DisplayCard.jsx";

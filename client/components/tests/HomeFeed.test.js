@@ -1,10 +1,19 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+
+import { screen, fireEvent } from "@testing-library/react";
+
+import mockContext from "./__mocks__/mockContext.js";
 import HomeFeed from "../HomeFeed.jsx";
 
 jest.mock('../ContainerFeed.jsx', () => {
   return () => <div data-testid="ContainerFeed" /> 
 });
+
+const userInfo = {
+  firstName: 'John',
+  lastName: 'Smith',
+  username: 'test@gmail.com'
+}
 
 const posts = [{
   address: {
@@ -40,16 +49,19 @@ const posts = [{
 describe("HomeFeed.jsx", () => {
 
   let originalFetch;
-
+  let providerProps;
   beforeEach(() => {
     originalFetch = global.fetch;
     global.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve(false)
     }));
+    providerProps = {
+      userInfo: userInfo
+    }
   });
 
   it("Renders HomeFeed component", async () => {    
-    render(
+    mockContext(
       <HomeFeed 
         posts={posts} 
         zipCode={10000} 
@@ -58,8 +70,7 @@ describe("HomeFeed.jsx", () => {
         priceRange={[0,100]} 
         sqftRange={[0,100]} 
         br={0} 
-        ba={0}/>
-    );
+        ba={0}/>, { providerProps })
 
     expect(await screen.getByTestId('homeFeed')).toBeTruthy();
     expect(await screen.getByLabelText('Zipcode')).toBeTruthy();
@@ -68,7 +79,7 @@ describe("HomeFeed.jsx", () => {
   });
 
   it("Populates props input", async () => {
-    render(
+    mockContext(
       <HomeFeed 
         posts={posts} 
         zipCode={10000} 
@@ -77,13 +88,12 @@ describe("HomeFeed.jsx", () => {
         priceRange={[0,100]} 
         sqftRange={[0,100]} 
         br={0} 
-        ba={0}/>
-    );
+        ba={0}/>, { providerProps })
 
   })
 
   it("Open filter options will lazy load", async () => {
-    render(
+    mockContext(
       <HomeFeed 
         posts={posts} 
         zipCode={10000} 
@@ -92,8 +102,7 @@ describe("HomeFeed.jsx", () => {
         priceRange={[0,100]} 
         sqftRange={[0,100]} 
         br={0} 
-        ba={0}/>
-    );
+        ba={0}/>, { providerProps })
 
     const toggleFilterBtn = await screen.getByTestId('toggleFilter')
     fireEvent.click(toggleFilterBtn)
