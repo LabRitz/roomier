@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import ProfileFeed from "./ProfileFeed.jsx";
 
-const Profile = ({ userInfo }) => {
+import Context from './context/Context.js'
+
+const Profile = () => {
+  const { userInfo } = useContext(Context)
+
   const [posts, setPosts] = useState([]);
 
   const getProfilePosts = async () => {
@@ -21,7 +25,7 @@ const Profile = ({ userInfo }) => {
 
   return (posts && 
     <div className="profile">
-      <ProfileFeed posts={posts} getProfilePosts={getProfilePosts} userInfo={userInfo}/>
+      <ProfileFeed posts={posts} getProfilePosts={getProfilePosts} />
     </div>
   );
 };

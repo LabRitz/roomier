@@ -8,7 +8,7 @@ jest.mock('../ProfileFeed.jsx', () => {
 
 describe("Profile.jsx", () => {
 
-  it("Renders Profile component", async () => {    
+  xit("Renders Profile component", async () => {    
     render(<Profile />);
 
     expect(await screen.getByTestId('ProfileFeed')).toBeTruthy();

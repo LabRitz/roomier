@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from '@mui/material/styles';
 
@@ -18,6 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
 
+import Context from './context/Context.js';
 import ColorModeContext from "./context/ColorModeContext.js";
 import Phrases from "./Phrases.jsx";
 import "../stylesheets/navbar.scss";
@@ -31,11 +32,13 @@ const settings = [
   { title: 'Signout', nav: '/' }
 ];
 
-const NavBar = ({ userInfo, setUserInfo }) => {
+const NavBar = () => {
   const navigate = useNavigate();
 
+  const { userInfo, setUserInfo } = useContext(Context);
+
   const theme = useTheme();
-  const colorMode = React.useContext(ColorModeContext);
+  const colorMode = useContext(ColorModeContext);
   
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
