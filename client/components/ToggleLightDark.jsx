@@ -24,8 +24,8 @@ const ToggleLightDark = () => {
               main: '#3D5A80',
             },
             background: {
-              default: '#d6d6d6',
-              paper: 'white',
+              default: '#3D5A80',
+              paper: '#fff',
             },
             text: {
               primary: '#293241',
@@ -39,7 +39,7 @@ const ToggleLightDark = () => {
           }
         : {
             primary: {
-              main: '#abb0b8',
+              main: '#3D5A80',
             },
             background: {
               default: '#293241',

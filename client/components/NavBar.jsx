@@ -4,6 +4,8 @@ import { useTheme } from '@mui/material/styles';
 
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import NightlightIcon from '@mui/icons-material/Nightlight';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,6 +19,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import Context from './context/Context.js';
 import ColorModeContext from "./context/ColorModeContext.js";
@@ -27,10 +31,6 @@ const pages = [
   { title: 'Home', nav: '/' },
   { title: 'Create Post', nav: '/createPost' },
 ];
-const settings = [
-  { title: 'Profile', nav: '/profile' }, 
-  { title: 'Signout', nav: '/' }
-];
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -40,14 +40,35 @@ const NavBar = () => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   
+  const settings = [
+    { 
+      icon: <AccountCircleIcon/>,
+      name: 'Profile',
+      action: () => navigate('/profile') 
+    },
+    { 
+      icon: (theme.palette.mode === 'dark') ? <Brightness4Icon/>: <NightlightIcon/>,
+      name: (theme.palette.mode === 'dark') ? 'Light mode': 'Dark mode',
+      action: () => { 
+        colorMode.toggleColorMode(); 
+        setAnchorElNav(null)
+      }
+    },
+    { 
+      icon: <LogoutIcon/>,
+      name: 'Signout',
+      action: () => handleSignout() 
+    }
+  ];
+
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(false);
   
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+  const toggleUserMenu = (event) => {
+    setAnchorElUser(!anchorElUser);
   };
   
   const handleCloseNavMenu = (page) => {
@@ -57,10 +78,7 @@ const NavBar = () => {
   
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
-    if (!setting.nav) return 
-    else {
-      (setting.nav == '/') ? handleSignout() : navigate(setting.nav)
-    }
+    if (setting.action) setting.action()
   };
   
   const handleSignout = async () => {
@@ -137,39 +155,30 @@ const NavBar = () => {
               <Phrases />
             </Box>
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={userInfo.firstName} sx={{ color: '#EAEAEA', bgcolor: '#3D5A80' }} src="/"/>
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+              <SpeedDial
+                ariaLabel="User Setting Menu"
+                sx={{position: 'relative', top: '6px', color:'#3D5A80'}}
+                icon={ 
+                  <Tooltip placement='left' title={anchorElUser ? 'Close settings' : 'Open settings'}>
+                    <IconButton >
+                      <Avatar alt={userInfo.firstName} sx={{ color: '#EAEAEA', bgcolor: '#3D5A80' }} src="/"/>
+                    </IconButton>
+                  </Tooltip>
+                }
+                onClick={toggleUserMenu}
+                open={anchorElUser}
+                direction='down'
               >
-                <MenuItem >
-                  <Box onClick={() => {colorMode.toggleColorMode(); setAnchorElNav(null)}} sx={{display:'flex'}}>
-                    <Typography sx={{mr: 1}}textAlign="center">{theme.palette.mode.charAt(0).toUpperCase() + theme.palette.mode.slice(1)} mode</Typography>
-                    {theme.palette.mode === 'dark' ? <NightlightIcon /> : <Brightness4Icon />}
-                  </Box>
-                </MenuItem>
-                {settings.map((setting) => (
-                  <MenuItem key={setting.title} onClick={() => handleCloseUserMenu(setting)}>
-                    <Typography textAlign="center">{setting.title}</Typography>
-                  </MenuItem>
+                {settings.map((setting, i) => (
+                  <SpeedDialAction
+                    sx={{ position: 'absolute', top: `${i*64+64}px`, right: '0px' }}
+                    key={setting.name}
+                    icon={setting.icon}
+                    tooltipTitle={setting.name}
+                    onClick={() => handleCloseUserMenu(setting)}
+                  />
                 ))}
-              </Menu>
+              </SpeedDial>
             </Box>
           </Toolbar>
         </Container>
