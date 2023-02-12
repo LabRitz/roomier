@@ -31,7 +31,7 @@ const ContainerApplications = ({ getProfilePosts, postInfo, setPostInfo, setEdit
   return (
     <div className='applications'>
       <ContainerFeed 
-        data={postInfo} 
+        post={postInfo} 
         setPostInfo={setPostInfo} 
         view={'profile'} 
         handleDelete={handleDelete} 
