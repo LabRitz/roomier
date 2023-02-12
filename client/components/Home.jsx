@@ -13,14 +13,10 @@ Geocode.setApiKey(GoogleMapsAPIKey);
 const Home = () => {
   const { userInfo } = useContext(Context)
 
-  console.log(userInfo)
-
-  const currUser = userInfo;
-
   const [filterArr, setFilterArr] = useState([])
   const [posts, setPosts] = useState([]);
 
-  const [zipCode, setZipCode] = useState(currUser.zipCode);
+  const [zipCode, setZipCode] = useState(userInfo.zipCode);
   const [center, setCenter] = useState(null)
   const [distance, setDistance] = useState(1609.344*2);
   const [priceRange, setPriceRange] = useState([3000, 8000]);
@@ -57,7 +53,7 @@ const Home = () => {
   const getPosts = async () => {
     if (!center) return setPosts([])
     try {  
-      const res = await fetch(`/home/${currUser.username}`, {
+      const res = await fetch(`/home/${userInfo.username}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -68,12 +64,7 @@ const Home = () => {
         }),
       });
       const postsArr = await res.json();
-
-      // Map across each post and append the current user to each post
-      const newPosts = postsArr.map(post => {
-        return Object.assign(post, { currUser: currUser })
-      });
-      setPosts(newPosts);
+      setPosts(postsArr)
     } catch (err) {
       console.log('ERROR: Cannot get posts at zip code', err)
     }

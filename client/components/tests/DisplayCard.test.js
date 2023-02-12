@@ -1,6 +1,15 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+
+import { screen, fireEvent } from "@testing-library/react";
+
+import mockContext from "./__mocks__/mockContext.js";
 import DisplayCard from "../DisplayCard.jsx";
+
+const userInfo = {
+  firstName: 'John',
+  lastName: 'Smith',
+  username: 'test@gmail.com'
+}
 
 const postInfo = {
   address: {
@@ -36,18 +45,21 @@ const postInfo = {
 describe("DisplayCard.jsx", () => {
 
   let originalFetch;
-
+  let providerProps;
   beforeEach(() => {
     originalFetch = global.fetch;
     global.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve(false)
     }));
+    providerProps = {
+      userInfo: userInfo
+    }
   });
 
   const date = Date.now()
 
   it("Renders Login component", async () => {    
-    render(<DisplayCard postInfo={postInfo} view={'user'}/>);
+    mockContext(<DisplayCard postInfo={postInfo} view={'user'}/>, { providerProps })
 
     expect(await screen.getByText("Street 1 Street 2")).toBeTruthy();
     expect(await screen.getByText("City, State 12345")).toBeTruthy();
@@ -59,7 +71,7 @@ describe("DisplayCard.jsx", () => {
   });
 
   it("Cycles images", async () => {    
-    render(<DisplayCard postInfo={postInfo} view={'user'}/>);
+    mockContext(<DisplayCard postInfo={postInfo} view={'user'}/>, { providerProps })
 
     const leftImg = await screen.getByTestId('leftImg')
     const rightImg = await screen.getByTestId('rightImg')
@@ -69,7 +81,7 @@ describe("DisplayCard.jsx", () => {
   });
 
   it("Populates user view", async () => {    
-    render(<DisplayCard postInfo={postInfo} view={'user'}/>);
+    mockContext(<DisplayCard postInfo={postInfo} view={'user'}/>, { providerProps })
 
     expect(await screen.getByText("Apply")).toBeTruthy();
   });
@@ -78,7 +90,7 @@ describe("DisplayCard.jsx", () => {
    * NEED TO TEST ABSENCE OF APPLY BUTTON
    */
   xit("Populates profile view", async () => {    
-    render(<DisplayCard postInfo={postInfo} view={'profile'}/>);
+    mockContext(<DisplayCard postInfo={postInfo} view={'profile'}/>, { providerProps })
 
     expect(await screen.getByText("Apply")).toBeFalsy();
   });
