@@ -1,5 +1,8 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+
+import { screen } from "@testing-library/react";
+
+import mockContext from "./__mocks__/mockContext.js";
 import ProfileFeed from "../ProfileFeed.jsx";
 
 jest.mock('../ContainerApplication.jsx', () => {
@@ -9,6 +12,12 @@ jest.mock('../ContainerApplication.jsx', () => {
 jest.mock('../ImageGallery.jsx', () => {
   return () => <div data-testid="ImageGallery" /> 
 });
+
+const userInfo = {
+  firstName: 'John',
+  lastName: 'Smith',
+  username: 'test@gmail.com'
+}
 
 const posts = [{
   address: {
@@ -43,8 +52,15 @@ const posts = [{
 
 describe("ProfileFeed.jsx", () => {
 
+  let providerProps;
+  beforeEach(() => {
+    providerProps = {
+      userInfo: userInfo
+    }
+  });
+
   it("Renders ProfileFeed component", async () => {    
-    render(<ProfileFeed posts={posts}/>);
+    mockContext(<ProfileFeed posts={posts}/>, { providerProps })
 
     expect(await screen.getByTestId('ContainerApplication')).toBeTruthy();
   });

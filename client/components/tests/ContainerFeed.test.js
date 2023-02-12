@@ -1,5 +1,8 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+
+import { screen, waitFor } from "@testing-library/react";
+
+import mockContext from "./__mocks__/mockContext.js";
 import ContainerFeed from "../ContainerFeed.jsx";
 
 jest.mock('../views/UserCardActions.jsx', () => {
@@ -9,6 +12,12 @@ jest.mock('../views/UserCardActions.jsx', () => {
 jest.mock('../views/ProfileCardActions.jsx', () => {
   return () => <div data-testid="ProfileCardActions" /> 
 });
+
+const userInfo = {
+  firstName: 'John',
+  lastName: 'Smith',
+  username: 'test@gmail.com'
+}
 
 const postInfo = {
   address: {
@@ -44,8 +53,15 @@ const postInfo = {
 
 describe("ContainerFeed.jsx", () => {
 
+  let providerProps;
+  beforeEach(() => {
+    providerProps = {
+      userInfo: userInfo
+    }
+  });
+
   it("Renders ContainerFeed component", () => {    
-    render(<ContainerFeed data={postInfo} view={'user'}/>);
+    mockContext(<ContainerFeed post={postInfo} view={'user'}/>, { providerProps })
 
     expect(screen.getByText('$100/mo')).toBeTruthy();
     expect(screen.getByText('Street 1 Street 2')).toBeTruthy();
@@ -54,12 +70,12 @@ describe("ContainerFeed.jsx", () => {
   });
 
   it("Renders ContainerFeed component in profile view", async () => {    
-    render(<ContainerFeed data={postInfo} view={'profile'}/>);
+    mockContext(<ContainerFeed post={postInfo} view={'profile'}/>, { providerProps })
     await waitFor(() => expect(screen.getByTestId('ProfileCardActions')).toBeTruthy())
   });
 
   it("Renders ContainerFeed component in user view", async () => {    
-    render(<ContainerFeed data={postInfo} view={'user'}/>);
+    mockContext(<ContainerFeed post={postInfo} view={'user'}/>, { providerProps })
     await waitFor(() => expect(screen.getByTestId('UserCardActions')).toBeTruthy())
   });
  

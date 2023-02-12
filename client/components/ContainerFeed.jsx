@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useContext, Suspense } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -9,19 +9,15 @@ import { motion } from 'framer-motion';
 const UserCardActions = React.lazy(() => import('./views/UserCardActions.jsx'));
 const ProfileCardActions = React.lazy(() => import('./views/ProfileCardActions.jsx'));
 const ApplicationModal = React.lazy(() => import('./ApplicationModal.jsx'));
+
+import Context from './context/Context';
 import '../stylesheets/containerFeed.scss'
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
-const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, handleDelete, setEditMode }) => {
-  const {
-    address,
-    description,
-    rent,
-    images,
-    applicantData,
-    currUser
-  } = data;
+const ContainerFeed = ({ post, handleOpen, setPostInfo, view, handleUpdate, handleDelete, setEditMode }) => {
+  const { userInfo, setAlert } = useContext(Context)
+  const { address, description, rent, images, applicantData } = post;
 
   const [application, setApplication] = useState(!applicantData ? [] : applicantData)
   const [hasApplied, setHasApplied] = useState(false)
@@ -34,17 +30,20 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   const handleApply = async (e) => {
     try {
       const reqBody = {
-        firstName: currUser.firstName,
-        lastName: currUser.lastName,
-        username: currUser.username
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+        username: userInfo.username
       }
-      const response = await fetch(`/home/${data._id}`, {
+      const response = await fetch(`/home/${post._id}`, {
         method:'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reqBody)
       })
       const data = await response.json();
-      if (data) setApplication(...application, reqBody); // only update if patch request is true/not error
+      if (data) { // only update if patch request is true/not error
+        setApplication([...application, reqBody]); 
+        setHasApplied(true)
+      }
     }
     catch(err) {
       console.log('Error applying to post: ', err)
@@ -52,7 +51,7 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   }
 
   const handleClick = () => {
-    setPostInfo(data)
+    setPostInfo(post)
     if (view == 'profile') setEditMode(false)
     else if (view == 'user') handleOpen()
   }
@@ -62,10 +61,10 @@ const ContainerFeed = ({ data, handleOpen, setPostInfo, view, handleUpdate, hand
   }, [applicantData])
 
   useEffect(() => {
-    if (currUser) {
+    if (userInfo !== '') {
       let applied = false
       for (const applicant of applicantData) {
-        if (applicant.username === currUser.username) applied = true
+        if (applicant.username === userInfo.username) applied = true
       }
       setHasApplied(applied)
     }

@@ -1,10 +1,19 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+
+import { screen, fireEvent } from "@testing-library/react";
+
+import mockContext from "./__mocks__/mockContext.js";
 import EditCard from "../EditCard.jsx";
 
 jest.mock('../ImageGallery.jsx', () => {
   return () => <div data-testid="ImageGallery" /> 
 });
+
+const userInfo = {
+  firstName: 'John',
+  lastName: 'Smith',
+  username: 'test@gmail.com'
+}
 
 const postInfo = {
   address: {
@@ -43,16 +52,19 @@ const getProfilePosts = () => {
 
 describe("EditCard.jsx", () => {
   let originalFetch;
-
+  let providerProps;
   beforeEach(() => {
     originalFetch = global.fetch;
     global.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve(false)
     }));
+    providerProps = {
+      userInfo: userInfo
+    }
   });
 
   xit("Renders EditCard component", async () => {    
-    render( <EditCard postInfo={postInfo} getProfilePosts={getProfilePosts}/> );
+    mockContext(<EditCard postInfo={postInfo} getProfilePosts={getProfilePosts}/>, { providerProps })
 
     expect(await screen.getByText("Upload Image")).toBeTruthy();
     expect(await screen.getByText("Remove Image")).toBeTruthy();
@@ -60,7 +72,7 @@ describe("EditCard.jsx", () => {
   });
 
   xit("Populates values in state", async () => {    
-    render(<EditCard postInfo={postInfo} getProfilePosts={getProfilePosts}/>);
+    mockContext(<EditCard postInfo={postInfo} getProfilePosts={getProfilePosts}/>, { providerProps })
 
     const cityInput = await screen.getByPlaceholderText('cityInput');
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import CardActions from '@mui/material/CardActions';
 import Paper from '@mui/material/Paper';
@@ -10,21 +10,14 @@ import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import Context from './context/Context.js'
+
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
 const DisplayCard = ({ postInfo, view }) => {
-  const {
-    address,
-    applicantData,
-    roommate,
-    description,
-    moveInDate,
-    utilities,
-    rent,
-    bio,
-    images,
-    currUser
-  } = postInfo;
+  const { userInfo, setAlert } = useContext(Context)
+
+  const { address, roommate, description, moveInDate, utilities, rent, bio, images } = postInfo;
 
   const [index, setIndex] = useState(0) // Index for gallery image
  
@@ -37,9 +30,9 @@ const DisplayCard = ({ postInfo, view }) => {
   const handleApply = async () => {
     try {
       const reqBody = {
-        firstName: currUser.firstName,
-        lastName: currUser.lastName,
-        username: currUser.username
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+        username: userInfo.username
       }
       const response = await fetch(`/home/${props._id}`, {
         method:'PATCH',
