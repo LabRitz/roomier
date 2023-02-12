@@ -1,15 +1,20 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 
 import HomeFeed from "./HomeFeed.jsx";
 import { Circle, GoogleMap, Marker } from "@react-google-maps/api";
 import Geocode from "react-geocode";
 
+import Context from './context/Context.js'
 import { mapContainerStyle, dotStyle, boundaryStyle } from "./styles/googleMaps.js";
 
 const GoogleMapsAPIKey = "AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM";
 Geocode.setApiKey(GoogleMapsAPIKey);
 
-const Home = ({ userInfo }) => {
+const Home = () => {
+  const { userInfo } = useContext(Context)
+
+  console.log(userInfo)
+
   const currUser = userInfo;
 
   const [filterArr, setFilterArr] = useState([])

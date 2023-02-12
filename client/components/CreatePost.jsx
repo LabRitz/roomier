@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import { useTheme } from '@mui/material/styles';
@@ -24,6 +24,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import Geocode from "react-geocode";
 
+import Context from "./context/Context.js"
 import ImageGallery from "./ImageGallery.jsx";
 
 import "../stylesheets/createPost.scss";
@@ -40,8 +41,9 @@ const getStyles = (filter, filterName, theme) => {
 const genders = ['male', 'female', 'no-preference']
 const filters = ['pets', 'smoking', 'parking'];
 
-const CreatePost = ({ userInfo }) => {
+const CreatePost = () => {
   const theme = useTheme();
+  const { userInfo } = useContext(Context)
 
   const [location, setLocation] = useState({
     street1: '',
@@ -269,7 +271,7 @@ const CreatePost = ({ userInfo }) => {
   return (
     <div className="createPost">
       <div className='postForm'>
-        <ImageGallery images={images} setImages={setImages} view={'create'} userInfo={userInfo}/>
+        <ImageGallery images={images} setImages={setImages} view={'create'} />
         <Paper elevation={0} sx={{p:2, display:'flex', flexDirection:'column', justifyContent:'center', width:'50%'}}>
           <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr', columnGap:'8px', m: 1 }} size="small">
             <PlacesAutocomplete

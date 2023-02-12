@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { storage } from './utils/firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
@@ -16,11 +16,15 @@ import CheckIcon from '@mui/icons-material/Check';
 import CircularProgress from '@mui/material/CircularProgress';
 import HideImageIcon from '@mui/icons-material/HideImage';
 
+import Context from './context/Context.js'
+
 import '../stylesheets/imageGallery.scss';
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
 
-const ImageGallery = ({ images, setImages, view, userInfo, postId }) => {
+const ImageGallery = ({ images, setImages, view, postId }) => {
+  const { userInfo } = useContext(Context)
+
   // Initialize states for
   const [imageUpload, setImageUpload] = useState(null);
   const [index, setIndex] = useState(0) // Index for gallery image
