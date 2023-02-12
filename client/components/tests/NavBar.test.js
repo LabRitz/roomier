@@ -1,6 +1,9 @@
 import React from "react";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
+
+import mockContext from "./__mocks__/mockContext.js";
 import NavBar from "../NavBar.jsx";
 
 jest.mock('../Phrases.jsx', () => {
@@ -19,16 +22,19 @@ const userInfo = {
 describe("Signup.jsx", () => {
 
   let originalFetch;
-
+  let providerProps;
   beforeEach(() => {
     originalFetch = global.fetch;
     global.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve(false)
     }));
+    providerProps = {
+      userInfo: userInfo
+    }
   });
 
-  xit("Renders NavBar component", async () => {    
-    render(
+  it("Renders NavBar component", async () => {    
+    mockContext(
       <Router>
         <NavBar userInfo={userInfo} setUserInfo={setUserInfo}/>
         <Routes>
@@ -37,14 +43,14 @@ describe("Signup.jsx", () => {
           <Route path="/profile" element={<div data-testid="Profile">Profile</div>} />
         </Routes>
       </Router>
-    );
+    , { providerProps })
 
     expect(await screen.getByTestId("phrases")).toBeTruthy();
     expect(await screen.getByTestId("Home")).toBeTruthy();
   });
 
-  xit("Navigate to CreatePost", async () => {    
-    render(
+  it("Navigate to CreatePost", async () => {    
+    mockContext(
       <Router>
         <NavBar userInfo={userInfo} setUserInfo={setUserInfo}/>
         <Routes>
@@ -53,15 +59,15 @@ describe("Signup.jsx", () => {
           <Route path="/profile" element={<div data-testid="Profile">Profile</div>} />
         </Routes>
       </Router>
-    );
+    , { providerProps })
 
     const createButton = await screen.getByTestId('createPostBtn');
     fireEvent.click(createButton)
     expect(await screen.getByTestId("CreatePost")).toBeTruthy();
   });
 
-  xit("Navigate to Home", async () => {    
-    render(
+  it("Navigate to Home", async () => {    
+    mockContext(
       <Router>
         <NavBar userInfo={userInfo} setUserInfo={setUserInfo}/>
         <Routes>
@@ -70,7 +76,7 @@ describe("Signup.jsx", () => {
           <Route path="/profile" element={<div data-testid="Profile">Profile</div>} />
         </Routes>
       </Router>
-    );
+    , { providerProps })
 
     const createButton = await screen.getByTestId('createPostBtn');
     fireEvent.click(createButton)
@@ -80,8 +86,8 @@ describe("Signup.jsx", () => {
     expect(await screen.getByTestId("Home")).toBeTruthy();
   });
 
-  xit("Navigate to Home in Menu", async () => {    
-    render(
+  it("Navigate to Home in Menu", async () => {    
+    mockContext(
       <Router>
         <NavBar userInfo={userInfo} setUserInfo={setUserInfo}/>
         <Routes>
@@ -90,7 +96,7 @@ describe("Signup.jsx", () => {
           <Route path="/profile" element={<div data-testid="Profile">Profile</div>} />
         </Routes>
       </Router>
-    );
+    , { providerProps })
 
     const createButton = await screen.getByTestId('createPostBtn');
     fireEvent.click(createButton)

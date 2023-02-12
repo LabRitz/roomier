@@ -1,11 +1,20 @@
 import React from "react";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
+
+import mockContext from "./__mocks__/mockContext.js";
 import Login from "../Login.jsx";
 
 jest.mock('../Phrases.jsx', () => {
   return () => <div data-testid="phrases" /> 
 });
+
+const userInfo = {
+  firstName: 'John',
+  lastName: 'Smith',
+  username: 'test@gmail.com'
+}
 
 describe("Login.jsx", () => {
 
@@ -18,14 +27,15 @@ describe("Login.jsx", () => {
     }));
   });
 
-  xit("Renders Login component", async () => {    
-    render(
+  it("Renders Login component", async () => {    
+    const providerProps = { userInfo: '' }
+    mockContext(
       <Router>
         <Routes>
           <Route exact path="/" element={<Login />} />
         </Routes>
       </Router>
-    );
+    , { providerProps })
     expect(await screen.getByText("a LabRitz thing")).toBeTruthy();
     expect(await screen.getByText("looking for a Zillow corporate sponsorship")).toBeTruthy();
     expect(await screen.getByPlaceholderText("Enter your email address")).toBeTruthy();
@@ -37,16 +47,17 @@ describe("Login.jsx", () => {
 
   });
 
-  xit("Renders Signup component when clicked", async () => {
-    render(
+  it("Renders Signup component when clicked", async () => {
+    const providerProps = { userInfo: '' }
+    mockContext(
       <Router>
         <Routes>
           <Route exact path="/" element={<Login />} />
           <Route path="/signup" element={<div data-testid="Signup">Signup</div>} />
         </Routes>
       </Router>
-    );
-    
+    , { providerProps })
+
     const signupButton = screen.getByText('Sign up');
     fireEvent.click(signupButton);
 
