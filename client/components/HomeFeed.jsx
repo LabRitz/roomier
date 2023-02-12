@@ -364,7 +364,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
             <ImageList sx={{ width: '100%', height: '95%', mb:4}} cols={2} rowHeight={350}>
                 {displayPosts.map((post, i) => (
                   <ImageListItem key={i}>
-                    <ContainerFeed key={i} data={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view={'user'}/>
+                    <ContainerFeed key={i} post={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view={'user'}/>
                   </ImageListItem>
                 ))}
             </ImageList>
