@@ -12,7 +12,7 @@ import CreatePost from "./CreatePost.jsx";
 import Profile from "./Profile.jsx";
 import NavBar from "./NavBar.jsx";
 
-import AlertContext from "./context/AlertContext.js";
+import Context from "./context/Context.js";
 
 const App = () => {
   const [userInfo, setUserInfo] = useState("");
@@ -35,27 +35,27 @@ const App = () => {
   }, []);
 
   return (
-    <AlertContext.Provider value={{ alert, setAlert }}>
+    <Context.Provider value={{ userInfo, setUserInfo, setAlert }}>
       {(userInfo == "" ) ? (
         <Router>
           <Routes>
-            <Route exact path="/" element={<Login setUserInfo={setUserInfo} />} />
+            <Route exact path="/" element={<Login />} />
             <Route
               path="/signup"
-              element={<Signup setUserInfo={setUserInfo} />}
+              element={<Signup />}
             />
           </Routes>
         </Router>
       ) : (
         <Router>
-          <NavBar userInfo={userInfo} setUserInfo={setUserInfo} />
+          <NavBar />
           <Routes>
-            <Route exact path="/" element={<Home userInfo={userInfo} />} />
+            <Route exact path="/" element={<Home />} />
             <Route
               path="/createPost"
-              element={<CreatePost userInfo={userInfo} />}
+              element={<CreatePost />}
             />
-            <Route path="/profile" element={<Profile userInfo={userInfo} />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </Router>
       )}
@@ -71,7 +71,7 @@ const App = () => {
           </Alert>
         ))}
       </Stack>
-    </AlertContext.Provider>
+    </Context.Provider>
   );
 };
 

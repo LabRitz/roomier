@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom'
 
-import AlertContext from './context/AlertContext.js';
+import Context from './context/Context.js';
 import Phrases from './Phrases.jsx';
 import '../stylesheets/login.scss';
 
-const Login = ({ setUserInfo }) => {
-  const { setAlert } = useContext(AlertContext);
+const Login = () => {
+  const { setUserInfo, setAlert } = useContext(Context);
 
   const handleLogin = async () => {      
     const reqBody = {

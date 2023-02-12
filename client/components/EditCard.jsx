@@ -19,7 +19,7 @@ import ImageGallery from './ImageGallery.jsx';
 
 const genders = ['male', 'female', 'no-preference']
 
-const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
+const EditCard = ({ postInfo, getProfilePosts }) => {
   const {
     _id,
     address,
@@ -199,7 +199,7 @@ const EditCard = ({ postInfo, getProfilePosts, userInfo }) => {
 
   return (
     <div style={{display: 'flex', flexDirection:'row', minWidth:'300px', height:'100%'}}>
-      <ImageGallery images={imgArr} setImages={setImgArr} view={'edit'} userInfo={userInfo} postId={_id}/>
+      <ImageGallery images={imgArr} setImages={setImgArr} view={'edit'} postId={_id}/>
       <Paper elevation={0} sx={{p:1, width:'50%'}}>
         <FormControl sx={{ display: 'grid', gridTemplateColumns:'2fr 1fr', columnGap:'8px', m: 1 }} size="small">
           <PlacesAutocomplete
