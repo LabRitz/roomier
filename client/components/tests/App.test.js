@@ -1,33 +1,32 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import App from "../App.jsx";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import App from '../App.jsx';
 
-jest.mock("../Login.jsx", () => {
-  return () => <div data-testid="Login">Login</div>;
+jest.mock('../Login.jsx', () => function () {
+  return <div data-testid="Login">Login</div>;
 });
 
-jest.mock("../Signup.jsx", () => {
-  return () => <div data-testid="Signup">Signup</div>;
+jest.mock('../Signup.jsx', () => function () {
+  return <div data-testid="Signup">Signup</div>;
 });
 
-jest.mock("../Home.jsx", () => {
-  return () => <div data-testid="Home">Home</div>;
+jest.mock('../Home.jsx', () => function () {
+  return <div data-testid="Home">Home</div>;
 });
 
-jest.mock("../CreatePost.jsx", () => {
-  return () => <div data-testid="CreatePost">CreatePost</div>;
+jest.mock('../CreatePost.jsx', () => function () {
+  return <div data-testid="CreatePost">CreatePost</div>;
 });
 
-jest.mock("../Profile.jsx", () => {
-  return () => <div data-testid="Profile">Profile</div>;
+jest.mock('../Profile.jsx', () => function () {
+  return <div data-testid="Profile">Profile</div>;
 });
 
-jest.mock("../NavBar.jsx", () => {
-  return () => <div data-testid="NavBar">NavBar</div>;
+jest.mock('../NavBar.jsx', () => function () {
+  return <div data-testid="NavBar">NavBar</div>;
 });
 
-describe("App.jsx", () => {
-
+describe('App.jsx', () => {
   let originalFetch;
 
   beforeEach(() => {
@@ -42,21 +41,21 @@ describe("App.jsx", () => {
       //   zipCode: '10000',
       //   __v: 0
       // })
-      json: () => Promise.resolve(false)
+      json: () => Promise.resolve(false),
     }));
   });
 
-  it("renders Login component when no user session", async () => {    
+  it('renders Login component when no user session', async () => {
     render(<App />);
-    expect(await screen.getByTestId("Login")).toBeTruthy();
+    expect(await screen.getByTestId('Login')).toBeTruthy();
   });
 
-  xit("renders Home, CreatePost, and Profile components with NavBar when user has session", async () => {
+  xit('renders Home, CreatePost, and Profile components with NavBar when user has session', async () => {
     render(<App />);
 
-    expect(await screen.getByTestId("Home")).toBeTruthy();
-    expect(await screen.getByTestId("CreatePost")).toBeTruthy();
-    expect(await screen.getByTestId("Profile")).toBeTruthy();
-    expect(await screen.getByTestId("NavBar")).toBeTruthy();
+    expect(await screen.getByTestId('Home')).toBeTruthy();
+    expect(await screen.getByTestId('CreatePost')).toBeTruthy();
+    expect(await screen.getByTestId('Profile')).toBeTruthy();
+    expect(await screen.getByTestId('NavBar')).toBeTruthy();
   });
 });

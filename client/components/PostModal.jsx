@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
-import DisplayCard from './DisplayCard.jsx';
+import DisplayCard from './DisplayCard';
 
 const style = {
   position: 'absolute',
@@ -17,8 +17,7 @@ const style = {
   p: 1,
 };
 
-const PostModal = ({postInfo, open, handleClose }) => {
-
+function PostModal({ postInfo, open, handleClose }) {
   return (
     <Modal
       keepMounted
@@ -28,10 +27,10 @@ const PostModal = ({postInfo, open, handleClose }) => {
       aria-describedby="keep-mounted-modal-description"
     >
       <Box sx={style}>
-        <DisplayCard postInfo={postInfo} view={'user'}/>
+        <DisplayCard postInfo={postInfo} view="user" />
       </Box>
     </Modal>
-  )
+  );
 }
 
 export default PostModal;

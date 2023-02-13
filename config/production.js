@@ -6,5 +6,5 @@ module.exports = {
   DATABASE: {
     URI: process.env.ATLAS_URI,
     dbName: process.env.DB_TABLE,
-  }
-}
+  },
+};

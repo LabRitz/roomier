@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -22,93 +22,95 @@ import EditIcon from '@mui/icons-material/Edit';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-import Context from './context/Context.js';
-import ColorModeContext from "./context/ColorModeContext.js";
-import Phrases from "./Phrases.jsx";
-import "../stylesheets/navbar.scss";
+import Context from './context/Context';
+import ColorModeContext from './context/ColorModeContext';
+import Phrases from './Phrases';
+import '../stylesheets/navbar.scss';
 
 const pages = [
   { title: 'Home', nav: '/' },
   { title: 'Create Post', nav: '/createPost' },
 ];
 
-const NavBar = () => {
+function NavBar() {
+  const theme = useTheme();
   const navigate = useNavigate();
 
   const { userInfo, setUserInfo } = useContext(Context);
-
-  const theme = useTheme();
-  const colorMode = useContext(ColorModeContext);
-  
-  const settings = [
-    { 
-      icon: <AccountCircleIcon/>,
-      name: 'Profile',
-      action: () => navigate('/profile') 
-    },
-    { 
-      icon: (theme.palette.mode === 'dark') ? <Brightness4Icon/>: <NightlightIcon/>,
-      name: (theme.palette.mode === 'dark') ? 'Light mode': 'Dark mode',
-      action: () => { 
-        colorMode.toggleColorMode(); 
-        setAnchorElNav(null)
-      }
-    },
-    { 
-      icon: <LogoutIcon/>,
-      name: 'Signout',
-      action: () => handleSignout() 
-    }
-  ];
+  const { toggleColorMode } = useContext(ColorModeContext);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(false);
-  
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const toggleUserMenu = (event) => {
+
+  const toggleUserMenu = () => {
     setAnchorElUser(!anchorElUser);
   };
-  
+
   const handleCloseNavMenu = (page) => {
     setAnchorElNav(null);
-    if (page.nav) navigate(page.nav)
+    if (page.nav) navigate(page.nav);
   };
-  
+
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
-    if (setting.action) setting.action()
+    if (setting.action) setting.action();
   };
-  
+
   const handleSignout = async () => {
     try {
-      const res = await fetch("/signout");
-      if (res.status == 204) {
-        setUserInfo("");
-        navigate('/')
+      const res = await fetch('/signout');
+      if (res.status === 204) {
+        setUserInfo('');
+        navigate('/');
       }
     } catch (err) {
-      console.log('ERROR: Cannot sign user out')
+      console.log('ERROR: Cannot sign user out');
     }
   };
 
+  const settings = [
+    {
+      icon: <AccountCircleIcon />,
+      name: 'Profile',
+      action: () => navigate('/profile'),
+    },
+    {
+      icon: (theme.palette.mode === 'dark') ? <Brightness4Icon /> : <NightlightIcon />,
+      name: (theme.palette.mode === 'dark') ? 'Light mode' : 'Dark mode',
+      action: () => {
+        toggleColorMode();
+        setAnchorElNav(null);
+      },
+    },
+    {
+      icon: <LogoutIcon />,
+      name: 'Signout',
+      action: () => handleSignout(),
+    },
+  ];
+
   return (
     <>
-      <AppBar position="fixed" style={{background: '#98C1D9'}}>
+      <AppBar position="fixed" style={{ background: '#98C1D9' }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Avatar 
-              data-testid='menuHomeBtn'
-              onClick={() => navigate('/')} 
-              alt={userInfo.firstName} 
-              sx={{ width: 112, 
-                bgcolor: 'transparent', 
-                display: { xs: 'none', sm: 'none', md: 'flex' }, 
-                mr: 1 }} 
-              variant='rounded'
+            <Avatar
+              data-testid="menuHomeBtn"
+              onClick={() => navigate('/')}
+              alt={userInfo.firstName}
+              sx={{
+                width: 112,
+                bgcolor: 'transparent',
+                display: { xs: 'none', sm: 'none', md: 'flex' },
+                mr: 1,
+              }}
+              variant="rounded"
             >
-              <img className='navBarLogo' src='roomier.svg' />
+              <img className="navBarLogo" src="roomier.svg" alt="Roomier logo" />
             </Avatar>
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', sm: 'flex', md: 'none' } }}>
               <IconButton
@@ -146,9 +148,9 @@ const NavBar = () => {
                 ))}
               </Menu>
             </Box>
-            <Box sx={{ mr: 2, flexGrow: 1, display: { xs: 'flex', sm: 'flex', md: 'none' } }} >
-              <Avatar data-testid='homeBtn' onClick={() => navigate('/')} alt={userInfo.firstName} sx={{ width: 112, bgcolor: 'transparent' }} variant='rounded'>
-                <img className='navBarLogo' src='roomier.svg' />
+            <Box sx={{ mr: 2, flexGrow: 1, display: { xs: 'flex', sm: 'flex', md: 'none' } }}>
+              <Avatar data-testid="homeBtn" onClick={() => navigate('/')} alt={userInfo.firstName} sx={{ width: 112, bgcolor: 'transparent' }} variant="rounded">
+                <img className="navBarLogo" src="roomier.svg" alt="Roomier logo" />
               </Avatar>
             </Box>
             <Box sx={{ ml: 1, flexGrow: 1, display: { xs: 'none', sm: 'none', md: 'flex' } }}>
@@ -157,21 +159,21 @@ const NavBar = () => {
             <Box sx={{ flexGrow: 0 }}>
               <SpeedDial
                 ariaLabel="User Setting Menu"
-                sx={{position: 'relative', top: '6px', color:'#3D5A80'}}
-                icon={ 
-                  <Tooltip placement='left' title={anchorElUser ? 'Close settings' : 'Open settings'}>
-                    <IconButton >
-                      <Avatar alt={userInfo.firstName} sx={{ color: '#EAEAEA', bgcolor: '#3D5A80' }} src="/"/>
+                sx={{ position: 'relative', top: '6px', color: '#3D5A80' }}
+                icon={(
+                  <Tooltip placement="left" title={anchorElUser ? 'Close settings' : 'Open settings'}>
+                    <IconButton>
+                      <Avatar alt={userInfo.firstName} sx={{ color: '#EAEAEA', bgcolor: '#3D5A80' }} src="/" />
                     </IconButton>
                   </Tooltip>
-                }
+                )}
                 onClick={toggleUserMenu}
                 open={anchorElUser}
-                direction='down'
+                direction="down"
               >
                 {settings.map((setting, i) => (
                   <SpeedDialAction
-                    sx={{ position: 'absolute', top: `${i*64+64}px`, right: '0px' }}
+                    sx={{ position: 'absolute', top: `${i * 64 + 64}px`, right: '0px' }}
                     key={setting.name}
                     icon={setting.icon}
                     tooltipTitle={setting.name}
@@ -183,11 +185,11 @@ const NavBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Fab data-testid='createPostBtn' sx={{position:'fixed', bottom: 24, right: 24}} color="primary" aria-label="edit" onClick={() => navigate('/createPost')}>
-        <EditIcon/>
+      <Fab data-testid="createPostBtn" sx={{ position: 'fixed', bottom: 24, right: 24 }} color="primary" aria-label="edit" onClick={() => navigate('/createPost')}>
+        <EditIcon />
       </Fab>
     </>
   );
-};
+}
 
 export default NavBar;

@@ -1,33 +1,35 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 
-import ProfileFeed from "./ProfileFeed.jsx";
+import ProfileFeed from './ProfileFeed';
 
-import Context from './context/Context.js'
+import Context from './context/Context';
 
-const Profile = () => {
-  const { userInfo } = useContext(Context)
+function Profile() {
+  const { userInfo } = useContext(Context);
 
   const [posts, setPosts] = useState([]);
 
   const getProfilePosts = async () => {
     try {
-      const res = await fetch(`/profile/${userInfo.username}`)
-      const data = await res.json()
+      const res = await fetch(`/profile/${userInfo.username}`);
+      const data = await res.json();
       setPosts(data);
     } catch (err) {
-      console.log('ERROR: Cannot get profile posts', err)
+      console.log('ERROR: Cannot get profile posts', err);
     }
-  }
+  };
 
   useEffect(() => {
-    getProfilePosts()
+    getProfilePosts();
   }, []);
 
-  return (posts && 
+  return (posts
+    && (
     <div className="profile">
       <ProfileFeed posts={posts} getProfilePosts={getProfilePosts} />
     </div>
+    )
   );
-};
+}
 
 export default Profile;

@@ -5,19 +5,26 @@ import Typography from '@mui/material/Typography';
 import TuneIcon from '@mui/icons-material/Tune';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-const ProfileCardActions = ({ application, handleUpdate, handleDelete, openApps }) => { 
+function ProfileCardActions({
+  application, handleUpdate, handleDelete, openApps,
+}) {
   return (
-    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems: 'center'}}>
+    <div style={{
+      display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    }}
+    >
       <Tooltip title="Edit post">
-        <Button sx={{mr:1}} color="inherit" onClick={handleUpdate} size="small">
+        <Button sx={{ mr: 1 }} color="inherit" onClick={handleUpdate} size="small">
           <TuneIcon />
         </Button>
       </Tooltip>
-      <Typography variant="body2" noWrap={true} color="text.secondary" onClick={openApps}>
-        {application.length} in review
+      <Typography variant="body2" noWrap color="text.secondary" onClick={openApps}>
+        {application.length}
+        {' '}
+        in review
       </Typography>
       <Tooltip title="Remove post">
-        <Button sx={{mr:1}} color="inherit" onClick={handleDelete} size="small">
+        <Button sx={{ mr: 1 }} color="inherit" onClick={handleDelete} size="small">
           <DeleteForeverIcon />
         </Button>
       </Tooltip>
