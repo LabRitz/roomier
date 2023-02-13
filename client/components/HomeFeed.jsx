@@ -14,78 +14,83 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import ToggleButton from '@mui/material/ToggleButton';
 import FilterListIcon from '@mui/icons-material/FilterList';
+
+import ContainerFeed from './ContainerFeed';
+import PostModal from './PostModal';
+
+import '../stylesheets/homeFeed.scss';
+
 const Box = React.lazy(() => import('@mui/material/Box'));
 const Chip = React.lazy(() => import('@mui/material/Chip'));
 const ListItemText = React.lazy(() => import('@mui/material/ListItemText'));
 const Checkbox = React.lazy(() => import('@mui/material/Checkbox'));
+const Slider = React.lazy(() => import('./Slider'));
 
-import ContainerFeed from './ContainerFeed.jsx';
-import PostModal from './PostModal.jsx';
-const Slider = React.lazy(() => import('./Slider.jsx'));
-
-import '../stylesheets/homeFeed.scss';
-
-const getStyles = (filter, filterName, theme) => {
-  return {
-    fontWeight:
+const getStyles = (filter, filterName, theme) => ({
+  fontWeight:
       filterName.indexOf(filter) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
-  };
-}
+});
 
 const filters = ['Pets', 'Smoking', 'Parking'];
 const distances = [1, 2, 5, 10, 25, 50];
 const postsPerPage = [2, 4, 6, 12, 24];
-const bedrooms = [0, 1, 2, 3, 4]
-const bathrooms = [1, 2, 3, 4]
+const bedrooms = [0, 1, 2, 3, 4];
+const bathrooms = [1, 2, 3, 4];
 const priceGap = 100;
 const sqftGap = 50;
 
-const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr, setFilterArr, priceRange, setPriceRange, sqftRange, setSqftRange, br, setBR, ba, setBA }) => {  
+function HomeFeed({
+  posts, zipCode, setZipCode, distance, setDistance,
+  filterArr, setFilterArr, priceRange, setPriceRange,
+  sqftRange, setSqftRange, br, setBR, ba, setBA,
+}) {
   const theme = useTheme();
 
   // Handlers for post modal open and close
   const [postInfo, setPostInfo] = useState({
-    address:'',
-    roommate:{
-      gender:''
+    address: '',
+    roommate: {
+      gender: '',
     },
-    description:{
-      condition:'',
-      BA:0,
-      BR:0,
-      sqFt:0,
+    description: {
+      condition: '',
+      BA: 0,
+      BR: 0,
+      sqFt: 0,
       pets: false,
       smoking: false,
       parking: false,
     },
-    moveInDate:'',
-    utilities:'',
-    rent:'',
-    bio:'',
-    images:{'key': 'value'}
-  })
+    moveInDate: '',
+    utilities: '',
+    rent: '',
+    bio: '',
+    images: { key: 'value' },
+  });
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
   // Toggle filter div open/closed
-  const [showFilter, setShowFilter] = useState(false)
+  const [showFilter, setShowFilter] = useState(false);
 
   // Set user selected posts per page
-  const[numPosts, setNumPosts] = useState(6)
+  const [numPosts, setNumPosts] = useState(6);
 
   // Set current page of posts to display
-  const [displayPosts, setDisplayPosts] = useState(posts.slice(0, numPosts));  
+  const [displayPosts, setDisplayPosts] = useState(posts.slice(0, numPosts));
 
   // Handle user input functions
-  const handleInput = (e) => { if (e.target.value.length === 5) setZipCode(e.target.value) }
-  const handleDistance = (e) => { setDistance(1609.344 * e.target.value) }
-  const handlePages = (event, value) => { setDisplayPosts(posts.slice(numPosts*(value-1), numPosts*value)) }
-  const handlePostsPerPage = (e) => { setNumPosts(e.target.value) }  
-  const handleBR = (e) => { setBR(e.target.value) }  
-  const handleBA = (e) => { setBA(e.target.value) }  
+  const handleInput = (e) => { if (e.target.value.length === 5) setZipCode(e.target.value); };
+  const handleDistance = (e) => { setDistance(1609.344 * e.target.value); };
+  const handlePages = (event, value) => {
+    setDisplayPosts(posts.slice(numPosts * (value - 1), numPosts * value));
+  };
+  const handlePostsPerPage = (e) => { setNumPosts(e.target.value); };
+  const handleBR = (e) => { setBR(e.target.value); };
+  const handleBA = (e) => { setBA(e.target.value); };
 
   // Dynamically update price selection based on range slider
   const handlePrice = (event, newValue, activeThumb) => {
@@ -132,22 +137,26 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
     } = event;
     setFilterArr(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
+      typeof value === 'string' ? value.split(',') : value,
     );
   };
 
   // Render posts in each page on load or filter change
   useEffect(() => {
-    setDisplayPosts(posts.slice(0, numPosts))
-  }, [posts, numPosts])
+    setDisplayPosts(posts.slice(0, numPosts));
+  }, [posts, numPosts]);
 
   return (
     <AnimatePresence initial={false}>
-      <div key='homeFeed' className='homeFeed' data-testid='homeFeed'>
-        <div className="filter" style={{
-          display: 'flex',
-          flexDirection: 'row', 
-          alignItems: 'center'}}>
+      <div key="homeFeed" className="homeFeed" data-testid="homeFeed">
+        <div
+          className="filter"
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
           <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
             {(posts.length > 0) ? (
               <TextField
@@ -156,11 +165,8 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                 defaultValue={zipCode}
                 onChange={handleInput}
                 size="small"
-                inputProps={{ 
-                  inputMode: 'numeric', 
-                  pattern: '^\d{5}(?:[-\s]\d{4})?$' 
-                }}
-              /> ) : (
+              />
+            ) : (
               <TextField
                 error
                 id="zipCode"
@@ -169,7 +175,8 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                 onChange={handleInput}
                 helperText="No results"
                 size="small"
-              /> )}  
+              />
+            )}
           </FormControl>
 
           <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
@@ -177,15 +184,19 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
             <Select
               labelId="distance-select-label"
               id="distance-select"
-              value={Math.round(distance/1609.344)}
+              value={Math.round(distance / 1609.344)}
               onChange={handleDistance}
-              input={<OutlinedInput id="distance-select" label="Distance (mi)"/>}
+              input={<OutlinedInput id="distance-select" label="Distance (mi)" />}
             >
               {distances.map((dist, i) => (
-                <MenuItem key={i} value={dist}>{dist} mi</MenuItem>
+                <MenuItem key={i} value={dist}>
+                  {dist}
+                  {' '}
+                  mi
+                </MenuItem>
               ))}
             </Select>
-          </FormControl> 
+          </FormControl>
 
           <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
             <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
@@ -194,7 +205,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
               id="ppp-select"
               value={numPosts}
               onChange={handlePostsPerPage}
-              input={<OutlinedInput id="ppp-select" label="# of Posts"/>}
+              input={<OutlinedInput id="ppp-select" label="# of Posts" />}
             >
               {postsPerPage.map((opt, i) => (
                 <MenuItem key={i} value={opt}>{opt}</MenuItem>
@@ -203,19 +214,20 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
           </FormControl>
 
           <ToggleButton
-            sx={{ml:1}}
+            sx={{ ml: 1 }}
             size="small"
             value="filter"
             selected={showFilter}
             onChange={() => setShowFilter(!showFilter)}
-            data-testid='toggleFilter'
+            data-testid="toggleFilter"
           >
-            <FilterListIcon/>
+            <FilterListIcon />
           </ToggleButton>
         </div>
-        <Suspense fallback={<div data-testid='loadingFilter'>Loading...</div>}>
-          { showFilter && 
-            <motion.div 
+        <Suspense fallback={<div data-testid="loadingFilter">Loading...</div>}>
+          { showFilter
+            && (
+            <motion.div
               variants={{
                 present: { scale: 1, opacity: 1 },
                 exit: { scale: 0.8, opacity: 0 },
@@ -223,14 +235,25 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
               initial="exit"
               animate="present"
               exit="exit"
-              layout={true}>
-              <div className="filter" data-testid='showFilter' style={{
-                paddingLeft:'4px',
-                display: 'flex',
-                flexWrap: 'wrap',
-                flexDirection: 'row', 
-                alignItems: 'center'}}>
-                <Box sx={{ p:1, minWidth: 190, display: 'flex', flexDirection: 'column'}} size="small">
+              layout
+            >
+              <div
+                className="filter"
+                data-testid="showFilter"
+                style={{
+                  paddingLeft: '4px',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <Box
+                  sx={{
+                    p: 1, minWidth: 190, display: 'flex', flexDirection: 'column',
+                  }}
+                  size="small"
+                >
                   <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
                   <Slider
                     min={0}
@@ -260,7 +283,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                     id="br-select"
                     value={br}
                     onChange={handleBR}
-                    input={<OutlinedInput id="br-select" label="BR"/>}
+                    input={<OutlinedInput id="br-select" label="BR" />}
                   >
                     {bedrooms.map((opt, i) => (
                       <MenuItem key={i} value={opt}>{opt}</MenuItem>
@@ -275,7 +298,7 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                     id="ba-select"
                     value={ba}
                     onChange={handleBA}
-                    input={<OutlinedInput id="ba-select" label="BA"/>}
+                    input={<OutlinedInput id="ba-select" label="BA" />}
                   >
                     {bathrooms.map((opt, i) => (
                       <MenuItem key={i} value={opt}>{opt}</MenuItem>
@@ -285,21 +308,21 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
 
                 <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
                   <InputLabel id="filter-chip-label">Options</InputLabel>
-                    <Select
-                      labelId="filter-chip-label"
-                      id="filter-chip"
-                      multiple
-                      value={filterArr}
-                      onChange={handleChip}
-                      input={<OutlinedInput id="select-filter" label="Options" />}
-                      renderValue={(selected) => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
-                          {selected.map((value) => (
-                            <Chip key={value} label={value} />
-                          ))}
-                        </Box>
-                      )}
-                    >
+                  <Select
+                    labelId="filter-chip-label"
+                    id="filter-chip"
+                    multiple
+                    value={filterArr}
+                    onChange={handleChip}
+                    input={<OutlinedInput id="select-filter" label="Options" />}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
+                  >
                     {filters.map((filter) => (
                       <MenuItem
                         key={filter}
@@ -311,27 +334,28 @@ const HomeFeed = ({ posts, zipCode, setZipCode, distance, setDistance, filterArr
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>  
+                </FormControl>
               </div>
             </motion.div>
-          }
-        </Suspense>        
-        <ImageList sx={{ width: '100%', height: '95%', mb:4}} cols={2} rowHeight={350}>
-            {displayPosts.map((post, i) => (
-              <ImageListItem key={i}>
-                <ContainerFeed key={i} post={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view={'user'}/>
-              </ImageListItem>
-            ))}
+            )}
+        </Suspense>
+        <ImageList sx={{ width: '100%', height: '95%', mb: 4 }} cols={2} rowHeight={350}>
+          {displayPosts.map((post, i) => (
+            <ImageListItem key={i}>
+              <ContainerFeed key={i} post={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view="user" />
+            </ImageListItem>
+          ))}
         </ImageList>
-        <Pagination 
-          count={Math.ceil(posts.length/numPosts)} 
-          defaultPage={1} boundaryCount={2} 
-          onChange={handlePages}/>
+        <Pagination
+          count={Math.ceil(posts.length / numPosts)}
+          defaultPage={1}
+          boundaryCount={2}
+          onChange={handlePages}
+        />
       </div>
-      <PostModal key='postModal' postInfo={postInfo} open={open} handleClose={handleClose}/>
+      <PostModal key="postModal" postInfo={postInfo} open={open} handleClose={handleClose} />
     </AnimatePresence>
-  )
-
+  );
 }
 
 export default HomeFeed;

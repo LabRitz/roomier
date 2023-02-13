@@ -4,9 +4,12 @@ import Tooltip from '@mui/material/Tooltip';
 import SaveIcon from '@mui/icons-material/Save';
 import RestoreIcon from '@mui/icons-material/Restore';
 
-const EditCardActions = ({ handleSave, handleUndo }) => { 
+function EditCardActions({ handleSave, handleUndo }) {
   return (
-    <div style={{display:'flex', flexDirection:'row', justifyContent:'space-around', alignItems: 'center'}}>
+    <div style={{
+      display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center',
+    }}
+    >
       <Tooltip title="Restore changes">
         <Button color="inherit" onClick={handleUndo} size="small">
           <RestoreIcon />
