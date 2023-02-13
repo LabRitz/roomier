@@ -3,11 +3,13 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
-const { PROTOCOL, DOMAIN, PORT, SERVER_PORT } = require('config')
+const {
+  PROTOCOL, DOMAIN, PORT, SERVER_PORT,
+} = require('config');
 
 module.exports = {
   entry: {
-    app: './client/index.js'
+    app: './client/index.js',
   },
 
   devtool: 'inline-source-map',
@@ -17,7 +19,7 @@ module.exports = {
     port: PORT,
     static: {
       directory: path.join(__dirname, '..', 'dist'),
-      publicPath: '/'
+      publicPath: '/',
     },
     client: {
       progress: true,
@@ -31,17 +33,17 @@ module.exports = {
   },
 
   output: {
-    publicPath: ``,
+    publicPath: '',
     path: path.join(__dirname, '..', 'dist'),
     filename: '[name].[contenthash:5]].js',
-    clean: true
+    clean: true,
   },
 
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '/index.html'),
       filename: 'index.html',
-      favicon: path.join(__dirname, '..', 'client/assets/roomier.svg')
+      favicon: path.join(__dirname, '..', 'client/assets/roomier.svg'),
     }),
     new Dotenv(),
   ],
@@ -54,15 +56,15 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
-        }
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
+        },
       },
       {
         test: /\.s?css$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }]
-      }
-    ]
-  }
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }],
+      },
+    ],
+  },
 
-}
+};
