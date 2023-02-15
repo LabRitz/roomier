@@ -12,7 +12,7 @@ const config = {
     '!**/__tests__/**.js',
     '!**/firebase.js',
     '!**/index.js',
-    '!**/passport.js'
+    '!**/passport.js',
   ],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
@@ -20,16 +20,16 @@ const config = {
     '\\.(scss|css|less)$': 'identity-obj-proxy',
   },
   testEnvironment: 'jsdom',
-  testMatch:['**.test.js'],
+  testMatch: ['**.test.js'],
   testPathIgnorePatterns: [
     './server/server.test.js',
     './__tests__/',
     './config/',
-    './node_modules/'
+    './node_modules/',
   ],
   transform: {
-    '^.+\\.(js|jsx)$': 'babel-jest'
-  }
+    '^.+\\.(js|jsx)$': 'babel-jest',
+  },
 };
 
 module.exports = config;

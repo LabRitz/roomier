@@ -1,31 +1,33 @@
 const Post = require('../../db/postModel');
 
 const filterPostsByDistance = async (req, res, next) => {
-  const { lng, lat , minDistance, maxDistance} = req.body
-  const username = req.params.username
-  if (username === undefined || lng === undefined || lat === undefined || 
-    minDistance === undefined || maxDistance === undefined) {
-    return res.sendStatus(400)
+  const {
+    lng, lat, minDistance, maxDistance,
+  } = req.body;
+  const { username } = req.params;
+  if (username === undefined || lng === undefined || lat === undefined
+    || minDistance === undefined || maxDistance === undefined) {
+    return res.sendStatus(400);
   }
 
   try {
     const queryResult = await Post.find({
-      geoData: { 
+      geoData: {
         $near: {
-          $geometry: { type: "Point",  coordinates: [ lng, lat ] },
+          $geometry: { type: 'Point', coordinates: [lng, lat] },
           $minDistance: minDistance,
-          $maxDistance: maxDistance
-        }
+          $maxDistance: maxDistance,
+        },
       },
-      'userData.username': {$ne: username}
-    })
+      'userData.username': { $ne: username },
+    });
     return res.status(200).json(queryResult);
   } catch (err) {
-    return next ({
+    return next({
       log: `ERROR: filterPostsByDistance, ${err}`,
       status: 500,
-      message: {err: 'an error occurred while attempting to filter for posts'}
-    })
+      message: { err: 'an error occurred while attempting to filter for posts' },
+    });
   }
 };
 
