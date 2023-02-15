@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect, Suspense } from 'react';
+import React, {
+  useState, useEffect, useRef, Suspense,
+} from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import ImageList from '@mui/material/ImageList';
@@ -14,11 +16,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import ToggleButton from '@mui/material/ToggleButton';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 
 import ContainerFeed from './ContainerFeed';
 import PostModal from './PostModal';
 
 import '../stylesheets/homeFeed.scss';
+
+import Scatter from './charts/Scatter';
 
 const Box = React.lazy(() => import('@mui/material/Box'));
 const Chip = React.lazy(() => import('@mui/material/Chip'));
@@ -72,6 +77,9 @@ function HomeFeed({
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // Toggle data visualization
+  const [showMetrics, setShowMetrics] = useState(false);
 
   // Toggle filter div open/closed
   const [showFilter, setShowFilter] = useState(false);
@@ -146,6 +154,27 @@ function HomeFeed({
     setDisplayPosts(posts.slice(0, numPosts));
   }, [posts, numPosts]);
 
+  // Define refs for Scatter plot size
+  const divRef = useRef(null);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+
+  // Update refs to scatter plot when metrics toggled on or resizing
+  useEffect(() => {
+    if (showMetrics) {
+      setWidth(divRef.current.offsetWidth);
+      setHeight(divRef.current.offsetHeight);
+      const handleResize = () => {
+        setWidth(divRef.current.offsetWidth);
+        setHeight(divRef.current.offsetHeight);
+      };
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, [showMetrics, width]);
+
   return (
     <AnimatePresence initial={false}>
       <div key="homeFeed" className="homeFeed" data-testid="homeFeed">
@@ -198,25 +227,21 @@ function HomeFeed({
             </Select>
           </FormControl>
 
-          <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
-            <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
-            <Select
-              labelId="ppp-select-label"
-              id="ppp-select"
-              value={numPosts}
-              onChange={handlePostsPerPage}
-              input={<OutlinedInput id="ppp-select" label="# of Posts" />}
-            >
-              {postsPerPage.map((opt, i) => (
-                <MenuItem key={i} value={opt}>{opt}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <ToggleButton
+            sx={{ ml: 1 }}
+            size="small"
+            value={showMetrics}
+            selected={showMetrics}
+            onChange={() => setShowMetrics(!showMetrics)}
+            data-testid="toggleMetrics"
+          >
+            <BubbleChartIcon />
+          </ToggleButton>
 
           <ToggleButton
             sx={{ ml: 1 }}
             size="small"
-            value="filter"
+            value={showFilter}
             selected={showFilter}
             onChange={() => setShowFilter(!showFilter)}
             data-testid="toggleFilter"
@@ -306,6 +331,24 @@ function HomeFeed({
                   </Select>
                 </FormControl>
 
+                {!showMetrics
+                  && (
+                  <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
+                    <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
+                    <Select
+                      labelId="ppp-select-label"
+                      id="ppp-select"
+                      value={numPosts}
+                      onChange={handlePostsPerPage}
+                      input={<OutlinedInput id="ppp-select" label="# of Posts" />}
+                    >
+                      {postsPerPage.map((opt, i) => (
+                        <MenuItem key={i} value={opt}>{opt}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  )}
+
                 <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
                   <InputLabel id="filter-chip-label">Options</InputLabel>
                   <Select
@@ -339,19 +382,29 @@ function HomeFeed({
             </motion.div>
             )}
         </Suspense>
-        <ImageList sx={{ width: '100%', height: '95%', mb: 4 }} cols={2} rowHeight={350}>
-          {displayPosts.map((post, i) => (
-            <ImageListItem key={i}>
-              <ContainerFeed key={i} post={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view="user" />
-            </ImageListItem>
-          ))}
-        </ImageList>
-        <Pagination
-          count={Math.ceil(posts.length / numPosts)}
-          defaultPage={1}
-          boundaryCount={2}
-          onChange={handlePages}
-        />
+        {showMetrics
+          ? (
+            <div style={{ width: '100%', height: '100%' }} ref={divRef}>
+              <Scatter width={width} height={height} posts={posts} />
+            </div>
+          )
+          : (
+            <>
+              <ImageList sx={{ width: '100%', height: '95%', mb: 4 }} cols={2} rowHeight={350}>
+                {displayPosts.map((post, i) => (
+                  <ImageListItem key={i}>
+                    <ContainerFeed key={i} post={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view="user" />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+              <Pagination
+                count={Math.ceil(posts.length / numPosts)}
+                defaultPage={1}
+                boundaryCount={2}
+                onChange={handlePages}
+              />
+            </>
+          )}
       </div>
       <PostModal key="postModal" postInfo={postInfo} open={open} handleClose={handleClose} />
     </AnimatePresence>
