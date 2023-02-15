@@ -22,8 +22,7 @@ const style = {
   p: 1,
 };
 
-const ApplicationModal = ({ applications, closeApps, open }) => {
-
+function ApplicationModal({ applications, closeApps, open }) {
   return (
     <Modal
       keepMounted
@@ -33,34 +32,34 @@ const ApplicationModal = ({ applications, closeApps, open }) => {
       aria-describedby="keep-mounted-modal-description"
     >
       <Box sx={style}>
-        <List key='appModal' component='nav' sx={{ width: '100%', bgcolor: 'background.paper' }}>
+        <List key="appModal" component="nav" sx={{ width: '100%', bgcolor: 'background.paper' }}>
           {applications.map((app, i) => (
             <>
-            <ListItem key={i} alignItems="flex-start" data-testid='listItemModal'>
-              <ListItemAvatar>
-                <Avatar alt={app.firstName} src={app?.profilePicture} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={`${app.firstName} ${app.lastName}`}
-                secondary={
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    component="span"
-                    variant="body2"
-                    color="text.primary"
-                  >
-                    {app.username}
-                  </Typography>   
-                }
-              />
-            </ListItem>
-            <Divider variant="inset" component="li" data-testid='dividerModal'/>
+              <ListItem key={i} alignItems="flex-start" data-testid="listItemModal">
+                <ListItemAvatar>
+                  <Avatar alt={app.firstName} src={app?.profilePicture} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={`${app.firstName} ${app.lastName}`}
+                  secondary={(
+                    <Typography
+                      sx={{ display: 'inline' }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
+                      {app.username}
+                    </Typography>
+                )}
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" data-testid="dividerModal" />
             </>
           ))}
         </List>
       </Box>
     </Modal>
-  )
+  );
 }
 
 export default ApplicationModal;

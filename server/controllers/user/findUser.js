@@ -3,23 +3,22 @@ const User = require('../../db/userModel');
 const findUser = async (req, res, next) => {
   const { userId } = res.locals;
   try {
-    const data = await User.findOne({_id: userId});
+    const data = await User.findOne({ _id: userId });
     if (!data) {
       return next({
-        log: `ERROR: findUser`,
+        log: 'ERROR: findUser',
         status: 404,
-        message: {err: 'Cannot find user based on userId'}
-      })
+        message: { err: 'Cannot find user based on userId' },
+      });
     }
-    else return res.status(200).json(data);
-  } 
-  catch (err) {
+    return res.status(200).json(data);
+  } catch (err) {
     return next({
       log: `ERROR: findUser, ${err}`,
-      status: 500, 
-      message: {err: 'an error occurred while attempting to find a user'}
-    })
+      status: 500,
+      message: { err: 'an error occurred while attempting to find a user' },
+    });
   }
-}
+};
 
 module.exports = findUser;

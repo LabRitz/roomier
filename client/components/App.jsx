@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
 
-import Login from "./Login.jsx";
-import Signup from "./Signup.jsx";
-import Home from "./Home.jsx";
-import CreatePost from "./CreatePost.jsx";
-import Profile from "./Profile.jsx";
-import NavBar from "./NavBar.jsx";
+import Login from './Login';
+import Signup from './Signup';
+import Home from './Home';
+import CreatePost from './CreatePost';
+import Profile from './Profile';
+import NavBar from './NavBar';
 
-import Context from "./context/Context.js";
+import Context from './context/Context';
 
-const App = () => {
-  const [userInfo, setUserInfo] = useState("");
-  const [alert, setAlert] = useState([])
+function App() {
+  const [userInfo, setUserInfo] = useState('');
+  const [alert, setAlert] = useState([]);
 
   const verifySession = async () => {
-    const res = await fetch("/currentSession");
-    if (res.status == 500) return setAlert(alerts => [...alerts, { severity: 'error', message: 'Uh oh... the server is currently down :(' }])
+    const res = await fetch('/currentSession');
+    if (res.status === 500) return setAlert((alerts) => [...alerts, { severity: 'error', message: 'Uh oh... the server is currently down :(' }]);
 
     const hasSession = await res.json();
     if (hasSession) setUserInfo(hasSession);
   };
 
   const handleDismiss = (i) => {
-    setAlert(prev => [...prev.slice(0,i), ...prev.slice(i+1)])
-  }
+    setAlert((prev) => [...prev.slice(0, i), ...prev.slice(i + 1)]);
+  };
 
   useEffect(() => {
     verifySession();
@@ -36,7 +36,7 @@ const App = () => {
 
   return (
     <Context.Provider value={{ userInfo, setUserInfo, setAlert }}>
-      {(userInfo == "" ) ? (
+      {(userInfo === '') ? (
         <Router>
           <Routes>
             <Route exact path="/" element={<Login />} />
@@ -59,20 +59,28 @@ const App = () => {
           </Routes>
         </Router>
       )}
-      <Stack sx={{ position: 'fixed', bottom: '12px', left: '12px', zIndex: 10, width: 'auto', maxWidth: '400px' }} spacing={1}>
+      <Stack
+        sx={{
+          position: 'fixed', bottom: '12px', left: '12px', zIndex: 10, width: 'auto', maxWidth: '400px',
+        }}
+        spacing={1}
+      >
         {alert.map((element, i) => (
-          <Alert 
-            key={i} 
-            severity={element.severity} 
+          <Alert
+            key={i}
+            severity={element.severity}
             onClose={() => handleDismiss(i)}
-            sx={{ boxShadow: '0px 4px 12px rgba(115, 115, 115, 0.5)' }}>
-            <AlertTitle>{element.severity.charAt(0).toUpperCase() + element.severity.slice(1)}</AlertTitle>
+            sx={{ boxShadow: '0px 4px 12px rgba(115, 115, 115, 0.5)' }}
+          >
+            <AlertTitle>
+              {element.severity.charAt(0).toUpperCase() + element.severity.slice(1)}
+            </AlertTitle>
             {element.message}
           </Alert>
         ))}
       </Stack>
     </Context.Provider>
   );
-};
+}
 
 export default App;

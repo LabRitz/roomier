@@ -5,16 +5,15 @@ const startSession = async (req, res, next) => {
     try {
       const id = res.locals.user._id.toString();
       await Session.create({ cookieId: id });
-      return next(); 
+      return next();
     } catch (err) {
       return next({
         log: `ERROR: startSession, ${err}`,
         status: 500,
-        message: { err: 'an error occured while attempting to start a session'}
-      })
+        message: { err: 'an error occured while attempting to start a session' },
+      });
     }
-  }
-  else return next();
+  } else return next();
 };
 
 module.exports = startSession;

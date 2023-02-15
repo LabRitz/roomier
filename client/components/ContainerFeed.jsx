@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useContext, Suspense } from 'react';
+import React, {
+  useState, useEffect, useContext, Suspense,
+} from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -6,21 +8,25 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 
-const UserCardActions = React.lazy(() => import('./views/UserCardActions.jsx'));
-const ProfileCardActions = React.lazy(() => import('./views/ProfileCardActions.jsx'));
-const ApplicationModal = React.lazy(() => import('./ApplicationModal.jsx'));
-
 import Context from './context/Context';
-import '../stylesheets/containerFeed.scss'
+import '../stylesheets/containerFeed.scss';
 
-const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg'
+const UserCardActions = React.lazy(() => import('./views/UserCardActions'));
+const ProfileCardActions = React.lazy(() => import('./views/ProfileCardActions'));
+const ApplicationModal = React.lazy(() => import('./ApplicationModal'));
 
-const ContainerFeed = ({ post, handleOpen, setPostInfo, view, handleUpdate, handleDelete, setEditMode }) => {
-  const { userInfo, setAlert } = useContext(Context)
-  const { address, description, rent, images, applicantData } = post;
+const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg';
 
-  const [application, setApplication] = useState(!applicantData ? [] : applicantData)
-  const [hasApplied, setHasApplied] = useState(false)
+function ContainerFeed({
+  post, handleOpen, setPostInfo, view, handleUpdate, handleDelete, setEditMode,
+}) {
+  const { userInfo, setAlert } = useContext(Context);
+  const {
+    address, description, rent, images, applicantData,
+  } = post;
+
+  const [application, setApplication] = useState(!applicantData ? [] : applicantData);
+  const [hasApplied, setHasApplied] = useState(false);
 
   // Profile view applications
   const [open, setOpen] = useState(false);
@@ -32,46 +38,45 @@ const ContainerFeed = ({ post, handleOpen, setPostInfo, view, handleUpdate, hand
       const reqBody = {
         firstName: userInfo.firstName,
         lastName: userInfo.lastName,
-        username: userInfo.username
-      }
+        username: userInfo.username,
+      };
       const response = await fetch(`/home/${post._id}`, {
-        method:'PATCH',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reqBody)
-      })
+        body: JSON.stringify(reqBody),
+      });
       const data = await response.json();
       if (data) { // only update if patch request is true/not error
-        setApplication([...application, reqBody]); 
-        setHasApplied(true)
+        setApplication([...application, reqBody]);
+        setHasApplied(true);
       }
+    } catch (err) {
+      console.log('Error applying to post: ', err);
     }
-    catch(err) {
-      console.log('Error applying to post: ', err)
-    }
-  }
+  };
 
   const handleClick = () => {
-    setPostInfo(post)
-    if (view == 'profile') setEditMode(false)
-    else if (view == 'user') handleOpen()
-  }
+    setPostInfo(post);
+    if (view == 'profile') setEditMode(false);
+    else if (view == 'user') handleOpen();
+  };
 
   useEffect(() => {
-    setApplication(applicantData)
-  }, [applicantData])
+    setApplication(applicantData);
+  }, [applicantData]);
 
   useEffect(() => {
     if (userInfo !== '') {
-      let applied = false
+      let applied = false;
       for (const applicant of applicantData) {
-        if (applicant.username === userInfo.username) applied = true
+        if (applicant.username === userInfo.username) applied = true;
       }
-      setHasApplied(applied)
+      setHasApplied(applied);
     }
-  }, [application])
+  }, [application]);
 
   return (
-    <motion.div 
+    <motion.div
       variants={{
         present: { scale: 1, opacity: 1 },
         exit: { scale: 0.8, opacity: 0 },
@@ -79,46 +84,54 @@ const ContainerFeed = ({ post, handleOpen, setPostInfo, view, handleUpdate, hand
       initial="exit"
       animate="present"
       exit="exit"
-      layout={true}>
-      <Card sx={{ maxWidth: 480, m: 1, p:0}}>
-        <CardContent sx={{ pb:0 }} onClick={handleClick}>
+      layout
+    >
+      <Card sx={{ maxWidth: 480, m: 1, p: 0 }}>
+        <CardContent sx={{ pb: 0 }} onClick={handleClick}>
           <CardMedia
-            sx={{ height: 180, mb:1 }}
-            image={(!images[0]) ? defaultImg : (images[0]['imgUrl'] == undefined) ? Object.keys(images[0])[0] : images[0]['imgUrl']}
+            sx={{ height: 180, mb: 1 }}
+            image={(!images[0]) ? defaultImg
+              : (images[0].imgUrl == undefined) ? Object.keys(images[0])[0] : images[0].imgUrl}
           />
-          <Typography gutterBottom variant="h5" noWrap={true} component="div" color="text.primary">
-            ${rent}/mo
+          <Typography gutterBottom variant="h5" noWrap component="div" color="text.primary">
+            {`$${rent}/mo`}
           </Typography>
-          <Typography variant="subtitle2" noWrap={true} color="text.primary">
-            {address.street1} {address.street2}
+          <Typography variant="subtitle2" noWrap color="text.primary">
+            {`${address.street1} ${address.street2}`}
           </Typography>
-          <Typography variant="body2" noWrap={true} color="text.ternary">
-            {description.BR}BR | {description.BA}BA | {description.sqFt} sqft
+          <Typography variant="body2" noWrap color="text.ternary">
+            {`${description.BR}BR | ${description.BA}BA | ${description.sqFt} sqft`}
           </Typography>
         </CardContent>
         <Suspense fallback={<div>Loading...</div>}>
-          {(view === 'user') && 
-            <CardActions sx={{display:'flex', alignItems:'center'}}>
-              <UserCardActions 
-                application={application} 
+          {(view === 'user')
+            && (
+            <CardActions sx={{ display: 'flex', alignItems: 'center' }}>
+              <UserCardActions
+                application={application}
                 handleApply={handleApply}
-                hasApplied={hasApplied}/>
-            </CardActions>}
-          {(view === 'profile') && 
-            <CardActions sx={{display:'flex', justifyContent: 'space-evenly'}}>          
-              <ProfileCardActions 
-                application={application} 
-                handleUpdate={handleUpdate} 
+                hasApplied={hasApplied}
+              />
+            </CardActions>
+            )}
+          {(view === 'profile')
+            && (
+            <CardActions sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+              <ProfileCardActions
+                application={application}
+                handleUpdate={handleUpdate}
                 handleDelete={handleDelete}
-                openApps={openApps}/>
-            </CardActions>}
+                openApps={openApps}
+              />
+            </CardActions>
+            )}
         </Suspense>
       </Card>
       <Suspense fallback={<div>Loading...</div>}>
-        {(view === 'profile') && <ApplicationModal applications={application} open={open} closeApps={closeApps}/> }
+        {(view === 'profile') && <ApplicationModal applications={application} open={open} closeApps={closeApps} /> }
       </Suspense>
     </motion.div>
-  )
+  );
 }
 
 export default ContainerFeed;

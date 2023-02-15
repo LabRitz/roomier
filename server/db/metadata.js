@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 
 const metadata = Schema({
   username: { type: String, required: true },
@@ -8,9 +9,9 @@ const metadata = Schema({
   createdAt: { type: Date, required: true, default: Date.now },
 
   // from navBar
-  id: { type: String, required: true }
+  id: { type: String, required: true },
   // profilePicture: {type: Buffer},
-})
+});
 
 const MetaData = mongoose.model('Metadata', metadata);
 

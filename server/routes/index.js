@@ -1,2 +1,2 @@
-exports.user = require('./user')
-exports.oauth = require('./oauth')
+exports.user = require('./user');
+exports.oauth = require('./oauth');
