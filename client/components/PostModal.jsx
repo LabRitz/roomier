@@ -11,10 +11,11 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: '70%',
   minWidth: '500px',
-  maxHeight: 'auto',
+  height: '60%',
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 1,
+  borderRadius: '4px',
 };
 
 function PostModal({ postInfo, open, handleClose }) {

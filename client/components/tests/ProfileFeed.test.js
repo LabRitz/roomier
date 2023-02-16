@@ -1,23 +1,27 @@
-import React from "react";
+import React from 'react';
 
-import { screen } from "@testing-library/react";
+import { screen } from '@testing-library/react';
 
-import mockContext from "./__mocks__/mockContext.js";
-import ProfileFeed from "../ProfileFeed.jsx";
+import mockContext from './__mocks__/mockContext';
+import ProfileFeed from '../ProfileFeed';
 
-jest.mock('../ContainerApplication.jsx', () => {
-  return () => <div data-testid="ContainerApplication" /> 
+jest.mock('../ContainerApplication.jsx', () => function () {
+  return <div data-testid="ContainerApplication" />;
 });
 
-jest.mock('../ImageGallery.jsx', () => {
-  return () => <div data-testid="ImageGallery" /> 
+jest.mock('../DisplayCard.jsx', () => function () {
+  return <div data-testid="DisplayCard" />;
+});
+
+jest.mock('../ImageGallery.jsx', () => function () {
+  return <div data-testid="ImageGallery" />;
 });
 
 const userInfo = {
   firstName: 'John',
   lastName: 'Smith',
-  username: 'test@gmail.com'
-}
+  username: 'test@gmail.com',
+};
 
 const posts = [{
   address: {
@@ -25,44 +29,42 @@ const posts = [{
     street2: 'Street 2',
     city: 'City',
     state: 'State',
-    zipCode: '12345'
+    zipCode: '12345',
   },
-  roommate: {gender: 'male'},
+  roommate: { gender: 'male' },
   description: {
     BR: 1,
     BA: 1,
     sqFt: 100,
     parking: true,
     smoking: true,
-    pets: true
+    pets: true,
   },
   moveInDate: Date.now(),
   rent: 100,
   bio: 'Description',
   images: {
     imgUrl: '',
-    imgPath: ''
+    imgPath: '',
   },
   currUser: {
     firstName: 'John',
     lastName: 'Smith',
-    username: 'test@gmail.com'
-  }
-}]
+    username: 'test@gmail.com',
+  },
+}];
 
-describe("ProfileFeed.jsx", () => {
-
+describe('ProfileFeed.jsx', () => {
   let providerProps;
   beforeEach(() => {
     providerProps = {
-      userInfo: userInfo
-    }
+      userInfo,
+    };
   });
 
-  it("Renders ProfileFeed component", async () => {    
-    mockContext(<ProfileFeed posts={posts}/>, { providerProps })
+  it('Renders ProfileFeed component', async () => {
+    mockContext(<ProfileFeed posts={posts} />, { providerProps });
 
     expect(await screen.getByTestId('ContainerApplication')).toBeTruthy();
   });
- 
 });

@@ -5,6 +5,12 @@ export const mapContainerStyle = {
   boxShadow: '2px 2px 8px gray',
 };
 
+export const mapDisplayCardStyle = {
+  width: '100%',
+  height: '30%',
+  borderRadius: '4px',
+};
+
 export const dotStyle = {
   strokeColor: '#3D5A80',
   strokeOpacity: 1,

@@ -73,6 +73,7 @@ function HomeFeed({
     rent: '',
     bio: '',
     images: { key: 'value' },
+    applicantData: [],
   });
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);

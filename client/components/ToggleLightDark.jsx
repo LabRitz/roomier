@@ -23,6 +23,9 @@ function ToggleLightDark() {
           primary: {
             main: '#3D5A80',
           },
+          secondary: {
+            main: '#fff',
+          },
           background: {
             default: '#3D5A80',
             paper: '#fff',
@@ -40,6 +43,9 @@ function ToggleLightDark() {
         : {
           primary: {
             main: '#3D5A80',
+          },
+          secondary: {
+            main: '#fff',
           },
           background: {
             default: '#293241',
