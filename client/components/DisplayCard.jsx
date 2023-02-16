@@ -47,8 +47,10 @@ function DisplayCard({ postInfo }) {
         body: JSON.stringify(reqBody),
       });
       await response.json();
+      setHasApplied(true);
     } catch (err) {
       console.log('Error applying to post: ', err);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in applying to post' }]);
     }
   };
 
