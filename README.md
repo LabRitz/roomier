@@ -1,7 +1,6 @@
 <p align="center">
-<img src= "./client/assets/roomier_banner.png" width="600" height="200" align="center">
+<img src= "./client/assets/roomier_banner.png" width="750" height="250" align="center">
 </p>
-<h2 align="center" style="font-size: 40px">find a roommate</h2>
 <p align="center">
   <img alt="Contributors" src="https://img.shields.io/github/contributors/Tassled-Wobbegong5/roomier?color=%239d65c9&style=flat-square">
   <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/Tassled-Wobbegong5/roomier/total?color=green">
@@ -40,7 +39,7 @@ NOTE: Proper environment variables are necessary to run the application properly
 
 The `production` deployment of this repo is hosted [here](https://roomier.onrender.com) and `development` can be accessed [here](https://roomier-dev.onrender.com).
 
-Currently, the team is hard at work on updating the user interface and including a search functionality for existing posts. We're doing research on connecting different user social profiles like Instagram, Facebook, etc. for a more open social experience.
+Currently, the team is hard at work on updating the user interface and including a search functionality for existing posts. We're experimenting with visualizing useful key metrics to help end users make informative decisions. We're also doing research on connecting different user social profiles like Instagram, Facebook, etc. for a more open social experience.
 
 # Authors
 
