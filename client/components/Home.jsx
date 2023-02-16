@@ -1,18 +1,23 @@
 import React, {
   useState, useEffect, useContext, useMemo,
 } from 'react';
+import { useTheme } from '@mui/material/styles';
 
 import { Circle, GoogleMap, Marker } from '@react-google-maps/api';
 import Geocode from 'react-geocode';
 import HomeFeed from './HomeFeed';
 
 import Context from './context/Context';
-import { mapContainerStyle, dotStyle, boundaryStyle } from './styles/googleMaps';
+import {
+  mapContainerStyle, darkModeStyle, darkDotStyle, darkBoundaryStyle,
+  lightBoundaryStyle, lightModeStyle, lightDotStyle,
+} from './styles/googleMaps';
 
 const GoogleMapsAPIKey = 'AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM';
 Geocode.setApiKey(GoogleMapsAPIKey);
 
 function Home() {
+  const theme = useTheme();
   const { userInfo, setAlert } = useContext(Context);
 
   const [filterArr, setFilterArr] = useState([]);
@@ -130,9 +135,14 @@ function Home() {
           onLoad={handleOnLoad}
           onDragEnd={handleCenterChanged}
           zoom={13}
+          options={{
+            keyboardShortcuts: false,
+            fullscreenControl: false,
+            styles: (theme.palette.mode === 'dark') ? darkModeStyle : lightModeStyle,
+          }}
         >
-          <Circle center={center} options={dotStyle} />
-          <Circle center={center} options={{ ...boundaryStyle, ...{ radius: distance } }} />
+          <Circle center={center} options={(theme.palette.mode === 'dark') ? darkDotStyle : lightDotStyle} />
+          <Circle center={center} options={(theme.palette.mode === 'dark') ? { ...darkBoundaryStyle, ...{ radius: distance } } : { ...lightBoundaryStyle, ...{ radius: distance } }} />
           {markers}
         </GoogleMap>
       </div>
