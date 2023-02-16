@@ -32,7 +32,7 @@ function Login() {
         return setAlert((alerts) => [...alerts, { severity: 'success', message: 'Good job! Welcome to Roomier :)' }]);
       }
     } catch (err) {
-      setAlert((alerts) => [...alerts, { severity: 'error' }]);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in attempting to login' }]);
     }
   };
 

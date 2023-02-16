@@ -27,7 +27,7 @@ const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/
 function ImageGallery({
   images, setImages, view, postId,
 }) {
-  const { userInfo } = useContext(Context);
+  const { userInfo, setAlert } = useContext(Context);
 
   // Initialize states for
   const [imageUpload, setImageUpload] = useState(null);
@@ -55,16 +55,19 @@ function ImageGallery({
         }, 1250);
       } catch (err) {
         console.log('ERROR: Cannot upload to Firebase');
+        setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while uploading image' }]);
       }
     } else {
-      alert('No image selected');
+      setAlert((alerts) => [...alerts, { severity: 'warn', message: 'No image selected' }]);
     }
   };
 
   // Remove picture from image array
   const handleRemove = async () => {
     // Handle for old image data structure
-    if (!images[index].imgUrl) return alert('Image uploaded on legacy image. Cannot delete. ');
+    if (!images[index].imgUrl) {
+      return setAlert((alerts) => [...alerts, { severity: 'warn', message: 'Image uploaded on legacy image. Cannot delete.' }]);
+    }
 
     const reqBody = {
       imgUrl: images[index].imgUrl,
@@ -79,11 +82,11 @@ function ImageGallery({
       });
       const data = await res.json();
       if (data.modifiedCount === 1) {
-        alert('Image successfully removed!');
-        getProfilePosts();
-      } else alert('ERROR: Unable to remove image');
+        setAlert((alerts) => [...alerts, { severity: 'success', message: 'Image successfully removed' }]);
+      } else setAlert((alerts) => [...alerts, { severity: 'error', message: 'Unable to remove image' }]);
     } catch (err) {
       console.log('ERROR: Cannot remove image', err);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while removing image' }]);
     }
   };
 

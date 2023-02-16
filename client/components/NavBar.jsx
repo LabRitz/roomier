@@ -35,8 +35,7 @@ const pages = [
 function NavBar() {
   const theme = useTheme();
   const navigate = useNavigate();
-
-  const { userInfo, setUserInfo } = useContext(Context);
+  const { userInfo, setUserInfo, setAlert } = useContext(Context);
   const { toggleColorMode } = useContext(ColorModeContext);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -69,6 +68,7 @@ function NavBar() {
       }
     } catch (err) {
       console.log('ERROR: Cannot sign user out');
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred attempting to sign user out' }]);
     }
   };
 
