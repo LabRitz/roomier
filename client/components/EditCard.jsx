@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import PlacesAutocomplete, { getLatLng, geocodeByAddress } from 'react-places-autocomplete';
 
@@ -16,6 +16,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 import EditCardActions from './views/EditCardActions';
 import ImageGallery from './ImageGallery';
+import Context from './context/Context';
 
 const genders = ['male', 'female', 'no-preference'];
 
@@ -33,6 +34,8 @@ function EditCard({ postInfo, getProfilePosts }) {
     images,
     condition,
   } = postInfo;
+
+  const { setAlert } = useContext(Context);
 
   const [location, setLocation] = useState(address);
   const [price, setPrice] = useState(rent);
@@ -81,6 +84,7 @@ function EditCard({ postInfo, getProfilePosts }) {
       setGeoLoc(geo);
     } catch (error) {
       console.error('Error selecting street', error);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while fetching addresses' }]);
     }
   };
 
@@ -111,6 +115,7 @@ function EditCard({ postInfo, getProfilePosts }) {
       setLocation(newAddress);
     } catch (error) {
       console.error('Error selecting city', error);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while fetching cities' }]);
     }
   };
 
@@ -133,7 +138,8 @@ function EditCard({ postInfo, getProfilePosts }) {
       newAddress.zipCode = '';
       setLocation(newAddress);
     } catch (error) {
-      console.error('Error selecting city', error);
+      console.error('Error selecting state', error);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while fetching states' }]);
     }
   };
 
@@ -170,10 +176,13 @@ function EditCard({ postInfo, getProfilePosts }) {
         body: JSON.stringify(reqBody),
       });
       const data = await res.json();
-      if (data) getProfilePosts();
-      else console.log('ERROR: Unable to update post');
+      if (data) {
+        getProfilePosts();
+        setAlert((alerts) => [...alerts, { severity: 'success', message: 'Successfully updated post' }]);
+      } else setAlert((alerts) => [...alerts, { severity: 'error', message: 'Could not update post' }]);
     } catch (err) {
       console.log('ERROR: Cannot save updated post');
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while updating post' }]);
     }
   };
 

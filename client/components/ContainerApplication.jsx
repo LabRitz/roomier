@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import ContainerFeed from './ContainerFeed';
+import Context from './context/Context';
 
 import '../stylesheets/containerApplication.scss';
 
 function ContainerApplications({
   getProfilePosts, postInfo, setPostInfo, setEditMode,
 }) {
+  const { setAlert } = useContext(Context);
+
   const handleUpdate = () => {
     setPostInfo(postInfo);
     setEditMode(true);
@@ -20,11 +23,11 @@ function ContainerApplications({
       });
       const data = await response.json();
       if (data.deletedCount === 1) {
-        alert('Post successfully removed!');
+        setAlert((alerts) => [...alerts, { severity: 'success', message: 'Post successfully removed' }]);
         getProfilePosts();
-      } else alert('Unable to delete posts');
+      } else setAlert((alerts) => [...alerts, { severity: 'error', message: 'Unable to delete post' }]);
     } catch (err) {
-      console.log('Error in delete: ', err);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in delete post' }]);
     }
   };
 

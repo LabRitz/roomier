@@ -49,16 +49,18 @@ function ContainerFeed({
       if (data) { // only update if patch request is true/not error
         setApplication([...application, reqBody]);
         setHasApplied(true);
+        setAlert((alerts) => [...alerts, { severity: 'success', message: 'Successfully submitted application' }]);
       }
     } catch (err) {
       console.log('Error applying to post: ', err);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in applying to post' }]);
     }
   };
 
   const handleClick = () => {
     setPostInfo(post);
-    if (view == 'profile') setEditMode(false);
-    else if (view == 'user') handleOpen();
+    if (view === 'profile') setEditMode(false);
+    else if (view === 'user') handleOpen();
   };
 
   useEffect(() => {
@@ -68,9 +70,9 @@ function ContainerFeed({
   useEffect(() => {
     if (userInfo !== '') {
       let applied = false;
-      for (const applicant of applicantData) {
+      applicantData.map((applicant) => {
         if (applicant.username === userInfo.username) applied = true;
-      }
+      });
       setHasApplied(applied);
     }
   }, [application]);

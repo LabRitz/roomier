@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 
+import Context from './context/Context';
 import Phrases from './Phrases';
 import '../stylesheets/login.scss';
 
 function Signup() {
   const navigate = useNavigate();
+  const { setAlert } = useContext(Context);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -25,7 +27,7 @@ function Signup() {
         || !/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(username)
         || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$/.test(password)
         || !/[0-9]{5}/.test(zipcode)) {
-      return alert('Please fill out the form correctly');
+      return setAlert((alerts) => [...alerts, { severity: 'warn', message: 'Please fill out the required fields' }]);
     }
 
     try {
@@ -46,10 +48,11 @@ function Signup() {
       if (data !== null) {
         navigate('/');
       } else {
-        alert('User already exists in the database');
+        setAlert((alerts) => [...alerts, { severity: 'error', message: 'User already exists in the database' }]);
       }
     } catch (err) {
       console.log('ERROR: Cannot signup user', err);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while creating new user' }]);
     }
   };
 

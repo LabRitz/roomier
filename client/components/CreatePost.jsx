@@ -41,7 +41,7 @@ const filters = ['pets', 'smoking', 'parking'];
 
 function CreatePost() {
   const theme = useTheme();
-  const { userInfo } = useContext(Context);
+  const { userInfo, setAlert } = useContext(Context);
 
   const [location, setLocation] = useState({
     street1: '',
@@ -168,6 +168,7 @@ function CreatePost() {
       setLocation(newAddress);
     } catch (error) {
       console.error('Error selecting city', error);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error selecting city' }]);
     }
   };
 
@@ -205,7 +206,7 @@ function CreatePost() {
       || sqft === 0
       || price === 0
     ) {
-      alert('Must Require Input Fields');
+      setAlert((alerts) => [...alerts, { severity: 'warn', message: 'Must provide the required fields' }]);
     }
 
     let geoData;
@@ -220,6 +221,7 @@ function CreatePost() {
         `ERROR: Unable to resolve coordinates of ${location.street1} ${location.city} ${location.state} ${location.zipCode}:`,
         err,
       );
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Unable to resolve coordinates' }]);
     }
 
     try {
@@ -257,11 +259,12 @@ function CreatePost() {
       });
       const data = await res.json();
       if (data) {
-        console.log('SUCCESS: Created post', data);
+        setAlert((alerts) => [...alerts, { severity: 'success', message: 'Your post has been succesfully uploaded' }]);
         handleClear();
       }
     } catch (err) {
       console.log('ERROR: POST request in createPost: ', err);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in creating post' }]);
     }
   };
 

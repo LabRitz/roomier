@@ -4,16 +4,16 @@ import React, {
 
 import { Circle, GoogleMap, Marker } from '@react-google-maps/api';
 import Geocode from 'react-geocode';
-import HomeFeed from './HomeFeed.jsx';
+import HomeFeed from './HomeFeed';
 
-import Context from './context/Context.js';
-import { mapContainerStyle, dotStyle, boundaryStyle } from './styles/googleMaps.js';
+import Context from './context/Context';
+import { mapContainerStyle, dotStyle, boundaryStyle } from './styles/googleMaps';
 
 const GoogleMapsAPIKey = 'AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM';
 Geocode.setApiKey(GoogleMapsAPIKey);
 
 function Home() {
-  const { userInfo } = useContext(Context);
+  const { userInfo, setAlert } = useContext(Context);
 
   const [filterArr, setFilterArr] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -43,8 +43,10 @@ function Home() {
         const { lng, lat } = geocode.results[0].geometry.location;
         return { lat, lng };
       }
+      setAlert((alerts) => [...alerts, { severity: 'warn', message: 'Cannot find zip code' }]);
     } catch (err) {
       console.log('ERROR: Cannot find zipcode', err);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in identifying zip code' }]);
     }
   }, [zipCode]);
 
@@ -69,6 +71,7 @@ function Home() {
       setPosts(postsArr);
     } catch (err) {
       console.log('ERROR: Cannot get posts at zip code', err);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in getting posts at location' }]);
     }
   };
 
@@ -82,11 +85,11 @@ function Home() {
           && post.description.BR >= br
           && post.description.BA >= ba) {
         if (filterArr.length !== 0) {
-          for (const filter of filterArr) {
+          filterArr.map((filter) => {
             if (post.description[filter.toLowerCase()]) {
               return true;
             }
-          }
+          });
         } else return true;
       } else return false;
     });
