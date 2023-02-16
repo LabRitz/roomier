@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect, useContext } from 'react';
+import { useTheme } from '@mui/material/styles';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 
 import CardActions from '@mui/material/CardActions';
@@ -13,7 +14,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import Context from './context/Context';
-import { mapDisplayCardStyle } from './styles/googleMaps';
+import { mapDisplayCardStyle, darkModeStyle, lightModeStyle } from './styles/googleMaps';
 
 const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg';
 
@@ -23,6 +24,7 @@ function DisplayCard({ postInfo }) {
     rent, bio, images, geoData, applicantData,
   } = postInfo;
 
+  const theme = useTheme();
   const { userInfo, setAlert } = useContext(Context);
 
   const [index, setIndex] = useState(0); // Index for gallery image
@@ -156,7 +158,11 @@ function DisplayCard({ postInfo }) {
         center={{ lng: geoData?.coordinates[0], lat: geoData?.coordinates[1] }}
         mapContainerStyle={mapDisplayCardStyle}
         zoom={15}
-        options={{ keyboardShortcuts: false, fullscreenControl: false }}
+        options={{
+          keyboardShortcuts: false,
+          fullscreenControl: false,
+          styles: (theme.palette.mode === 'dark') ? darkModeStyle : lightModeStyle,
+        }}
       >
         <Marker position={{ lng: geoData?.coordinates[0], lat: geoData?.coordinates[1] }} />
       </GoogleMap>
