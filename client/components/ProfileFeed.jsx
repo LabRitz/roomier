@@ -42,6 +42,7 @@ function ProfileFeed({ posts, getProfilePosts }) {
     rent: '',
     bio: '',
     images: { key: 'value' },
+    applicantData: [],
   });
 
   useEffect(() => {
