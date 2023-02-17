@@ -1,6 +1,16 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+  useNavigationType,
+  createRoutesFromChildren,
+  matchRoutes,
+} from 'react-router-dom';
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
 
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
@@ -14,6 +24,24 @@ import Profile from './Profile';
 import NavBar from './NavBar';
 
 import Context from './context/Context';
+
+Sentry.init({
+  dsn: 'https://917e39262caa4db0bab41139f4c8ddbd@o4504696226447360.ingest.sentry.io/4504696228675584',
+  integrations: [
+    new BrowserTracing({
+      routingInstrumentation: Sentry.reactRouterV6Instrumentation(
+        useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes,
+      ),
+    }),
+  ],
+  tracesSampleRate: 0.2, // Lower sampling rate for prod
+});
+
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,25 +85,25 @@ function App() {
       )
         : ((userInfo === '') ? (
           <Router>
-            <Routes>
+            <SentryRoutes>
               <Route exact path="/" element={<Login />} />
               <Route
                 path="/signup"
                 element={<Signup />}
               />
-            </Routes>
+            </SentryRoutes>
           </Router>
         ) : (
           <Router>
             <NavBar />
-            <Routes>
+            <SentryRoutes>
               <Route exact path="/" element={<Home />} />
               <Route
                 path="/createPost"
                 element={<CreatePost />}
               />
               <Route path="/profile" element={<Profile />} />
-            </Routes>
+            </SentryRoutes>
           </Router>
         ))}
       <Stack
