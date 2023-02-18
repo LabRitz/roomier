@@ -142,7 +142,7 @@ function Home() {
           options={{
             keyboardShortcuts: false,
             fullscreenControl: false,
-            styles: (theme.palette.mode === 'dark') ? darkModeStyle : lightModeStyle,
+            styles: (theme.palette.mode === 'dark') ? darkModeStyle : [],
           }}
         >
           <Circle center={center} options={(theme.palette.mode === 'dark') ? darkDotStyle : lightDotStyle} />
