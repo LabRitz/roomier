@@ -33,18 +33,20 @@ function Profile() {
 
   return (isLoading
     ? (
-      <div style={{
-        marginTop: '70px',
-        height: `${parseInt(window.innerHeight, 10) - 70}px`,
-        paddingLeft: '12px',
-        paddingRight: '12px',
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gridTemplateRows: '55% 45%',
-        rowGap: '12px',
-        justifyItems: 'center',
-        alignItems: 'center',
-      }}
+      <div
+        style={{
+          marginTop: '70px',
+          height: `${parseInt(window.innerHeight, 10) - 70}px`,
+          paddingLeft: '12px',
+          paddingRight: '12px',
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+          gridTemplateRows: '55% 45%',
+          rowGap: '12px',
+          justifyItems: 'center',
+          alignItems: 'center',
+        }}
+        data-testid="ProfileFeed"
       >
         <div style={{
           display: 'flex',
