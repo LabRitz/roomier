@@ -22,6 +22,7 @@ function Home() {
 
   const [filterArr, setFilterArr] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [zipCode, setZipCode] = useState(userInfo.zipCode);
   const [center, setCenter] = useState(null);
@@ -61,6 +62,7 @@ function Home() {
 
   const getPosts = async () => {
     if (!center) return setPosts([]);
+    setIsLoading(true);
     try {
       const res = await fetch(`/home/${userInfo.username}`, {
         method: 'POST',
@@ -82,7 +84,7 @@ function Home() {
 
   const filterPosts = useMemo(() => {
     if (posts.length === 0) return [];
-    return posts.filter((post) => {
+    const results = posts.filter((post) => {
       if (post.rent >= priceRange[0]
           && post.rent <= priceRange[1]
           && post.description.sqFt >= sqftRange[0]
@@ -98,6 +100,8 @@ function Home() {
         } else return true;
       } else return false;
     });
+    setIsLoading(false);
+    return results;
   }, [posts, filterArr, priceRange, sqftRange, br, ba]);
 
   const markers = useMemo(() => {
@@ -138,7 +142,7 @@ function Home() {
           options={{
             keyboardShortcuts: false,
             fullscreenControl: false,
-            styles: (theme.palette.mode === 'dark') ? darkModeStyle : lightModeStyle,
+            styles: (theme.palette.mode === 'dark') ? darkModeStyle : [],
           }}
         >
           <Circle center={center} options={(theme.palette.mode === 'dark') ? darkDotStyle : lightDotStyle} />
@@ -162,6 +166,7 @@ function Home() {
         setBR={setBR}
         ba={ba}
         setBA={setBA}
+        isLoading={isLoading}
       />
     </div>
   );

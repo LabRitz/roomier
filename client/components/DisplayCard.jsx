@@ -117,7 +117,7 @@ function DisplayCard({ postInfo }) {
         <Paper
           elevation={0}
           sx={{
-            p: 3, pt: 2, pb: 1, width: '50%',
+            p: 3, pt: 2, pb: 1, width: '50%', height: '100%',
           }}
         >
           <Typography variant="h4" noWrap={false} component="div" color="text.primary">
@@ -146,7 +146,7 @@ function DisplayCard({ postInfo }) {
             color="text.primary"
             sx={{
               fontSize: 12,
-              height: '35%',
+              height: '25%',
               overflowY: 'scroll',
             }}
           >
@@ -161,7 +161,7 @@ function DisplayCard({ postInfo }) {
         options={{
           keyboardShortcuts: false,
           fullscreenControl: false,
-          styles: (theme.palette.mode === 'dark') ? darkModeStyle : lightModeStyle,
+          styles: (theme.palette.mode === 'dark') ? darkModeStyle : [],
         }}
       >
         <Marker position={{ lng: geoData?.coordinates[0], lat: geoData?.coordinates[1] }} />
