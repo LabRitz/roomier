@@ -17,6 +17,7 @@ import Select from '@mui/material/Select';
 import ToggleButton from '@mui/material/ToggleButton';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import BubbleChartIcon from '@mui/icons-material/BubbleChart';
+import Skeleton from '@mui/material/Skeleton';
 
 import ContainerFeed from './ContainerFeed';
 import PostModal from './PostModal';
@@ -49,7 +50,7 @@ const sqftGap = 50;
 function HomeFeed({
   posts, zipCode, setZipCode, distance, setDistance,
   filterArr, setFilterArr, priceRange, setPriceRange,
-  sqftRange, setSqftRange, br, setBR, ba, setBA,
+  sqftRange, setSqftRange, br, setBR, ba, setBA, isLoading,
 }) {
   const theme = useTheme();
 
@@ -392,11 +393,32 @@ function HomeFeed({
           : (
             <>
               <ImageList sx={{ width: '100%', height: '95%', mb: 4 }} cols={2} rowHeight={350}>
-                {displayPosts.map((post, i) => (
-                  <ImageListItem key={i}>
-                    <ContainerFeed key={i} post={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view="user" />
+                {isLoading ? Array(numPosts).fill(0).map((post, i) => (
+                  <ImageListItem key={i} sx={{ p: 2 }}>
+                    <Skeleton variant="rounded" width="100%" height="50%" animation="wave" />
+                    <div style={{
+                      display: 'grid', gridTemplateColumns: '3fr 1fr', columnGap: '4px', width: '100%', height: '30%', paddingBottom: '4px',
+                    }}
+                    >
+                      <div style={{ display: 'grid', gridTemplateRows: '2fr 1fr 1fr', rowGap: '4px' }}>
+                        <Skeleton variant="text" width="100%" height="100%" animation="wave" />
+                        <Skeleton variant="text" width="80%" height="100%" animation="wave" />
+                        <div style={{
+                          display: 'grid', gridTemplateColumns: '1fr 2fr', columnGap: '12px', width: '80%',
+                        }}
+                        >
+                          <Skeleton variant="circular" width="100%" height="100%" animation="wave" />
+                          <Skeleton variant="text" width="100%" height="100%" animation="wave" />
+                        </div>
+                      </div>
+                    </div>
                   </ImageListItem>
-                ))}
+                ))
+                  : displayPosts.map((post, i) => (
+                    <ImageListItem key={i}>
+                      <ContainerFeed key={i} post={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view="user" />
+                    </ImageListItem>
+                  ))}
               </ImageList>
               <Pagination
                 count={Math.ceil(posts.length / numPosts)}
