@@ -60,7 +60,7 @@ function App() {
 
       const hasSession = await res.json();
       if (hasSession) {
-        info('User session found:', hasSession);
+        info(`User session found: ${hasSession.firstName} ${hasSession.lastName} ${hasSession.username}`);
         setUserInfo(hasSession);
       }
       setTimeout(() => setIsLoading(false), 2000);
