@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -24,6 +24,7 @@ import Profile from './Profile';
 import NavBar from './NavBar';
 
 import Context from './context/Context';
+import { error, info } from '../utils/logger';
 
 Sentry.init({
   dsn: 'https://917e39262caa4db0bab41139f4c8ddbd@o4504696226447360.ingest.sentry.io/4504696228675584',
@@ -50,12 +51,22 @@ function App() {
 
   const verifySession = async () => {
     setIsLoading(true);
-    const res = await fetch('/currentSession');
-    if (res.status === 500) return setAlert((alerts) => [...alerts, { severity: 'error', message: 'Uh oh... the server is currently down :(' }]);
+    try {
+      const res = await fetch('/currentSession');
+      if (res.status === 500) {
+        info('Server returned 500 trying to retrieve current session');
+        setAlert((alerts) => [...alerts, { severity: 'error', message: 'Uh oh... the server is currently down :(' }]);
+      }
 
-    const hasSession = await res.json();
-    if (hasSession) setUserInfo(hasSession);
-    setTimeout(() => setIsLoading(false), 2000);
+      const hasSession = await res.json();
+      if (hasSession) {
+        info(`User session found: ${hasSession.firstName} ${hasSession.lastName} ${hasSession.username}`);
+        setUserInfo(hasSession);
+      }
+      setTimeout(() => setIsLoading(false), 2000);
+    } catch (err) {
+      error(err);
+    }
   };
 
   const handleDismiss = (i) => {
@@ -66,8 +77,12 @@ function App() {
     verifySession();
   }, []);
 
+  const contextValue = useMemo(() => (
+    { userInfo, setUserInfo, setAlert }
+  ), [userInfo, setUserInfo, setAlert]);
+
   return (
-    <Context.Provider value={{ userInfo, setUserInfo, setAlert }}>
+    <Context.Provider value={contextValue}>
       {isLoading ? (
         <div
           data-testid="Login"

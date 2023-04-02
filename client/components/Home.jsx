@@ -8,6 +8,8 @@ import Geocode from 'react-geocode';
 import HomeFeed from './HomeFeed';
 
 import Context from './context/Context';
+import { error, info } from '../utils/logger';
+
 import {
   mapContainerStyle, darkModeStyle, darkDotStyle, darkBoundaryStyle,
   lightBoundaryStyle, lightModeStyle, lightDotStyle,
@@ -64,6 +66,7 @@ function Home() {
     if (!center) return setPosts([]);
     setIsLoading(true);
     try {
+      info(`Getting posts for ${userInfo.username}`);
       const res = await fetch(`/home/${userInfo.username}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,9 +78,10 @@ function Home() {
         }),
       });
       const postsArr = await res.json();
+      info(`Received ${postsArr.length} posts for ${userInfo.username}`);
       setPosts(postsArr);
     } catch (err) {
-      console.log('ERROR: Cannot get posts at zip code', err);
+      error(err);
       setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in getting posts at location' }]);
     }
   };

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import Context from './context/Context';
 import Phrases from './Phrases';
+import { error, info } from '../utils/logger';
+
 import '../stylesheets/login.scss';
 
 function Login() {
@@ -26,12 +28,14 @@ function Login() {
         const data = await res.json();
         if (data === null || data.err) return setAlert((alerts) => [...alerts, { severity: 'warning', message: 'Cannot find user with that username and password' }]);
 
+        info(`Successfully logged in: ${data.username}`);
         setUserInfo(data);
         document.getElementById('username').value = '';
         document.getElementById('password').value = '';
         return setAlert((alerts) => [...alerts, { severity: 'success', message: 'Good job! Welcome to Roomier :)' }]);
       }
     } catch (err) {
+      error(err);
       setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in attempting to login' }]);
     }
   };
