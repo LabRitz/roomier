@@ -9,6 +9,7 @@ import HomeFeed from './HomeFeed';
 
 import Context from './context/Context';
 import { error, info } from '../utils/logger';
+import { homeStore } from '../stores/home';
 
 import {
   mapContainerStyle, darkModeStyle, darkDotStyle, darkBoundaryStyle,
@@ -18,21 +19,46 @@ import {
 const GoogleMapsAPIKey = 'AIzaSyAdo3_P6D0eBnk6Xj6fmQ4b1pO-HHvEfOM';
 Geocode.setApiKey(GoogleMapsAPIKey);
 
-function Home() {
+const Home = () => {
+  const { 
+    zipcode,
+    center,
+    distance,
+    priceRange,
+    sqftRange,
+    br,
+    ba,
+    setZipcode,
+    setCenter,
+    setDistance,
+    setPriceRange,
+    setSqftRange,
+    setBA,
+    setBR
+  } = homeStore((state) => 
+    ({
+      zipcode: state.zipcode,
+      center: state.center,
+      distance: state.distance, 
+      priceRange: state.priceRange,
+      sqftRange: state.sqftRange,
+      br: state.br,
+      ba: state.ba,
+      setZipcode: state.setZipcode,
+      setCenter: state.setCenter,
+      setDistance: state.setDistance,
+      setPriceRange: state.setPriceRange,
+      setSqftRange: state.setSqftRange,
+      setBR: state.setBR,
+      setBA: state.setBA
+    }));
+
   const theme = useTheme();
   const { userInfo, setAlert } = useContext(Context);
 
   const [filterArr, setFilterArr] = useState([]);
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [zipCode, setZipCode] = useState(userInfo.zipCode);
-  const [center, setCenter] = useState(null);
-  const [distance, setDistance] = useState(1609.344 * 2);
-  const [priceRange, setPriceRange] = useState([3000, 8000]);
-  const [sqftRange, setSqftRange] = useState([200, 1500]);
-  const [br, setBR] = useState(0);
-  const [ba, setBA] = useState(1);
 
   // Google Maps
   const [mapref, setMapRef] = useState(null);
@@ -46,7 +72,7 @@ function Home() {
 
   const geo = useMemo(async () => {
     try {
-      const geocode = await Geocode.fromAddress(zipCode);
+      const geocode = await Geocode.fromAddress(zipcode);
       if (geocode.status === 'OK') {
         const { lng, lat } = geocode.results[0].geometry.location;
         return { lat, lng };
@@ -56,7 +82,7 @@ function Home() {
       console.log('ERROR: Cannot find zipcode', err);
       setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in identifying zip code' }]);
     }
-  }, [zipCode]);
+  }, [zipcode]);
 
   const getGeo = async () => {
     setCenter(await geo);
@@ -127,7 +153,7 @@ function Home() {
   // 3. Configure markers based on posts
   useEffect(() => {
     getGeo();
-  }, [zipCode]);
+  }, [zipcode]);
 
   useEffect(() => {
     getPosts();
@@ -156,8 +182,8 @@ function Home() {
       </div>
       <HomeFeed
         posts={filterPosts}
-        zipCode={zipCode}
-        setZipCode={setZipCode}
+        zipCode={zipcode}
+        setZipCode={setZipcode}
         distance={distance}
         setDistance={setDistance}
         filterArr={filterArr}

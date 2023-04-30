@@ -7,7 +7,8 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "airbnb"
+        "airbnb",
+        "prettier/prettier"
     ],
     "overrides": [
     ],
@@ -26,6 +27,7 @@
         "import/no-extraneous-dependencies": 0,
         "react/jsx-filename-extension": 0,
         "consistent-return": 0,
-        "array-callback-return": 0
+        "array-callback-return": 0,
+        "import/prefer-default-export": 0,
     }
 }
