@@ -3,7 +3,6 @@ import React, {
   useState, useEffect, useRef, Suspense,
 } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Pagination from '@mui/material/Pagination';
@@ -19,12 +18,14 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 import Skeleton from '@mui/material/Skeleton';
 
+import { homeStore } from '../stores/home';
+
 import ContainerFeed from './ContainerFeed';
 import PostModal from './PostModal';
+import Scatter from './charts/Scatter';
 
 import '../stylesheets/homeFeed.scss';
 
-import Scatter from './charts/Scatter';
 
 const Box = React.lazy(() => import('@mui/material/Box'));
 const Chip = React.lazy(() => import('@mui/material/Chip'));
@@ -39,7 +40,7 @@ const getStyles = (filter, filterName, theme) => ({
         : theme.typography.fontWeightMedium,
 });
 
-const filters = ['Pets', 'Smoking', 'Parking'];
+const filterOptions = ['Pets', 'Smoking', 'Parking'];
 const distances = [1, 2, 5, 10, 25, 50];
 const postsPerPage = [2, 4, 6, 12, 24];
 const bedrooms = [0, 1, 2, 3, 4];
@@ -47,11 +48,39 @@ const bathrooms = [1, 2, 3, 4];
 const priceGap = 100;
 const sqftGap = 50;
 
-function HomeFeed({
-  posts, zipCode, setZipCode, distance, setDistance,
-  filterArr, setFilterArr, priceRange, setPriceRange,
-  sqftRange, setSqftRange, br, setBR, ba, setBA, isLoading,
-}) {
+const HomeFeed = ({ posts, isLoading }) => {
+  const {
+    filters,
+    zipcode,
+    distance,
+    priceRange,
+    sqftRange,
+    br,
+    ba,
+    setZipcode,
+    setDistance,
+    setPriceRange,
+    setSqftRange,
+    setBA,
+    setBR,
+    setFilters,
+  } = homeStore((state) => ({
+    filters: state.filters,
+    zipcode: state.zipcode,
+    distance: state.distance,
+    priceRange: state.priceRange,
+    sqftRange: state.sqftRange,
+    br: state.br,
+    ba: state.ba,
+    setZipcode: state.setZipcode,
+    setDistance: state.setDistance,
+    setPriceRange: state.setPriceRange,
+    setSqftRange: state.setSqftRange,
+    setBR: state.setBR,
+    setBA: state.setBA,
+    setFilters: state.setFilters,
+  }));
+
   const theme = useTheme();
 
   // Handlers for post modal open and close
@@ -93,7 +122,7 @@ function HomeFeed({
   const [displayPosts, setDisplayPosts] = useState(posts.slice(0, numPosts));
 
   // Handle user input functions
-  const handleInput = (e) => { if (e.target.value.length === 5) setZipCode(e.target.value); };
+  const handleInput = (e) => { if (e.target.value.length === 5) setZipcode(e.target.value); };
   const handleDistance = (e) => { setDistance(1609.344 * e.target.value); };
   const handlePages = (event, value) => {
     setDisplayPosts(posts.slice(numPosts * (value - 1), numPosts * value));
@@ -145,7 +174,7 @@ function HomeFeed({
     const {
       target: { value },
     } = event;
-    setFilterArr(
+    setFilters(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
@@ -171,6 +200,7 @@ function HomeFeed({
         setHeight(divRef.current.offsetHeight);
       };
       window.addEventListener('resize', handleResize);
+
       return () => {
         window.removeEventListener('resize', handleResize);
       };
@@ -193,7 +223,7 @@ function HomeFeed({
               <TextField
                 id="zipCode"
                 label="Zipcode"
-                defaultValue={zipCode}
+                defaultValue={zipcode}
                 onChange={handleInput}
                 size="small"
               />
@@ -202,7 +232,7 @@ function HomeFeed({
                 error
                 id="zipCode"
                 label="Zipcode"
-                defaultValue={zipCode}
+                defaultValue={zipcode}
                 onChange={handleInput}
                 helperText="No results"
                 size="small"
@@ -254,134 +284,134 @@ function HomeFeed({
         <Suspense fallback={<div data-testid="loadingFilter">Loading...</div>}>
           { showFilter
             && (
-            <motion.div
-              variants={{
-                present: { scale: 1, opacity: 1 },
-                exit: { scale: 0.8, opacity: 0 },
-              }}
-              initial="exit"
-              animate="present"
-              exit="exit"
-              layout
-            >
-              <div
-                className="filter"
-                data-testid="showFilter"
-                style={{
-                  paddingLeft: '4px',
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  flexDirection: 'row',
-                  alignItems: 'center',
+              <motion.div
+                variants={{
+                  present: { scale: 1, opacity: 1 },
+                  exit: { scale: 0.8, opacity: 0 },
                 }}
+                initial="exit"
+                animate="present"
+                exit="exit"
+                layout
               >
-                <Box
-                  sx={{
-                    p: 1, minWidth: 190, display: 'flex', flexDirection: 'column',
+                <div
+                  className="filter"
+                  data-testid="showFilter"
+                  style={{
+                    paddingLeft: '4px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}
-                  size="small"
                 >
-                  <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
-                  <Slider
-                    min={0}
-                    step={10}
-                    max={10000}
-                    value={priceRange}
-                    onChange={handlePrice}
-                    valueLabelDisplay="auto"
-                    disableSwap
-                  />
-                  <InputLabel id="sqft-range-label" sx={{ fontSize: 12 }}>SqFt:</InputLabel>
-                  <Slider
-                    min={200}
-                    step={10}
-                    max={3000}
-                    value={sqftRange}
-                    onChange={handleSqft}
-                    valueLabelDisplay="auto"
-                    disableSwap
-                  />
-                </Box>
-                <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
-                  <InputLabel id="br-select-label" sx={{ fontSize: 14 }}>BR</InputLabel>
-                  <Select
-                    sx={{ fontSize: 14 }}
-                    labelId="br-select-label"
-                    id="br-select"
-                    value={br}
-                    onChange={handleBR}
-                    input={<OutlinedInput id="br-select" label="BR" />}
+                  <Box
+                    sx={{
+                      p: 1, minWidth: 190, display: 'flex', flexDirection: 'column',
+                    }}
+                    size="small"
                   >
-                    {bedrooms.map((opt, i) => (
-                      <MenuItem key={i} value={opt}>{opt}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
-                  <InputLabel id="ba-select-label" sx={{ fontSize: 14 }}>BA</InputLabel>
-                  <Select
-                    sx={{ fontSize: 14 }}
-                    labelId="ba-select-label"
-                    id="ba-select"
-                    value={ba}
-                    onChange={handleBA}
-                    input={<OutlinedInput id="ba-select" label="BA" />}
-                  >
-                    {bathrooms.map((opt, i) => (
-                      <MenuItem key={i} value={opt}>{opt}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                {!showMetrics
-                  && (
-                  <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
-                    <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
+                    <InputLabel id="price-range-label" sx={{ fontSize: 12 }}>Price:</InputLabel>
+                    <Slider
+                      min={0}
+                      step={10}
+                      max={10000}
+                      value={priceRange}
+                      onChange={handlePrice}
+                      valueLabelDisplay="auto"
+                      disableSwap
+                    />
+                    <InputLabel id="sqft-range-label" sx={{ fontSize: 12 }}>SqFt:</InputLabel>
+                    <Slider
+                      min={200}
+                      step={10}
+                      max={3000}
+                      value={sqftRange}
+                      onChange={handleSqft}
+                      valueLabelDisplay="auto"
+                      disableSwap
+                    />
+                  </Box>
+                  <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
+                    <InputLabel id="br-select-label" sx={{ fontSize: 14 }}>BR</InputLabel>
                     <Select
-                      labelId="ppp-select-label"
-                      id="ppp-select"
-                      value={numPosts}
-                      onChange={handlePostsPerPage}
-                      input={<OutlinedInput id="ppp-select" label="# of Posts" />}
+                      sx={{ fontSize: 14 }}
+                      labelId="br-select-label"
+                      id="br-select"
+                      value={br}
+                      onChange={handleBR}
+                      input={<OutlinedInput id="br-select" label="BR" />}
                     >
-                      {postsPerPage.map((opt, i) => (
+                      {bedrooms.map((opt, i) => (
                         <MenuItem key={i} value={opt}>{opt}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                  <FormControl sx={{ m: 1, minWidth: 55 }} size="small">
+                    <InputLabel id="ba-select-label" sx={{ fontSize: 14 }}>BA</InputLabel>
+                    <Select
+                      sx={{ fontSize: 14 }}
+                      labelId="ba-select-label"
+                      id="ba-select"
+                      value={ba}
+                      onChange={handleBA}
+                      input={<OutlinedInput id="ba-select" label="BA" />}
+                    >
+                      {bathrooms.map((opt, i) => (
+                        <MenuItem key={i} value={opt}>{opt}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  {!showMetrics
+                  && (
+                    <FormControl sx={{ m: 1, minWidth: 70 }} size="small">
+                      <InputLabel id="ppp-select-label" sx={{ fontSize: 14 }}># of Posts</InputLabel>
+                      <Select
+                        labelId="ppp-select-label"
+                        id="ppp-select"
+                        value={numPosts}
+                        onChange={handlePostsPerPage}
+                        input={<OutlinedInput id="ppp-select" label="# of Posts" />}
+                      >
+                        {postsPerPage.map((opt, i) => (
+                          <MenuItem key={i} value={opt}>{opt}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
 
-                <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
-                  <InputLabel id="filter-chip-label">Options</InputLabel>
-                  <Select
-                    labelId="filter-chip-label"
-                    id="filter-chip"
-                    multiple
-                    value={filterArr}
-                    onChange={handleChip}
-                    input={<OutlinedInput id="select-filter" label="Options" />}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
-                  >
-                    {filters.map((filter) => (
-                      <MenuItem
-                        key={filter}
-                        value={filter}
-                        style={getStyles(filter, filterArr, theme)}
-                      >
-                        <Checkbox checked={filterArr.indexOf(filter) > -1} />
-                        <ListItemText primary={filter} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-            </motion.div>
+                  <FormControl sx={{ m: 1, minWidth: 200, maxWidth: 300 }} size="small">
+                    <InputLabel id="filter-chip-label">Options</InputLabel>
+                    <Select
+                      labelId="filter-chip-label"
+                      id="filter-chip"
+                      multiple
+                      value={filters}
+                      onChange={handleChip}
+                      input={<OutlinedInput id="select-filter" label="Options" />}
+                      renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25 }}>
+                          {selected.map((value) => (
+                            <Chip key={value} label={value} />
+                          ))}
+                        </Box>
+                      )}
+                    >
+                      {filterOptions.map((filter) => (
+                        <MenuItem
+                          key={filter}
+                          value={filter}
+                          style={getStyles(filter, filters, theme)}
+                        >
+                          <Checkbox checked={filters.indexOf(filter) > -1} />
+                          <ListItemText primary={filter} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </motion.div>
             )}
         </Suspense>
         {showMetrics
@@ -393,27 +423,28 @@ function HomeFeed({
           : (
             <>
               <ImageList sx={{ width: '100%', height: '95%', mb: 4 }} cols={2} rowHeight={350}>
-                {isLoading ? Array(numPosts).fill(0).map((post, i) => (
-                  <ImageListItem key={i} sx={{ p: 2 }}>
-                    <Skeleton variant="rounded" width="100%" height="50%" animation="wave" />
-                    <div style={{
-                      display: 'grid', gridTemplateColumns: '3fr 1fr', columnGap: '4px', width: '100%', height: '30%', paddingBottom: '4px',
-                    }}
-                    >
-                      <div style={{ display: 'grid', gridTemplateRows: '2fr 1fr 1fr', rowGap: '4px' }}>
-                        <Skeleton variant="text" width="100%" height="100%" animation="wave" />
-                        <Skeleton variant="text" width="80%" height="100%" animation="wave" />
-                        <div style={{
-                          display: 'grid', gridTemplateColumns: '1fr 2fr', columnGap: '12px', width: '80%',
-                        }}
-                        >
-                          <Skeleton variant="circular" width="100%" height="100%" animation="wave" />
+                {isLoading
+                  ? Array(numPosts).fill(0).map((post, i) => (
+                    <ImageListItem key={i} sx={{ p: 2 }}>
+                      <Skeleton variant="rounded" width="100%" height="50%" animation="wave" />
+                      <div style={{
+                        display: 'grid', gridTemplateColumns: '3fr 1fr', columnGap: '4px', width: '100%', height: '30%', paddingBottom: '4px',
+                      }}
+                      >
+                        <div style={{ display: 'grid', gridTemplateRows: '2fr 1fr 1fr', rowGap: '4px' }}>
                           <Skeleton variant="text" width="100%" height="100%" animation="wave" />
+                          <Skeleton variant="text" width="80%" height="100%" animation="wave" />
+                          <div style={{
+                            display: 'grid', gridTemplateColumns: '1fr 2fr', columnGap: '12px', width: '80%',
+                          }}
+                          >
+                            <Skeleton variant="circular" width="100%" height="100%" animation="wave" />
+                            <Skeleton variant="text" width="100%" height="100%" animation="wave" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </ImageListItem>
-                ))
+                    </ImageListItem>
+                  ))
                   : displayPosts.map((post, i) => (
                     <ImageListItem key={i}>
                       <ContainerFeed key={i} post={post} handleOpen={handleOpen} setPostInfo={setPostInfo} view="user" />
@@ -432,6 +463,6 @@ function HomeFeed({
       <PostModal key="postModal" postInfo={postInfo} open={open} handleClose={handleClose} />
     </AnimatePresence>
   );
-}
+};
 
 export default HomeFeed;

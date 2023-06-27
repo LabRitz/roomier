@@ -29,4 +29,8 @@ export const homeStore = create((set) => ({
   setBA: (val) => {
     set({ ba: val });
   },
+  filters: [],
+  setFilters: (val) => {
+    set({ filters: val });
+  },
 }));

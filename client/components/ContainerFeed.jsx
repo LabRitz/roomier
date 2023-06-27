@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useContext, Suspense,
+  useState, useEffect, useContext, Suspense, useMemo,
 } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -8,18 +8,19 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 
+import { DEFAULT_IMAGE } from '../assets/constants';
+
 import Context from './context/Context';
+
 import '../stylesheets/containerFeed.scss';
 
 const UserCardActions = React.lazy(() => import('./views/UserCardActions'));
 const ProfileCardActions = React.lazy(() => import('./views/ProfileCardActions'));
 const ApplicationModal = React.lazy(() => import('./ApplicationModal'));
 
-const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg';
-
-function ContainerFeed({
+const ContainerFeed = ({
   post, handleOpen, setPostInfo, view, handleUpdate, handleDelete, setEditMode,
-}) {
+}) => {
   const { userInfo, setAlert } = useContext(Context);
   const {
     address, description, rent, images, applicantData,
@@ -32,6 +33,16 @@ function ContainerFeed({
   const [open, setOpen] = useState(false);
   const openApps = () => setOpen(true);
   const closeApps = () => setOpen(false);
+
+  const displayImage = useMemo(() => {
+    if (!images[0]) return DEFAULT_IMAGE;
+
+    if (images[0].imgUrl === undefined) {
+      return Object.keys(images[0])[0];
+    }
+
+    return images[0].imgUrl;
+  }, [images]);
 
   const handleApply = async (e) => {
     try {
@@ -52,15 +63,17 @@ function ContainerFeed({
         setAlert((alerts) => [...alerts, { severity: 'success', message: 'Successfully submitted application' }]);
       }
     } catch (err) {
-      console.log('Error applying to post: ', err);
       setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in applying to post' }]);
     }
   };
 
   const handleClick = () => {
     setPostInfo(post);
-    if (view === 'profile') setEditMode(false);
-    else if (view === 'user') handleOpen();
+    if (view === 'profile') {
+      setEditMode(false);
+    } else if (view === 'user') {
+      handleOpen();
+    }
   };
 
   useEffect(() => {
@@ -69,13 +82,13 @@ function ContainerFeed({
 
   useEffect(() => {
     if (userInfo !== '') {
-      let applied = false;
-      applicantData.map((applicant) => {
-        if (applicant.username === userInfo.username) applied = true;
-      });
-      setHasApplied(applied);
+      const applied = applicantData.reduce((acc, curr) => {
+        return (curr.username === userInfo.username);
+      }, false);
+
+      return setHasApplied(applied);
     }
-  }, [application]);
+  }, [applicantData, application, userInfo]);
 
   return (
     <motion.div
@@ -92,8 +105,7 @@ function ContainerFeed({
         <CardContent sx={{ pb: 0 }} onClick={handleClick}>
           <CardMedia
             sx={{ height: 180, mb: 1 }}
-            image={(!images[0]) ? defaultImg
-              : (images[0].imgUrl == undefined) ? Object.keys(images[0])[0] : images[0].imgUrl}
+            image={displayImage}
           />
           <Typography gutterBottom variant="h5" noWrap component="div" color="text.primary">
             {`$${rent}/mo`}
@@ -107,25 +119,24 @@ function ContainerFeed({
         </CardContent>
         <Suspense fallback={<div>Loading...</div>}>
           {(view === 'user')
-            && (
-            <CardActions sx={{ display: 'flex', alignItems: 'center' }}>
-              <UserCardActions
-                application={application}
-                handleApply={handleApply}
-                hasApplied={hasApplied}
-              />
-            </CardActions>
-            )}
-          {(view === 'profile')
-            && (
-            <CardActions sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
-              <ProfileCardActions
-                application={application}
-                handleUpdate={handleUpdate}
-                handleDelete={handleDelete}
-                openApps={openApps}
-              />
-            </CardActions>
+            ? (
+              <CardActions sx={{ display: 'flex', alignItems: 'center' }}>
+                <UserCardActions
+                  application={application}
+                  handleApply={handleApply}
+                  hasApplied={hasApplied}
+                />
+              </CardActions>
+            )
+            : (
+              <CardActions sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                <ProfileCardActions
+                  application={application}
+                  handleUpdate={handleUpdate}
+                  handleDelete={handleDelete}
+                  openApps={openApps}
+                />
+              </CardActions>
             )}
         </Suspense>
       </Card>
@@ -134,6 +145,6 @@ function ContainerFeed({
       </Suspense>
     </motion.div>
   );
-}
+};
 
 export default ContainerFeed;
