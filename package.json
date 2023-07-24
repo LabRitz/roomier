@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "build": "NODE_ENV=production webpack --config=./webpack/production.webpack.js",
-    "dev": "NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve --config=./webpack/development.webpack.js --open ",
+    "dev": "cross-env NODE_ENV=development nodemon server/server.js & NODE_ENV=development webpack serve --config=./webpack/development.webpack.js --open ",
     "dev:server": "NODE_ENV=development nodemon server/server.js",
     "dev:client": "NODE_ENV=development webpack serve --config=./webpack/development.webpack.js",
     "test": "NODE_ENV=development jest"
@@ -45,6 +45,7 @@
     "config": "^3.3.8",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
