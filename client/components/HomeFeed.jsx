@@ -2,6 +2,7 @@
 import React, {
   useState, useEffect, useRef, Suspense,
 } from 'react';
+import { styled } from '@mui/material/styles';
 import { AnimatePresence, motion } from 'framer-motion';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -19,6 +20,7 @@ import BubbleChartIcon from '@mui/icons-material/BubbleChart';
 import Skeleton from '@mui/material/Skeleton';
 
 import { homeStore } from '../stores/home';
+import { filterOptions, distances, postsPerPage, bedrooms, bathrooms, priceGap, sqftGap } from '../constants/home';
 
 import ContainerFeed from './ContainerFeed';
 import PostModal from './PostModal';
@@ -39,14 +41,6 @@ const getStyles = (filter, filterName, theme) => ({
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
 });
-
-const filterOptions = ['Pets', 'Smoking', 'Parking'];
-const distances = [1, 2, 5, 10, 25, 50];
-const postsPerPage = [2, 4, 6, 12, 24];
-const bedrooms = [0, 1, 2, 3, 4];
-const bathrooms = [1, 2, 3, 4];
-const priceGap = 100;
-const sqftGap = 50;
 
 const HomeFeed = ({ posts, isLoading }) => {
   const {
@@ -210,14 +204,7 @@ const HomeFeed = ({ posts, isLoading }) => {
   return (
     <AnimatePresence initial={false}>
       <div key="homeFeed" className="homeFeed" data-testid="homeFeed">
-        <div
-          className="filter"
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
+        <FilterWrapper className="filter">
           <FormControl sx={{ m: 1, minWidth: 90 }} size="small">
             {(posts.length > 0) ? (
               <TextField
@@ -280,7 +267,7 @@ const HomeFeed = ({ posts, isLoading }) => {
           >
             <FilterListIcon />
           </ToggleButton>
-        </div>
+        </FilterWrapper>
         <Suspense fallback={<div data-testid="loadingFilter">Loading...</div>}>
           { showFilter
             && (
@@ -294,17 +281,7 @@ const HomeFeed = ({ posts, isLoading }) => {
                 exit="exit"
                 layout
               >
-                <div
-                  className="filter"
-                  data-testid="showFilter"
-                  style={{
-                    paddingLeft: '4px',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
+                <ShowFilterWrapper className="filter" data-testid="showFilter">
                   <Box
                     sx={{
                       p: 1, minWidth: 190, display: 'flex', flexDirection: 'column',
@@ -410,7 +387,7 @@ const HomeFeed = ({ posts, isLoading }) => {
                       ))}
                     </Select>
                   </FormControl>
-                </div>
+                </ShowFilterWrapper>
               </motion.div>
             )}
         </Suspense>
@@ -464,5 +441,19 @@ const HomeFeed = ({ posts, isLoading }) => {
     </AnimatePresence>
   );
 };
+
+const FilterWrapper = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+}))
+
+const ShowFilterWrapper = styled('div')(() => ({
+  paddingLeft: '4px',
+  display: 'flex',
+  flexWrap: 'wrap',
+  flexDirection: 'row',
+  alignItems: 'center',
+}))
 
 export default HomeFeed;
