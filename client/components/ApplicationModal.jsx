@@ -50,7 +50,7 @@ function ApplicationModal({ applications, closeApps, open }) {
                     >
                       {app.username}
                     </Typography>
-                )}
+                  )}
                 />
               </ListItem>
               <Divider variant="inset" component="li" data-testid="dividerModal" />

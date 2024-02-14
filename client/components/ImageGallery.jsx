@@ -1,8 +1,6 @@
 import React, {
-  useState, useEffect, useContext, useRef,
+  useState, useEffect, useMemo, useContext, useCallback,
 } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-
 import CardActions from '@mui/material/CardActions';
 import Paper from '@mui/material/Paper';
 import CardMedia from '@mui/material/CardMedia';
@@ -17,56 +15,76 @@ import CheckIcon from '@mui/icons-material/Check';
 import CircularProgress from '@mui/material/CircularProgress';
 import HideImageIcon from '@mui/icons-material/HideImage';
 
-import storage from './utils/firebase';
+import { DEFAULT_IMAGE } from '../assets/constants';
+import { useImageUpload } from '../hooks/posts/useImageUpload';
+
 import Context from './context/Context';
 
 import '../stylesheets/imageGallery.scss';
 
-const defaultImg = 'https://mindfuldesignconsulting.com/wp-content/uploads/2017/07/Fast-Food-Restaurant-Branding-with-Interior-Design.jpg';
-
-function ImageGallery({
+const ImageGallery = ({
   images, setImages, view, postId,
-}) {
-  const { userInfo, setAlert } = useContext(Context);
+}) => {
+  const { setAlert } = useContext(Context);
 
   // Initialize states for
   const [imageUpload, setImageUpload] = useState(null);
+  // const [upload, setUpload] = useState(false)
   const [index, setIndex] = useState(0); // Index for gallery image
   const [success, setSuccess] = useState(false);
   const [imgLoad, setImgLoad] = useState(false);
-  const timer = useRef();
+  // const timer = useRef();
 
-  const handleUpload = async () => {
-    if (imageUpload) {
-      setSuccess(false);
-      setImgLoad(true);
-      const imgPath = `images/${userInfo.username}/${imageUpload.name}`;
-      const imgRef = ref(storage, imgPath);
-      try {
-        await uploadBytes(imgRef, imageUpload);
-        const imgUrl = await getDownloadURL(imgRef);
-        setImages([...images, { imgUrl, imgPath }]);
-        setIndex(images.length);
+  const { query: useImageUploadQuery } = useImageUpload({ imageUpload, imgLoad });
+
+  const isImageUploading = useMemo(() => {
+    return useImageUploadQuery.isLoading;
+  }, [useImageUploadQuery.isLoading]);
+
+  const uploadImage = useMemo(() => useImageUploadQuery.data ?? undefined, [useImageUploadQuery.data]);
+
+  const displayImage = useMemo(() => {
+    if (!images[index]) return DEFAULT_IMAGE;
+
+    if (images[index].imgUrl === undefined) {
+      return Object.keys(images[index])[0];
+    }
+
+    return images[index].imgUrl;
+  }, [images, index]);
+
+  const handleUpload = useCallback(() => {
+    if (!imageUpload) {
+      return setAlert((alerts) => [...alerts, { severity: 'warn', message: 'No image selected' }]);
+    }
+
+    // Sets enabled flag in image upload hook
+    setImgLoad(true);
+    setAlert((alerts) => [...alerts, { severity: 'success', message: 'Successfully uploaded' }]);
+  }, [imageUpload, setAlert]);
+
+  useEffect(() => {
+    if (imageUpload && imgLoad) {
+      if (useImageUploadQuery.isSuccess) {
         setImgLoad(false);
         setSuccess(true);
-        timer.current = window.setTimeout(() => {
+        setImages([...images, uploadImage]);
+        setTimeout(() => {
           setSuccess(false);
           setImageUpload(null);
-        }, 1250);
-      } catch (err) {
-        console.log('ERROR: Cannot upload to Firebase');
-        setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while uploading image' }]);
+        }, 1500);
       }
-    } else {
-      setAlert((alerts) => [...alerts, { severity: 'warn', message: 'No image selected' }]);
     }
-  };
+  }, [imageUpload, images, imgLoad, setImages, uploadImage, useImageUploadQuery.isSuccess]);
 
   // Remove picture from image array
   const handleRemove = async () => {
     // Handle for old image data structure
     if (!images[index].imgUrl) {
-      return setAlert((alerts) => [...alerts, { severity: 'warn', message: 'Image uploaded on legacy image. Cannot delete.' }]);
+      return setAlert((alerts) => [
+        ...alerts,
+        { severity: 'warn', message: 'Image uploaded on legacy image. Cannot delete.' },
+      ]);
     }
 
     const reqBody = {
@@ -81,24 +99,31 @@ function ImageGallery({
         body: JSON.stringify(reqBody),
       });
       const data = await res.json();
-      if (data.modifiedCount === 1) {
-        setAlert((alerts) => [...alerts, { severity: 'success', message: 'Image successfully removed' }]);
-      } else setAlert((alerts) => [...alerts, { severity: 'error', message: 'Unable to remove image' }]);
+      const isSuccess = data.modifiedCount === 1;
+
+      setAlert((alerts) => {
+        return [
+          ...alerts,
+          {
+            severity: isSuccess ? 'success' : 'error',
+            message: isSuccess ? 'Image successfully removed' : 'Unable to remove image',
+          },
+        ];
+      });
     } catch (err) {
-      console.log('ERROR: Cannot remove image', err);
       setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error occurred while removing image' }]);
     }
   };
 
   const handleClick = (dir) => {
-    if (index + dir < 0) setIndex(images.length - 1);
-    else if (index + dir > images.length - 1) setIndex(0);
-    else setIndex(index + dir);
+    if (index + dir < 0) {
+      setIndex(images.length - 1);
+    } else if (index + dir > images.length - 1) {
+      setIndex(0);
+    } else {
+      setIndex(index + dir);
+    }
   };
-
-  useEffect(() => () => {
-    clearTimeout(timer.current);
-  }, []);
 
   return (
     <Paper
@@ -110,9 +135,7 @@ function ImageGallery({
       <CardMedia
         component="img"
         height="300"
-        image={(!images[index]) ? defaultImg
-          : (images[index].imgUrl == undefined) ? Object.keys(images[index])[0]
-            : images[index].imgUrl}
+        image={displayImage}
       />
       <CardActions sx={{ display: 'flex', justifyContent: 'space-around' }}>
         <IconButton color="inherit" onClick={() => handleClick(-1)}>
@@ -120,95 +143,95 @@ function ImageGallery({
         </IconButton>
         <div className="imageUpload">
           { view === 'create' && (
-          <>
-            <Box sx={{ m: 1 }}>
-              <Button
-                variant="contained"
-                component="label"
-              >
-                <CollectionsIcon />
-                <input
-                  type="file"
-                  multiple
-                  hidden
-                  onChange={(e) => setImageUpload(e.target.files[0])}
-                />
-              </Button>
-            </Box>
-            <Box sx={{ m: 1, position: 'relative' }}>
-              <Button
-                variant="contained"
-                component="label"
-                disabled={imgLoad}
-                onClick={handleUpload}
-                sx={{ '&:hover': { transform: 'scale(1.0)' } }}
-              >
-                {success ? <CheckIcon /> : <FileUploadIcon />}
-              </Button>
-              {imgLoad && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  marginTop: '-12px',
-                  marginLeft: '-12px',
-                }}
-              />
-              )}
-            </Box>
-          </>
+            <>
+              <Box sx={{ m: 1 }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                >
+                  <CollectionsIcon />
+                  <input
+                    type="file"
+                    multiple
+                    hidden
+                    onChange={(e) => setImageUpload(e.target.files[0])}
+                  />
+                </Button>
+              </Box>
+              <Box sx={{ m: 1, position: 'relative' }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  disabled={imgLoad}
+                  onClick={handleUpload}
+                  sx={{ '&:hover': { transform: 'scale(1.0)' } }}
+                >
+                  {success ? <CheckIcon /> : <FileUploadIcon />}
+                </Button>
+                {isImageUploading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-12px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
+              </Box>
+            </>
           )}
           { view === 'edit' && (
-          <>
-            <Box sx={{ m: 1 }}>
-              <Button
-                variant="contained"
-                component="label"
-                onClick={(e) => handleRemove(e)}
-              >
-                <HideImageIcon />
-              </Button>
-            </Box>
-            <Box sx={{ m: 1 }}>
-              <Button
-                variant="contained"
-                component="label"
-              >
-                <CollectionsIcon />
-                <input
-                  type="file"
-                  multiple
-                  hidden
-                  onChange={(e) => setImageUpload(e.target.files[0])}
-                />
-              </Button>
-            </Box>
-            <Box sx={{ m: 1, position: 'relative' }}>
-              <Button
-                variant="contained"
-                component="label"
-                disabled={imgLoad}
-                onClick={handleUpload}
-                sx={{ '&:hover': { transform: 'scale(1.0)' } }}
-              >
-                {success ? <CheckIcon /> : <FileUploadIcon />}
-              </Button>
-              {imgLoad && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  marginTop: '-12px',
-                  marginLeft: '-12px',
-                }}
-              />
-              )}
-            </Box>
-          </>
+            <>
+              <Box sx={{ m: 1 }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  onClick={(e) => handleRemove(e)}
+                >
+                  <HideImageIcon />
+                </Button>
+              </Box>
+              <Box sx={{ m: 1 }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                >
+                  <CollectionsIcon />
+                  <input
+                    type="file"
+                    multiple
+                    hidden
+                    onChange={(e) => setImageUpload(e.target.files[0])}
+                  />
+                </Button>
+              </Box>
+              <Box sx={{ m: 1, position: 'relative' }}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  disabled={imgLoad}
+                  onClick={handleUpload}
+                  sx={{ '&:hover': { transform: 'scale(1.0)' } }}
+                >
+                  {success ? <CheckIcon /> : <FileUploadIcon />}
+                </Button>
+                {imgLoad && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-12px',
+                      marginLeft: '-12px',
+                    }}
+                  />
+                )}
+              </Box>
+            </>
           )}
         </div>
 
@@ -218,6 +241,6 @@ function ImageGallery({
       </CardActions>
     </Paper>
   );
-}
+};
 
 export default ImageGallery;

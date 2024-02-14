@@ -1,15 +1,21 @@
 import React, { useState, useMemo } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import App from './App';
+import { App } from './App';
 import ColorModeContext from './context/ColorModeContext';
 
-function ToggleLightDark() {
+const queryClient = new QueryClient();
+
+export const ToggleLightDark = () => {
   const [mode, setMode] = useState('light');
   const colorMode = useMemo(() => ({
     toggleColorMode: () => {
       setMode((prevMode) => {
-        document.body.style.background = (prevMode === 'light') ? '#293241' : 'linear-gradient(180deg,rgb(214, 214, 214) 85%,rgba(169, 169, 169, 0.903)95%,  rgba(140, 140, 140, 0.937) 98%, rgba(0, 25, 46, 0.585))';
+        document.body.style.background = (prevMode === 'light')
+          ? '#293241'
+          : 'linear-gradient(180deg,rgb(214, 214, 214) 85%,rgba(169, 169, 169, 0.903)95%,  rgba(140, 140, 140, 0.937) 98%, rgba(0, 25, 46, 0.585))';
+
         return (prevMode === 'light' ? 'dark' : 'light');
       });
     },
@@ -69,12 +75,12 @@ function ToggleLightDark() {
   const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+    </QueryClientProvider>
   );
-}
-
-export default ToggleLightDark;
+};

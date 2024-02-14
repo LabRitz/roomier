@@ -31,6 +31,7 @@
     "@react-google-maps/api": "^2.12.1",
     "@sentry/react": "^7.38.0",
     "@sentry/tracing": "^7.38.0",
+    "@tanstack/react-query": "^4.29.14",
     "@visx/event": "^3.0.0",
     "@visx/gradient": "^3.0.0",
     "@visx/group": "^3.0.0",
@@ -51,6 +52,7 @@
     "express-session": "^1.17.3",
     "firebase": "^9.9.0",
     "framer-motion": "^8.4.6",
+    "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "mongoose": "^6.4.4",
     "node-fetch": "^2.3.0",
@@ -65,7 +67,8 @@
     "react-router-dom": "^6.6.1",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.2",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -79,6 +82,7 @@
     "eslint": "^8.34.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jest": "^27.2.1",
     "eslint-plugin-jsx-a11y": "^6.7.1",
@@ -92,6 +96,7 @@
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
+    "prettier": "^2.8.8",
     "style-loader": "^3.3.1",
     "supertest": "^6.2.4",
     "webpack": "^5.64.1",

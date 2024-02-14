@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react';
-
-import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
-import { useTheme } from '@mui/material/styles';
+import React, { useState, useContext, useCallback } from 'react';
+import { geocodeByAddress } from 'react-places-autocomplete';
+import { styled, useTheme } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -12,6 +11,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
+import SaveIcon from '@mui/icons-material/Save';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import Box from '@mui/system/Box';
@@ -21,13 +21,16 @@ import Chip from '@mui/material/Chip';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-
 import Geocode from 'react-geocode';
+import { shallow } from 'zustand/shallow';
+
+import { isNum } from '../utils/isNum';
+import { defaultFormState, usePostStore } from '../stores/post-form';
 
 import Context from './context/Context';
 import ImageGallery from './ImageGallery';
-
 import '../stylesheets/createPost.scss';
+import { Autocomplete } from './Autocomplete';
 
 const getStyles = (filter, filterName, theme) => ({
   fontWeight:
@@ -37,67 +40,33 @@ const getStyles = (filter, filterName, theme) => ({
 });
 
 const genders = ['male', 'female', 'no-preference'];
-const filters = ['pets', 'smoking', 'parking'];
+const filterOptions = ['pets', 'smoking', 'parking'];
 
 function CreatePost() {
   const theme = useTheme();
   const { userInfo, setAlert } = useContext(Context);
 
-  const [location, setLocation] = useState({
-    street1: '',
-    street2: '',
-    city: '',
-    state: '',
-    zipCode: '',
-  });
-  const [price, setPrice] = useState(0);
-  const [utilities, setUtilities] = useState(0);
-  const [br, setBR] = useState(0);
-  const [ba, setBA] = useState(0);
-  const [sqft, setSqft] = useState(0);
-  const [date, setDate] = useState(Date.now());
-  const [gender, setGender] = useState('');
-  const [desc, setDesc] = useState('');
-  const [filterArr, setFilterArr] = useState([]);
-  const [condition, setCondition] = useState('');
-  const [images, setImages] = useState([]);
+  const { postFormState, setPostFormState } = usePostStore((state) => ({
+    postFormState: state.postFormState,
+    setPostFormState: state.setPostFormState,
+  }), shallow);
 
-  // Validate whether input is number
-  const checkNum = (e) => {
-    const regex = /^[0-9\b]+$/;
-    return (e.target.value === '' || regex.test(e.target.value));
-  };
+  const [formState, setFormState] = useState(postFormState);
 
   // Clear form document
   const handleClear = () => {
-    setLocation({
-      street1: '',
-      street2: '',
-      city: '',
-      state: '',
-      zipCode: '',
-    });
-    setPrice(0);
-    setUtilities(0);
-    setBR(0);
-    setBA(0);
-    setSqft(0);
-    setDate(Date.now());
-    setGender('');
-    setDesc('');
-    setCondition('');
-    setFilterArr([]);
-    setImages([]);
+    setFormState(defaultFormState);
+    setPostFormState(defaultFormState);
   };
 
   const handleStreet1Change = (address) => {
-    const newAddress = { ...location };
+    const newAddress = { ...formState.location };
     newAddress.street1 = address;
-    setLocation(newAddress);
+    setFormState((prev) => ({ ...prev, location: newAddress }));
   };
 
   const handleStreet1 = async (address) => {
-    const newAddress = { ...location };
+    const newAddress = { ...formState.location };
     try {
       const results = await geocodeByAddress(address);
       let i = 0;
@@ -107,55 +76,62 @@ function CreatePost() {
           newAddress.street1 = `${res.short_name} ${results[0].address_components[i + 1].short_name}`;
           newAddress.street2 = '';
           i += 1;
-        } else if (res.types.indexOf('locality') !== -1) newAddress.city = res.short_name;
-        else if (res.types.indexOf('administrative_area_level_1') !== -1) newAddress.state = res.short_name;
-        else if (res.types.indexOf('postal_code') !== -1) newAddress.zipCode = res.short_name;
+        } else if (res.types.indexOf('locality') !== -1) {
+          newAddress.city = res.short_name;
+        } else if (res.types.indexOf('administrative_area_level_1') !== -1) {
+          newAddress.state = res.short_name;
+        } else if (res.types.indexOf('postal_code') !== -1) {
+          newAddress.zipCode = res.short_name;
+        }
         i += 1;
       }
-      setLocation(newAddress);
+      setFormState((prev) => ({ ...prev, location: newAddress }));
     } catch (error) {
-      console.error('Error selecting street', error);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error selecting street' }]);
     }
   };
 
   const handleStreet2 = async (e) => {
-    const newAddress = { ...location };
+    const newAddress = { ...formState.location };
     newAddress.street2 = e.target.value;
-    setLocation(newAddress);
+    setFormState((prev) => ({ ...prev, location: newAddress }));
   };
 
   const handleCityChange = (city) => {
-    const newAddress = { ...location };
+    const newAddress = { ...formState.location };
     newAddress.city = city;
-    setLocation(newAddress);
+    setFormState((prev) => ({ ...prev, location: newAddress }));
   };
 
   const handleCity = async (address) => {
-    const newAddress = { ...location };
+    const newAddress = { ...formState.location };
     try {
       const results = await geocodeByAddress(address);
       let i = 0;
       while (i < results[0].address_components.length) {
         const res = results[0].address_components[i];
-        if (res.types.indexOf('locality') !== -1) newAddress.city = res.short_name;
-        else if (res.types.indexOf('administrative_area_level_1') !== -1) newAddress.state = res.short_name;
+        if (res.types.indexOf('locality') !== -1) {
+          newAddress.city = res.short_name;
+        } else if (res.types.indexOf('administrative_area_level_1') !== -1) {
+          newAddress.state = res.short_name;
+        }
         i += 1;
       }
       newAddress.zipCode = '';
-      setLocation(newAddress);
+      setFormState((prev) => ({ ...prev, location: newAddress }));
     } catch (error) {
-      console.error('Error selecting city', error);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error selecting city' }]);
     }
   };
 
   const handleStateChange = (state) => {
-    const newAddress = { ...location };
+    const newAddress = { ...formState.location };
     newAddress.state = state;
-    setLocation(newAddress);
+    setFormState((prev) => ({ ...prev, location: newAddress }));
   };
 
   const handleState = async (address) => {
-    const newAddress = { ...location };
+    const newAddress = { ...formState.location };
     try {
       const results = await geocodeByAddress(address);
       let i = 0;
@@ -165,37 +141,50 @@ function CreatePost() {
         i += 1;
       }
       newAddress.zipCode = '';
-      setLocation(newAddress);
+      setFormState((prev) => ({ ...prev, location: newAddress }));
     } catch (error) {
-      console.error('Error selecting city', error);
-      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error selecting city' }]);
+      setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error selecting state' }]);
     }
   };
 
   const handleZip = async (e) => {
-    if (!checkNum(e) || e.target.value.length > 5) return;
-    const newAddress = { ...location };
-    newAddress.zipCode = e.target.value;
-    setLocation(newAddress);
+    const val = e.target.value ?? null;
+
+    if (!val || !isNum(val) || val.length > 5) return;
+
+    const newAddress = { ...formState.location };
+    newAddress.zipCode = val;
+    setFormState((prev) => ({ ...prev, location: newAddress }));
   };
 
-  const handleGender = (e) => { setGender(e.target.value); };
+  const handleGender = (e) => {
+    const val = e.target.value ?? null;
 
-  const handleDate = (val) => { setDate(val); };
+    if (!val) return;
+
+    setFormState((prev) => ({ ...prev, gender: val }));
+  };
+
+  const handleDate = (val) => {
+    setFormState((prev) => ({ ...prev, date: val }));
+  };
 
   // Set filter array in Home state with each change
   const handleChip = (event) => {
     const {
       target: { value },
     } = event;
-    setFilterArr(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
+
+    // On autofill we get a stringified value.
+    const newFilters = typeof value === 'string' ? value.split(',') : value;
+
+    setFormState((prev) => ({ ...prev, filters: newFilters }));
   };
 
-  const createPostSubmissions = async (e) => {
-    e.preventDefault();
+  const checkForm = useCallback(() => {
+    const {
+      location, gender, sqft, price,
+    } = formState;
 
     if (
       location.street1 === ''
@@ -207,7 +196,28 @@ function CreatePost() {
       || price === 0
     ) {
       setAlert((alerts) => [...alerts, { severity: 'warn', message: 'Must provide the required fields' }]);
+
+      return false;
     }
+
+    return true;
+  }, [formState, setAlert]);
+
+  const handleSave = useCallback(() => {
+    setPostFormState(formState);
+    setAlert((alerts) => [...alerts, { severity: 'success', message: 'Your post has been succesfully saved' }]);
+  }, [formState, setAlert, setPostFormState]);
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+
+    const {
+      location, utilities, gender, sqft, price, br, ba, filters, date, description, condition, images,
+    } = formState;
+
+    const isValidForm = checkForm();
+
+    if (!isValidForm) return;
 
     let geoData;
     try {
@@ -217,10 +227,6 @@ function CreatePost() {
       const { lat, lng } = geo.results[0].geometry.location;
       geoData = { lat, lng };
     } catch (err) {
-      console.log(
-        `ERROR: Unable to resolve coordinates of ${location.street1} ${location.city} ${location.state} ${location.zipCode}:`,
-        err,
-      );
       setAlert((alerts) => [...alerts, { severity: 'error', message: 'Unable to resolve coordinates' }]);
     }
 
@@ -238,15 +244,15 @@ function CreatePost() {
           BR: br,
           BA: ba,
           sqFt: sqft,
-          pets: (filterArr.indexOf('pets') > -1),
-          smoking: (filterArr.indexOf('smoking') > -1),
-          parking: (filterArr.indexOf('parking') > -1),
+          pets: (filters.indexOf('pets') > -1),
+          smoking: (filters.indexOf('smoking') > -1),
+          parking: (filters.indexOf('parking') > -1),
           condition,
         },
         moveInDate: date,
         utilities,
         rent: price,
-        bio: desc,
+        bio: description,
         userData: userInfo,
         applications: [],
         geoData,
@@ -263,15 +269,18 @@ function CreatePost() {
         handleClear();
       }
     } catch (err) {
-      console.log('ERROR: POST request in createPost: ', err);
       setAlert((alerts) => [...alerts, { severity: 'error', message: 'Error in creating post' }]);
     }
   };
 
+  const handleImages = useCallback((arr) => {
+    setFormState((prev) => ({ ...prev, images: arr }));
+  }, []);
+
   return (
     <div className="createPost">
       <div className="postForm">
-        <ImageGallery images={images} setImages={setImages} view="create" />
+        <ImageGallery images={formState.images} setImages={handleImages} view="create" />
         <Paper
           elevation={0}
           sx={{
@@ -284,53 +293,20 @@ function CreatePost() {
             }}
             size="small"
           >
-            <PlacesAutocomplete
-              value={location.street1}
+            <Autocomplete
+              label="Street Address"
+              value={formState.location.street1}
+              placeholder="Search streets..."
               onChange={handleStreet1Change}
               onSelect={handleStreet1}
               searchOptions={{
                 componentRestrictions: { country: ['us'] },
               }}
-            >
-              {({
-                getInputProps, suggestions, getSuggestionItemProps, loading,
-              }) => (
-                <div style={{ position: 'relative' }}>
-                  <TextField
-                    required
-                    label="Street Address"
-                    value={location.street1}
-                    sx={{ mr: 1, width: '100%' }}
-                    size="small"
-                    inputProps={{
-                      ...getInputProps({
-                        placeholder: 'Search Places ...',
-                        className: 'location-search-input',
-                      }),
-                      style: { fontSize: 14 },
-                    }}
-                  />
-                  <div className="autocomplete-dropdown-container" style={{ width: '100%', position: 'absolute', zIndex: 5 }}>
-                    {loading && <div>Loading...</div>}
-                    {suggestions.map((suggestion) => {
-                      const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                      const style = suggestion.active ? {
-                        width: '100%', backgroundColor: '#e1e4e6', color: '#293241', fontWeight: '500', cursor: 'pointer',
-                      }
-                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
-                      return (
-                        <div {...getSuggestionItemProps(suggestion, { className, style })}>
-                          <span style={{ fontSize: '12px', overflowX: 'hidden' }}>{suggestion.description}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </PlacesAutocomplete>
+              required
+            />
             <TextField
               label="Apt, Suite, Unit, etc."
-              value={location.street2}
+              value={formState.location.street2}
               onChange={handleStreet2}
               inputProps={{ style: { fontSize: 14 } }}
               size="small"
@@ -343,103 +319,37 @@ function CreatePost() {
             }}
             size="small"
           >
-            <PlacesAutocomplete
+            <Autocomplete
               data-testid="cityInput"
-              value={location.city}
+              label="City"
+              value={formState.location.city}
+              placeholder="Search cities..."
               onChange={handleCityChange}
               onSelect={handleCity}
               searchOptions={{
                 componentRestrictions: { country: ['us'] },
                 types: ['locality'],
               }}
-            >
-              {({
-                getInputProps, suggestions, getSuggestionItemProps, loading,
-              }) => (
-                <div style={{ position: 'relative' }}>
-                  <TextField
-                    required
-                    label="City"
-                    value={location.city}
-                    sx={{ mr: 1, width: '100%' }}
-                    size="small"
-                    inputProps={{
-                      ...getInputProps({
-                        placeholder: 'Search Places ...',
-                        className: 'location-search-input',
-                      }),
-                      style: { fontSize: 14 },
-                    }}
-                  />
-                  <div className="autocomplete-dropdown-container" style={{ width: '100%', position: 'absolute', zIndex: 5 }}>
-                    {loading && <div>Loading...</div>}
-                    {suggestions.map((suggestion) => {
-                      const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                      const style = suggestion.active ? {
-                        width: '100%', backgroundColor: '#e1e4e6', color: '#293241', fontWeight: '500', cursor: 'pointer',
-                      }
-                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
-                      return (
-                        <div {...getSuggestionItemProps(suggestion, { className, style })}>
-                          <span style={{ fontSize: '12px', overflowX: 'hidden' }}>{suggestion.description}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </PlacesAutocomplete>
-
-            <PlacesAutocomplete
-              value={location.state}
+              required
+            />
+            <Autocomplete
+              data-testid="stateInput"
+              label="State"
+              value={formState.location.state}
+              placeholder="Search states..."
               onChange={handleStateChange}
               onSelect={handleState}
               searchOptions={{
                 componentRestrictions: { country: ['us'] },
                 types: ['administrative_area_level_1'],
               }}
-            >
-              {({
-                getInputProps, suggestions, getSuggestionItemProps, loading,
-              }) => (
-                <div style={{ position: 'relative' }}>
-                  <TextField
-                    required
-                    label="State"
-                    value={location.state}
-                    sx={{ mr: 1, width: '100%' }}
-                    size="small"
-                    inputProps={{
-                      ...getInputProps({
-                        placeholder: 'Search Places ...',
-                        className: 'location-search-input',
-                      }),
-                      style: { fontSize: 14 },
-                    }}
-                  />
-                  <div className="autocomplete-dropdown-container" style={{ width: '100%', position: 'absolute', zIndex: 5 }}>
-                    {loading && <div>Loading...</div>}
-                    {suggestions.map((suggestion) => {
-                      const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
-                      const style = suggestion.active ? {
-                        width: '100%', backgroundColor: '#e1e4e6', color: '#293241', fontWeight: '500', cursor: 'pointer',
-                      }
-                        : { width: '100%', backgroundColor: '#ffffff', cursor: 'pointer' };
-                      return (
-                        <div {...getSuggestionItemProps(suggestion, { className, style })}>
-                          <span style={{ fontSize: '12px', overflowX: 'hidden' }}>{suggestion.description}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </PlacesAutocomplete>
+              required
+            />
             <TextField
               required
               label="Zip code"
               onChange={handleZip}
-              value={location.zipCode}
+              value={formState.location.zipCode}
               sx={{ width: '100%' }}
               inputProps={{ style: { fontSize: 14 } }}
               size="small"
@@ -452,9 +362,15 @@ function CreatePost() {
               <OutlinedInput
                 id="outlined-adornment-amount"
                 startAdornment={<InputAdornment sx={{ fontSize: 12 }} position="start">$</InputAdornment>}
-                value={price}
+                value={formState.price}
                 label="Amount"
-                onChange={(e) => { if (checkNum(e)) setPrice(e.target.value); }}
+                onChange={(e) => {
+                  const val = e.target.value ?? null;
+
+                  if (!val || !isNum(e.target.value)) return;
+
+                  setFormState((prev) => ({ ...prev, price: e.target.value }));
+                }}
                 inputProps={{ style: { fontSize: 14 } }}
               />
             </FormControl>
@@ -463,9 +379,15 @@ function CreatePost() {
               <OutlinedInput
                 id="outlined-adornment-amount"
                 startAdornment={<InputAdornment sx={{ fontSize: 12 }} position="start">$</InputAdornment>}
-                value={utilities}
+                value={formState.utilities}
                 label="Utilities"
-                onChange={(e) => { if (checkNum(e)) setUtilities(e.target.value); }}
+                onChange={(e) => {
+                  const val = e.target.value ?? null;
+
+                  if (!val || !isNum(e.target.value)) return;
+
+                  setFormState((prev) => ({ ...prev, utilities: e.target.value }));
+                }}
                 inputProps={{ style: { fontSize: 14 } }}
               />
             </FormControl>
@@ -474,9 +396,11 @@ function CreatePost() {
                 <DesktopDatePicker
                   label="Available"
                   inputFormat="MM/DD/YYYY"
-                  value={date}
+                  value={formState.date}
                   onChange={handleDate}
-                  renderInput={(params) => <TextField size="small" inputProps={{ style: { fontSize: 12 } }} {...params} />}
+                  renderInput={(params) => (
+                    <TextField size="small" inputProps={{ style: { fontSize: 12 } }} {...params} />
+                  )}
                 />
               </LocalizationProvider>
             </FormControl>
@@ -491,28 +415,46 @@ function CreatePost() {
             <TextField
               required
               label="BR"
-              value={br}
+              value={formState.br}
               sx={{ mr: 1, width: '100%' }}
               size="small"
-              onChange={(e) => { if (checkNum(e)) setBR(e.target.value); }}
+              onChange={(e) => {
+                const val = e.target.value ?? null;
+
+                if (!val || !isNum(e.target.value)) return;
+
+                setFormState((prev) => ({ ...prev, br: e.target.value }));
+              }}
               inputProps={{ style: { fontSize: 14 } }}
             />
             <TextField
               required
               label="BA"
-              value={ba}
+              value={formState.ba}
               sx={{ mr: 1, width: '100%' }}
               size="small"
-              onChange={(e) => { if (checkNum(e)) setBA(e.target.value); }}
+              onChange={(e) => {
+                const val = e.target.value ?? null;
+
+                if (!val || !isNum(e.target.value)) return;
+
+                setFormState((prev) => ({ ...prev, ba: e.target.value }));
+              }}
               inputProps={{ style: { fontSize: 14 } }}
             />
             <TextField
               required
               label="sqft"
-              value={sqft}
+              value={formState.sqft}
               sx={{ mr: 1, width: '100%' }}
               size="small"
-              onChange={(e) => { if (checkNum(e)) setSqft(e.target.value); }}
+              onChange={(e) => {
+                const val = e.target.value ?? null;
+
+                if (!val || !isNum(e.target.value)) return;
+
+                setFormState((prev) => ({ ...prev, sqft: e.target.value }));
+              }}
               inputProps={{ style: { fontSize: 14 } }}
             />
           </FormControl>
@@ -529,7 +471,7 @@ function CreatePost() {
                 labelId="roommate-select-label"
                 id="roommate-select"
                 sx={{ fontSize: 14 }}
-                value={gender}
+                value={formState.gender}
                 onChange={handleGender}
                 input={<OutlinedInput id="roommate-select" label="Looking for..." />}
               >
@@ -544,7 +486,7 @@ function CreatePost() {
                 labelId="filter-chip-label"
                 id="filter-chip"
                 multiple
-                value={filterArr}
+                value={formState.filters}
                 onChange={handleChip}
                 sx={{ fontSize: 14, width: '100%' }}
                 input={<OutlinedInput id="select-filter" label="Options" />}
@@ -556,13 +498,13 @@ function CreatePost() {
                   </Box>
                 )}
               >
-                {filters.map((filter) => (
+                {filterOptions.map((filter) => (
                   <MenuItem
                     key={filter}
                     value={filter}
-                    style={getStyles(filter, filterArr, theme)}
+                    style={getStyles(filter, formState.filters, theme)}
                   >
-                    <Checkbox checked={filterArr.indexOf(filter) > -1} />
+                    <Checkbox ised={formState.filters.indexOf(filter) > -1} />
                     <ListItemText primary={filter} />
                   </MenuItem>
                 ))}
@@ -573,13 +515,13 @@ function CreatePost() {
           <FormControl sx={{ display: 'block', m: 1 }} size="small">
             <TextField
               label="Condition"
-              value={condition}
+              value={formState.condition}
               size="small"
               multiline
               minRows={1}
               maxRows={2}
               fullWidth
-              onChange={(e) => setCondition(e.target.value)}
+              onChange={(e) => setFormState((prev) => ({ ...prev, condition: e.target.value }))}
               inputProps={{ style: { fontSize: 10 } }}
               sx={{ overflowY: 'scroll' }}
             />
@@ -588,33 +530,35 @@ function CreatePost() {
           <FormControl sx={{ display: 'block', m: 1 }} size="small">
             <TextField
               label="Description"
-              value={desc}
+              value={formState.description}
               size="small"
               multiline
               minRows={3}
               maxRows={5}
               fullWidth
-              onChange={(e) => setDesc(e.target.value)}
+              onChange={(e) => setFormState((prev) => ({ ...prev, description: e.target.value }))}
               inputProps={{ style: { fontSize: 10 } }}
               sx={{ overflowY: 'scroll', height: '100%' }}
             />
           </FormControl>
 
-          <div style={{
-            display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center',
-          }}
-          >
-            <Tooltip title="Clear form">
+          <ActionFormWrapper>
+            <Tooltip title="Clear">
               <Button color="inherit" onClick={handleClear} size="small">
-                <PlaylistRemoveIcon />
+                Clear
               </Button>
             </Tooltip>
-            <Tooltip title="Upload post">
-              <Button color="inherit" onClick={createPostSubmissions} size="small">
-                <CloudUploadIcon />
+            <Tooltip title="Save">
+              <Button color="inherit" onClick={handleSave} size="small">
+                Save
               </Button>
             </Tooltip>
-          </div>
+            <Tooltip title="Upload">
+              <Button color="inherit" onClick={handleUpload} size="small">
+                Upload
+              </Button>
+            </Tooltip>
+          </ActionFormWrapper>
 
         </Paper>
       </div>
@@ -623,3 +567,11 @@ function CreatePost() {
 }
 
 export default CreatePost;
+
+const ActionFormWrapper = styled('div')(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  alignItems: 'center',
+}));
+

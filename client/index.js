@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import ToggleLightDark from './components/ToggleLightDark';
+import { ToggleLightDark } from './components/ToggleLightDark';
 
 import './stylesheets/styles.css';
 
